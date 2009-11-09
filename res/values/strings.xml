@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="hello">FreshDocs rocks!</string>
+    <string name="app_name">FreshDocs</string>
+<string name="username">Username: </string>
+<string name="password">Password</string>
+<string name="hostname">Hostname</string>
+</resources>
