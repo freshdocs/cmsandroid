@@ -2,7 +2,13 @@
 <resources>
     <string name="hello">FreshDocs rocks!</string>
     <string name="app_name">FreshDocs</string>
-<string name="username">Username: </string>
+<string name="username">Username</string>
 <string name="password">Password</string>
 <string name="hostname">Hostname</string>
+<string name="auth_heading">Authorization </string>
+<string name="advanced_heading">Advanced</string>
+<string name="port">Port</string>
+<string name="hidden_files">Show Hidden Files</string>
+<string name="quit">Quit</string>
+<string name="settings">Settings</string>
 </resources>
