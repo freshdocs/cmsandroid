@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xmlns:app="http://www.w3.org/2007/app"
+	xmlns:cmis="http://www.cmis.org/2008/05" xmlns:alf="http://www.alfresco.org"
+	xmlns:opensearch="http://a9.com/-/spec/opensearch/1.1/">
+	<author>
+		<name>System</name>
+	</author>
+	<generator version="3.1.1 (@build-number@)">Alfresco (Enterprise)</generator>
+	<icon>http://192.168.10.111:80/alfresco/images/logo/AlfrescoLogo16.ico</icon>
+	<id>urn:uuid:d9236733-05f4-4b37-992a-43cbe5ed5478-children</id>
+	<link rel="self"
+		href="http://192.168.10.111:80/alfresco/service/api/node/workspace/SpacesStore/d9236733-05f4-4b37-992a-43cbe5ed5478/children?alf_ticket=TICKET_92895b2e9ee9fdd3aa0395ab56dad6b35c0c0ab7" />
+	<link rel="cmis-source"
+		href="http://192.168.10.111:80/alfresco/service/api/node/workspace/SpacesStore/d9236733-05f4-4b37-992a-43cbe5ed5478" />
+	<link rel="first"
+		href="http://192.168.10.111:80/alfresco/service/api/node/workspace/SpacesStore/d9236733-05f4-4b37-992a-43cbe5ed5478/children?alf_ticket=TICKET_92895b2e9ee9fdd3aa0395ab56dad6b35c0c0ab7&amp;pageNo=1&amp;pageSize=0&amp;guest=&amp;format=atomfeed"
+		type="application/atom+xml;type=feed" />
+	<link rel="last"
+		href="http://192.168.10.111:80/alfresco/service/api/node/workspace/SpacesStore/d9236733-05f4-4b37-992a-43cbe5ed5478/children?alf_ticket=TICKET_92895b2e9ee9fdd3aa0395ab56dad6b35c0c0ab7&amp;pageNo=1&amp;pageSize=0&amp;guest=&amp;format=atomfeed"
+		type="application/atom+xml;type=feed" />
+	<title>Samples Children</title>
+	<updated>2009-11-05T13:07:10.354-07:00</updated>
+	<entry>
+		<author>
+			<name>System</name>
+		</author>
+		<content type="text/html"
+			src="http://192.168.10.111:80/alfresco/service/api/node/workspace/SpacesStore/cc32ecfa-9159-4a7c-bc89-eb5bc9bd895b/content.system-overview.html" />
+		<id>urn:uuid:cc32ecfa-9159-4a7c-bc89-eb5bc9bd895b</id>
+		<link rel="self"
+			href="http://192.168.10.111:80/alfresco/service/api/node/workspace/SpacesStore/cc32ecfa-9159-4a7c-bc89-eb5bc9bd895b" />
+		<link rel="enclosure" type="text/html"
+			href="http://192.168.10.111:80/alfresco/service/api/node/workspace/SpacesStore/cc32ecfa-9159-4a7c-bc89-eb5bc9bd895b/content.system-overview.html" />
+		<link rel="edit"
+			href="http://192.168.10.111:80/alfresco/service/api/node/workspace/SpacesStore/cc32ecfa-9159-4a7c-bc89-eb5bc9bd895b" />
+		<link rel="edit-media" type="text/html"
+			href="http://192.168.10.111:80/alfresco/service/api/node/workspace/SpacesStore/cc32ecfa-9159-4a7c-bc89-eb5bc9bd895b/content.system-overview.html" />
+		<link rel="cmis-allowableactions"
+			href="http://192.168.10.111:80/alfresco/service/api/node/workspace/SpacesStore/cc32ecfa-9159-4a7c-bc89-eb5bc9bd895b/permissions" />
+		<link rel="cmis-relationships"
+			href="http://192.168.10.111:80/alfresco/service/api/node/workspace/SpacesStore/cc32ecfa-9159-4a7c-bc89-eb5bc9bd895b/associations" />
+		<link rel="cmis-parents"
+			href="http://192.168.10.111:80/alfresco/service/api/node/workspace/SpacesStore/cc32ecfa-9159-4a7c-bc89-eb5bc9bd895b/parents" />
+		<link rel="cmis-allversions"
+			href="http://192.168.10.111:80/alfresco/service/api/node/workspace/SpacesStore/cc32ecfa-9159-4a7c-bc89-eb5bc9bd895b/versions" />
+		<link rel="cmis-stream" type="text/html"
+			href="http://192.168.10.111:80/alfresco/service/api/node/workspace/SpacesStore/cc32ecfa-9159-4a7c-bc89-eb5bc9bd895b/content.system-overview.html" />
+		<link rel="cmis-type"
+			href="http://192.168.10.111:80/alfresco/service/api/type/document" />
+		<link rel="cmis-repository"
+			href="http://192.168.10.111:80/alfresco/service/api/repository" />
+		<published>2009-11-05T13:07:10.356-07:00</published>
+		<summary>system-overview.html</summary>
+		<title>system-overview.html</title>
+		<updated>2009-11-05T13:07:15.484-07:00</updated>
+		<cmis:object>
+			<cmis:properties>
+				<cmis:propertyId cmis:name="ObjectId">
+					<cmis:value>workspace://SpacesStore/cc32ecfa-9159-4a7c-bc89-eb5bc9bd895b/1.0</cmis:value>
+				</cmis:propertyId>
+				<cmis:propertyString cmis:name="BaseType">
+					<cmis:value>document</cmis:value>
+				</cmis:propertyString>
+				<cmis:propertyString cmis:name="ObjectTypeId">
+					<cmis:value>document</cmis:value>
+				</cmis:propertyString>
+				<cmis:propertyString cmis:name="CreatedBy">
+					<cmis:value>System</cmis:value>
+				</cmis:propertyString>
+				<cmis:propertyDateTime cmis:name="CreationDate">
+					<cmis:value>2009-11-05T13:07:10.356-07:00</cmis:value>
+				</cmis:propertyDateTime>
+				<cmis:propertyString cmis:name="LastModifiedBy">
+					<cmis:value>System</cmis:value>
+				</cmis:propertyString>
+				<cmis:propertyDateTime cmis:name="LastModificationDate">
+					<cmis:value>2009-11-05T13:07:15.484-07:00</cmis:value>
+				</cmis:propertyDateTime>
+				<cmis:propertyString cmis:name="Name">
+					<cmis:value>system-overview.html</cmis:value>
+				</cmis:propertyString>
+				<cmis:propertyBoolean cmis:name="IsImmutable">
+					<cmis:value>false</cmis:value>
+				</cmis:propertyBoolean>
+				<cmis:propertyBoolean cmis:name="IsLatestVersion">
+					<cmis:value>true</cmis:value>
+				</cmis:propertyBoolean>
+				<cmis:propertyBoolean cmis:name="IsMajorVersion">
+					<cmis:value>false</cmis:value>
+				</cmis:propertyBoolean>
+				<cmis:propertyBoolean cmis:name="IsLatestMajorVersion">
+					<cmis:value>false</cmis:value>
+				</cmis:propertyBoolean>
+				<cmis:propertyString cmis:name="VersionLabel">
+					<cmis:value>1.0</cmis:value>
+				</cmis:propertyString>
+				<cmis:propertyId cmis:name="VersionSeriesId">
+					<cmis:value>workspace://SpacesStore/cc32ecfa-9159-4a7c-bc89-eb5bc9bd895b</cmis:value>
+				</cmis:propertyId>
+				<cmis:propertyBoolean cmis:name="IsVersionSeriesCheckedOut">
+					<cmis:value>false</cmis:value>
+				</cmis:propertyBoolean>
+				<cmis:propertyString cmis:name="VersionSeriesCheckedOutBy" />
+				<cmis:propertyId cmis:name="VersionSeriesCheckedOutId" />
+				<cmis:propertyString cmis:name="CheckinComment" />
+				<cmis:propertyInteger cmis:name="ContentStreamLength">
+					<cmis:value>549</cmis:value>
+				</cmis:propertyInteger>
+				<cmis:propertyString cmis:name="ContentStreamMimeType">
+					<cmis:value>text/html</cmis:value>
+				</cmis:propertyString>
+				<cmis:propertyString cmis:name="ContentStreamFilename">
+					<cmis:value>system-overview.html</cmis:value>
+				</cmis:propertyString>
+				<cmis:propertyString cmis:name="ContentStreamURI">
+					<cmis:value>http://192.168.10.111:80/alfresco/service/api/node/workspace/SpacesStore/cc32ecfa-9159-4a7c-bc89-eb5bc9bd895b/content.system-overview.html</cmis:value>
+				</cmis:propertyString>
+			</cmis:properties>
+		</cmis:object>
+		<cmis:terminator />
+		<app:edited>2009-11-05T13:07:15.484-07:00</app:edited>
+		<alf:icon>http://192.168.10.111:80/alfresco/images/filetypes/html.gif</alf:icon>
+	</entry>
+	<cmis:hasMoreItems>false</cmis:hasMoreItems>
+	<opensearch:totalResults>1</opensearch:totalResults>
+	<opensearch:startIndex>0</opensearch:startIndex>
+	<opensearch:itemsPerPage>0</opensearch:itemsPerPage>
+</feed>

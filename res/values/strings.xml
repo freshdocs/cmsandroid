@@ -11,4 +11,7 @@
 <string name="hidden_files">Show Hidden Files</string>
 <string name="quit">Quit</string>
 <string name="settings">Settings</string>
+<string name="search">Search</string>
+<string name="refresh">Refresh</string>
+<string name="favorites">Favorites</string>
 </resources>
