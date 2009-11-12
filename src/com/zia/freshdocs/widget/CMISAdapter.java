@@ -3,12 +3,15 @@ package com.zia.freshdocs.widget;
 import java.util.Stack;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri.Builder;
 import android.preference.PreferenceManager;
 import android.widget.ArrayAdapter;
 
 import com.zia.freshdocs.data.NodeRef;
 import com.zia.freshdocs.net.CMIS;
+import com.zia.freshdocs.util.URLUtils;
 
 public class CMISAdapter extends ArrayAdapter<NodeRef>
 {
@@ -47,7 +50,7 @@ public class CMISAdapter extends ArrayAdapter<NodeRef>
 		} 
 		else
 		{
-			home();
+			getChildren(_currentUuid);
 		}
 	}
 	
@@ -57,7 +60,7 @@ public class CMISAdapter extends ArrayAdapter<NodeRef>
 		
 		// Save reference to current entry
 		_stack.clear();		
-		_currentUuid = companyHome.getUuid(); 
+		_currentUuid = companyHome.getContent(); 
 		
 		// Get Company Home children
 		getChildren(_currentUuid);		
@@ -80,9 +83,21 @@ public class CMISAdapter extends ArrayAdapter<NodeRef>
 	public void getChildren(int position)
 	{
 		NodeRef ref = getItem(position);
-		_stack.push(_currentUuid);
-		_currentUuid = ref.getUuid();
-		getChildren(_currentUuid);
+		
+		if(ref.isFolder())
+		{
+			_stack.push(_currentUuid);
+			_currentUuid = ref.getContent();
+			getChildren(_currentUuid);
+		}
+		else
+		{
+			// Display the content
+			Builder builder = URLUtils.toUriBuilder(ref.getContent());
+			builder.appendQueryParameter("alf_ticket", _cmis.getTicket());
+			Intent viewIntent = new Intent(Intent.ACTION_VIEW, builder.build());
+			getContext().startActivity(viewIntent);
+		}
 	}
 	
 	protected void getChildren(String uuid)

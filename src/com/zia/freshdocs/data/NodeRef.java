@@ -2,20 +2,31 @@ package com.zia.freshdocs.data;
 
 public class NodeRef
 {
-	private String _uuid;
+	private String _content;
+	private String contentType;
 	private String _name;
-	private boolean _isDocument;
+	private boolean _isFolder;
 
-	public String getUuid()
+	public String getContent()
 	{
-		return _uuid;
+		return _content;
 	}
 
-	public void setUuid(String uuid)
+	public void setContent(String content)
 	{
-		this._uuid = uuid;
+		this._content = content;
 	}
 
+	public String getContentType()
+	{
+		return contentType;
+	}
+
+	public void setContentType(String contentType)
+	{
+		this.contentType = contentType;
+	}	
+	
 	public String getName()
 	{
 		return _name;
@@ -26,14 +37,14 @@ public class NodeRef
 		this._name = name;
 	}
 
-	public boolean isDocument()
+	public boolean isFolder()
 	{
-		return _isDocument;
+		return _isFolder;
 	}
 
-	public void setDocument(boolean isDocument)
+	public void setFolder(boolean isFolder)
 	{
-		this._isDocument = isDocument;
+		this._isFolder = isFolder;
 	}
 
 	@Override
@@ -52,7 +63,6 @@ public class NodeRef
 		
 		NodeRef other = (NodeRef) o;
 		return _name.equals(other.getName()) &&
-			_uuid.equals(other.getUuid());
-	}	
-	
+			_content.equals(other.getContent());
+	}
 }

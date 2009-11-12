@@ -34,7 +34,7 @@ public class CMIS
 	private String _hostname;
 	private String _username;
 	private String _password;
-	private String _ticket;
+	private String ticket;
 	private int _port;
 
 	public CMIS(String hostname, String username, String password, int port)
@@ -57,7 +57,7 @@ public class CMIS
 			{
 				docBuilder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
 				Document doc = docBuilder.parse(new ByteArrayInputStream(res.getBytes()));
-				_ticket = doc.getDocumentElement().getFirstChild().getNodeValue();
+				ticket = doc.getDocumentElement().getFirstChild().getNodeValue();
 			}
 			catch (Exception e)
 			{
@@ -65,12 +65,12 @@ public class CMIS
 			}
 		}
 
-		return _ticket;
+		return ticket;
 	}
 
 	public NodeRef getCompanyHome()
 	{
-		String res = get(String.format(SCRIPT_INFO_URI, _ticket));
+		String res = get(String.format(SCRIPT_INFO_URI, ticket));
 		if (res != null)
 		{
 			DocumentBuilder docBuilder = null;
@@ -87,7 +87,7 @@ public class CMIS
 					Node node = nodes.item(0); 
 					StringBuilder buf = new StringBuilder(
 							new URL(node.getFirstChild().getNodeValue()).getPath());
-					buf.append("?alf_ticket=").append(_ticket);
+					buf.append("?alf_ticket=").append(ticket);
 					return parseChildren(get(buf.toString()))[0];
 				}
 			}
@@ -102,7 +102,7 @@ public class CMIS
 	
 	public NodeRef[] getChildren(String uuid)
 	{
-		String res = get(String.format(CHILDREN_URI, uuid, _ticket));
+		String res = get(String.format(CHILDREN_URI, uuid, ticket));
 		if (res != null)
 		{
 			return parseChildren(res);
@@ -136,14 +136,25 @@ public class CMIS
 				}
 				
 				node = (Element) nodes.item(i);
-				children = node.getElementsByTagName("id");
+				children = node.getElementsByTagName("content");
 				
 				if(children.getLength() > 0)
 				{
+					Element contentNode = (Element) children.item(0);
+					String content = null;
 					nodeRef = new NodeRef();
-					String id = children.item(0).getFirstChild().getNodeValue();
-					// Ignore preceding 'urn:uuid:'
-					nodeRef.setUuid(id.substring(9));
+					
+					if(contentNode.hasAttribute("type"))
+					{
+						nodeRef.setContentType(contentNode.getAttribute("type"));
+						content = contentNode.getAttribute("src");
+					} 
+					else
+					{
+						content = contentNode.getFirstChild().getNodeValue();
+					}
+					
+					nodeRef.setContent(content);
 					
 					children = node.getElementsByTagName("title");
 					if(children.getLength() > 0)
@@ -162,7 +173,7 @@ public class CMIS
 							{
 								children = child.getElementsByTagName("cmis:value");
 								String baseType = children.item(0).getFirstChild().getNodeValue(); 
-								nodeRef.setDocument(baseType.equals("document"));
+								nodeRef.setFolder(baseType.equals("folder"));
 								break;
 							}
 						}
@@ -251,5 +262,10 @@ public class CMIS
 	public void setPort(int port)
 	{
 		this._port = port;
+	}
+
+	public String getTicket()
+	{
+		return ticket;
 	}
 }
