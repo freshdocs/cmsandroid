@@ -1,5 +1,6 @@
 package com.zia.freshdocs.widget;
 
+import java.util.HashMap;
 import java.util.Stack;
 
 import android.content.Context;
@@ -22,6 +23,15 @@ import com.zia.freshdocs.util.URLUtils;
 
 public class CMISAdapter extends ArrayAdapter<NodeRef>
 {
+	protected static  HashMap<String, Integer> mimeMap = new HashMap<String, Integer>();
+	static
+	{
+		mimeMap.put("application/pdf", R.drawable.pdf);
+		mimeMap.put("cmis/folder", R.drawable.folder);
+		mimeMap.put("text/plain", R.drawable.txt);
+		mimeMap.put(null, R.drawable.document);
+	}
+	
 	private String _currentUuid = null;
 	private Stack<String> _stack = new Stack<String>(); 
 	private CMIS _cmis;
@@ -124,7 +134,8 @@ public class CMISAdapter extends ArrayAdapter<NodeRef>
 	{
 		TextView textView = (TextView) super.getView(position, convertView, parent);
 		NodeRef nodeRef = getItem(position);
-		Drawable icon = getDrawableForType(nodeRef.getContentType());
+		String contentType = nodeRef.getContentType();
+		Drawable icon = getDrawableForType(contentType == null ? "cmis/folder" : contentType);
 		textView.setCompoundDrawablePadding(5);
 		textView.setCompoundDrawables(icon,	null, null, null);
 		return textView;
@@ -134,17 +145,8 @@ public class CMISAdapter extends ArrayAdapter<NodeRef>
 	{
 		Context context = getContext();
 		Resources resources = context.getResources();
-		Drawable icon = null;
-
-		if (null == contentType)
-		{
-			icon = resources.getDrawable(R.drawable.folder);
-		} 
-		else if(contentType.equals("text/plain"))		
-		{
-			icon = resources.getDrawable(R.drawable.txt);			
-		}
-		
+		int resId = mimeMap.get(mimeMap.containsKey(contentType) ? contentType : null);
+		Drawable icon = resources.getDrawable(resId);
 		icon.setBounds(new Rect(0, 0, 44, 44));
 		return icon;
 	}

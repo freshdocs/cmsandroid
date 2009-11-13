@@ -3,6 +3,7 @@ package com.zia.freshdocs.activity;
 import android.app.ListActivity;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.view.KeyEvent;
@@ -44,11 +45,17 @@ public class Main extends ListActivity
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu)
 	{
-		menu.add(0, REFRESH_ITEM, 0, R.string.refresh);
-		menu.add(0, SETTINGS_ITEM, 0, R.string.settings);
-		menu.add(0, SEARCH_ITEM, 0, R.string.search);
-		menu.add(0, FAVORITES_ITEM, 0, R.string.favorites);
-		menu.add(0, QUIT_ITEM, 0, R.string.quit);
+		Resources res = getResources();
+		menu.add(0, REFRESH_ITEM, 0, R.string.refresh).setIcon(
+				res.getDrawable(R.drawable.refresh));
+		menu.add(0, SETTINGS_ITEM, 0, R.string.settings).setIcon(
+				res.getDrawable(android.R.drawable.ic_menu_preferences));
+		menu.add(0, SEARCH_ITEM, 0, R.string.search).setIcon(
+				res.getDrawable(android.R.drawable.ic_menu_search));
+		menu.add(0, FAVORITES_ITEM, 0, R.string.favorites).setIcon(
+				res.getDrawable(android.R.drawable.btn_star));
+		menu.add(0, QUIT_ITEM, 0, R.string.quit).setIcon(
+				res.getDrawable(android.R.drawable.ic_lock_power_off));
 
 		return true;
 	}

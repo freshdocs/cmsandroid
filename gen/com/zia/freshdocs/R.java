@@ -11,10 +11,20 @@ public final class R {
     public static final class attr {
     }
     public static final class drawable {
-        public static final int folder=0x7f020000;
-        public static final int icon=0x7f020001;
-        public static final int txt=0x7f020002;
-        public static final int welcome=0x7f020003;
+        public static final int archive=0x7f020000;
+        public static final int audio=0x7f020001;
+        public static final int document=0x7f020002;
+        public static final int excel=0x7f020003;
+        public static final int folder=0x7f020004;
+        public static final int icon=0x7f020005;
+        public static final int image=0x7f020006;
+        public static final int pdf=0x7f020007;
+        public static final int powerpoint=0x7f020008;
+        public static final int refresh=0x7f020009;
+        public static final int txt=0x7f02000a;
+        public static final int welcome=0x7f02000b;
+        public static final int word=0x7f02000c;
+        public static final int xml=0x7f02000d;
     }
     public static final class string {
         public static final int advanced_heading=0x7f040006;
