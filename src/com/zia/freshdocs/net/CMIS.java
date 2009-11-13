@@ -191,7 +191,7 @@ public class CMIS
 		return refs;
 	}
 
-	public String get(String path)
+	protected String get(String path)
 	{
 		try
 		{

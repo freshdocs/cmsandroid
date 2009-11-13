@@ -5,10 +5,17 @@ import java.util.Stack;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Resources;
+import android.graphics.Rect;
+import android.graphics.drawable.Drawable;
 import android.net.Uri.Builder;
 import android.preference.PreferenceManager;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.TextView;
 
+import com.zia.freshdocs.R;
 import com.zia.freshdocs.data.NodeRef;
 import com.zia.freshdocs.net.CMIS;
 import com.zia.freshdocs.util.URLUtils;
@@ -110,5 +117,35 @@ public class CMISAdapter extends ArrayAdapter<NodeRef>
 		{
 			add(nodes[i]);
 		}
+	}
+
+	@Override
+	public View getView(int position, View convertView, ViewGroup parent)
+	{
+		TextView textView = (TextView) super.getView(position, convertView, parent);
+		NodeRef nodeRef = getItem(position);
+		Drawable icon = getDrawableForType(nodeRef.getContentType());
+		textView.setCompoundDrawablePadding(5);
+		textView.setCompoundDrawables(icon,	null, null, null);
+		return textView;
+	}
+	
+	protected Drawable getDrawableForType(String contentType)
+	{
+		Context context = getContext();
+		Resources resources = context.getResources();
+		Drawable icon = null;
+
+		if (null == contentType)
+		{
+			icon = resources.getDrawable(R.drawable.folder);
+		} 
+		else if(contentType.equals("text/plain"))		
+		{
+			icon = resources.getDrawable(R.drawable.txt);			
+		}
+		
+		icon.setBounds(new Rect(0, 0, 44, 44));
+		return icon;
 	}
 }
