@@ -1,7 +1,13 @@
 package com.zia.freshdocs.widget;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.HashMap;
 import java.util.Stack;
+
+import org.apache.commons.io.IOUtils;
 
 import android.content.Context;
 import android.content.Intent;
@@ -9,8 +15,10 @@ import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.net.Uri.Builder;
 import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -109,11 +117,32 @@ public class CMISAdapter extends ArrayAdapter<NodeRef>
 		}
 		else
 		{
+			Context context = getContext();
+			
 			// Display the content
 			Builder builder = URLUtils.toUriBuilder(ref.getContent());
 			builder.appendQueryParameter("alf_ticket", _cmis.getTicket());
-			Intent viewIntent = new Intent(Intent.ACTION_VIEW, builder.build());
-			getContext().startActivity(viewIntent);
+			FileOutputStream f =  null;
+			
+			try
+			{
+				String name = ref.getName();
+				f = context.openFileOutput(name, Context.MODE_WORLD_WRITEABLE);
+				URL url = new URL(builder.build().toString());
+				URLConnection conn = url.openConnection();
+				int nBytes = IOUtils.copy(conn.getInputStream(), f);
+				f.close();
+				
+				// Ask for viewer
+				Uri uri = Uri.fromFile(new File(name));
+				Intent viewIntent = new Intent(Intent.ACTION_VIEW, uri);
+				viewIntent.setType(ref.getContentType());
+				context.startActivity(viewIntent);
+			} 
+			catch(Exception e)
+			{
+				Log.e(CMISAdapter.class.getSimpleName(), "", e);
+			}
 		}
 	}
 	
