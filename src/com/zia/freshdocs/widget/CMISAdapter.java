@@ -4,11 +4,12 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.net.URL;
 import java.net.URLConnection;
-import java.util.HashMap;
 import java.util.Stack;
 
 import org.apache.commons.io.IOUtils;
 
+import android.app.ProgressDialog;
+import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -17,34 +18,31 @@ import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.net.Uri.Builder;
+import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.zia.freshdocs.Constants;
 import com.zia.freshdocs.R;
-import com.zia.freshdocs.data.NodeRef;
+import com.zia.freshdocs.model.NodeRef;
 import com.zia.freshdocs.net.CMIS;
 import com.zia.freshdocs.util.URLUtils;
 
 public class CMISAdapter extends ArrayAdapter<NodeRef>
-{
-	private static final String DOCS_DIR = "/sdcard/FreshDocs";
-	
-	protected static  HashMap<String, Integer> mimeMap = new HashMap<String, Integer>();
-	static
-	{
-		mimeMap.put("application/pdf", R.drawable.pdf);
-		mimeMap.put("cmis/folder", R.drawable.folder);
-		mimeMap.put("text/plain", R.drawable.txt);
-		mimeMap.put(null, R.drawable.document);
-	}
-	
+{	
 	private String _currentUuid = null;
 	private Stack<String> _stack = new Stack<String>(); 
 	private CMIS _cmis;
+	private ProgressDialog _progressDlg = null;
+	private ChildDownloadThread _dlThread = null;
+	
 
 	public CMISAdapter(Context context, int textViewResourceId, NodeRef[] objects)
 	{
@@ -119,12 +117,16 @@ public class CMISAdapter extends ArrayAdapter<NodeRef>
 		}
 		else
 		{
-			viewContent(ref);
+			if(downloadContent(ref) > 0)
+			{
+				viewContent(ref);
+			}
 		}
 	}
 	
-	protected void viewContent(NodeRef ref)
+	protected int downloadContent(NodeRef ref)
 	{
+		int bytes = 0;
 		Context context = getContext();
 		
 		// Display the content
@@ -138,33 +140,58 @@ public class CMISAdapter extends ArrayAdapter<NodeRef>
 			fos = context.openFileOutput(name, Context.MODE_WORLD_READABLE);
 			URL url = new URL(builder.build().toString());
 			URLConnection conn = url.openConnection();
-			IOUtils.copy(conn.getInputStream(), fos);
+			bytes = IOUtils.copy(conn.getInputStream(), fos);
 			fos.flush();
-			fos.close();
-			
-			// Ask for viewer
-			File file = context.getFileStreamPath(ref.getName());
-			Uri uri = Uri.fromFile(file);
-			Intent viewIntent = new Intent(Intent.ACTION_VIEW);
-			viewIntent.setDataAndType(uri, ref.getContentType());
-			context.startActivity(viewIntent);
+			fos.close();	
 		} 
 		catch(Exception e)
 		{
 			Log.e(CMISAdapter.class.getSimpleName(), "", e);
 		}		
+		
+		return bytes;
+	}
+
+	protected void viewContent(NodeRef ref)
+	{
+		Context context = getContext();
+		
+		// Ask for viewer
+		File file = context.getFileStreamPath(ref.getName());
+		Uri uri = Uri.fromFile(file);
+		Intent viewIntent = new Intent(Intent.ACTION_VIEW);
+		viewIntent.setDataAndType(uri, ref.getContentType());
+		try
+		{
+			context.startActivity(viewIntent);
+		}
+		catch(ActivityNotFoundException e)
+		{
+			deleteContent(ref);
+			CharSequence text = "No viewer found for " + ref.getContentType();
+			int duration = Toast.LENGTH_SHORT;
+			Toast toast = Toast.makeText(context, text, duration);
+			toast.show();
+		}
+	}
+	
+	protected void deleteContent(NodeRef ref)
+	{
+		Context context = getContext();
+		context.deleteFile(ref.getName());
 	}
 	
 	protected void getChildren(String uuid)
 	{
 		clear();
+
+		Context context = getContext();
+		Resources res = context.getResources();
+		_progressDlg = ProgressDialog.show(context, "", res.getString(R.string.loading), 
+				true, true);
 		
-		NodeRef[] nodes = _cmis.getChildren(uuid);
-		
-		for(int i = 0; i < nodes.length; i++)
-		{
-			add(nodes[i]);
-		}
+		_dlThread = new ChildDownloadThread(_childrenHandler, uuid);
+		_dlThread.start();
 	}
 
 	@Override
@@ -183,9 +210,57 @@ public class CMISAdapter extends ArrayAdapter<NodeRef>
 	{
 		Context context = getContext();
 		Resources resources = context.getResources();
-		int resId = mimeMap.get(mimeMap.containsKey(contentType) ? contentType : null);
+		int resId = Constants.mimeMap.get(Constants.mimeMap.containsKey(contentType) ? contentType : null);
 		Drawable icon = resources.getDrawable(resId);
 		icon.setBounds(new Rect(0, 0, 44, 44));
 		return icon;
 	}
+
+	final Handler _childrenHandler = new Handler() 
+	{
+		public void handleMessage(Message msg) 
+		{
+			boolean done = msg.getData().getBoolean("done");
+			if(done && _progressDlg != null)
+			{	
+				_progressDlg.dismiss();
+			}
+			
+			NodeRef[] nodes = _dlThread.getResult();
+			
+			for(int i = 0; i < nodes.length; i++)
+			{
+				add(nodes[i]);
+			}
+
+		}
+	};
+
+	private class ChildDownloadThread extends Thread {
+		Handler _handler;
+		String _uuid = null;
+		NodeRef[] _result = null;
+
+		ChildDownloadThread(Handler h, String uuid) {
+			_handler = h;
+			_uuid = uuid;
+		}
+
+		public void run() 
+		{
+			_result = _cmis.getChildren(_uuid);
+
+			Message msg = _handler.obtainMessage();
+			Bundle b = new Bundle();
+			b.putBoolean("done", true);
+			msg.setData(b);
+			_handler.sendMessage(msg);
+		}
+		
+		public NodeRef[] getResult()
+		{
+			return _result;
+		}
+	}
+
 }

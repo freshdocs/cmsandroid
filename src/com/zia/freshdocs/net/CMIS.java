@@ -22,7 +22,7 @@ import org.w3c.dom.NodeList;
 
 import android.util.Log;
 
-import com.zia.freshdocs.data.NodeRef;
+import com.zia.freshdocs.model.NodeRef;
 
 public class CMIS
 {

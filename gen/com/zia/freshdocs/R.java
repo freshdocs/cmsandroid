@@ -34,6 +34,7 @@ public final class R {
         public static final int hello=0x7f040000;
         public static final int hidden_files=0x7f040008;
         public static final int hostname=0x7f040004;
+        public static final int loading=0x7f04000e;
         public static final int password=0x7f040003;
         public static final int port=0x7f040007;
         public static final int quit=0x7f040009;

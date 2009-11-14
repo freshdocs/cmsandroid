@@ -117,6 +117,4 @@ public class Main extends ListActivity
 			return super.onKeyDown(keyCode, event);
 		}
 	}
-	
-	
 }

@@ -1,4 +1,4 @@
-package com.zia.freshdocs.data;
+package com.zia.freshdocs.model;
 
 public class NodeRef
 {
