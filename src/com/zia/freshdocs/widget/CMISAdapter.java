@@ -31,6 +31,8 @@ import com.zia.freshdocs.util.URLUtils;
 
 public class CMISAdapter extends ArrayAdapter<NodeRef>
 {
+	private static final String DOCS_DIR = "/sdcard/FreshDocs";
+	
 	protected static  HashMap<String, Integer> mimeMap = new HashMap<String, Integer>();
 	static
 	{
@@ -117,33 +119,40 @@ public class CMISAdapter extends ArrayAdapter<NodeRef>
 		}
 		else
 		{
-			Context context = getContext();
-			
-			// Display the content
-			Builder builder = URLUtils.toUriBuilder(ref.getContent());
-			builder.appendQueryParameter("alf_ticket", _cmis.getTicket());
-			FileOutputStream f =  null;
-			
-			try
-			{
-				String name = ref.getName();
-				f = context.openFileOutput(name, Context.MODE_WORLD_WRITEABLE);
-				URL url = new URL(builder.build().toString());
-				URLConnection conn = url.openConnection();
-				int nBytes = IOUtils.copy(conn.getInputStream(), f);
-				f.close();
-				
-				// Ask for viewer
-				Uri uri = Uri.fromFile(new File(name));
-				Intent viewIntent = new Intent(Intent.ACTION_VIEW, uri);
-				viewIntent.setType(ref.getContentType());
-				context.startActivity(viewIntent);
-			} 
-			catch(Exception e)
-			{
-				Log.e(CMISAdapter.class.getSimpleName(), "", e);
-			}
+			viewContent(ref);
 		}
+	}
+	
+	protected void viewContent(NodeRef ref)
+	{
+		Context context = getContext();
+		
+		// Display the content
+		Builder builder = URLUtils.toUriBuilder(ref.getContent());
+		builder.appendQueryParameter("alf_ticket", _cmis.getTicket());
+		FileOutputStream fos =  null;
+		
+		try
+		{
+			String name = ref.getName();
+			fos = context.openFileOutput(name, Context.MODE_WORLD_READABLE);
+			URL url = new URL(builder.build().toString());
+			URLConnection conn = url.openConnection();
+			IOUtils.copy(conn.getInputStream(), fos);
+			fos.flush();
+			fos.close();
+			
+			// Ask for viewer
+			File file = context.getFileStreamPath(ref.getName());
+			Uri uri = Uri.fromFile(file);
+			Intent viewIntent = new Intent(Intent.ACTION_VIEW);
+			viewIntent.setDataAndType(uri, ref.getContentType());
+			context.startActivity(viewIntent);
+		} 
+		catch(Exception e)
+		{
+			Log.e(CMISAdapter.class.getSimpleName(), "", e);
+		}		
 	}
 	
 	protected void getChildren(String uuid)
