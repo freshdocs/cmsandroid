@@ -17,16 +17,33 @@ public class SearchActivity extends ListActivity
 	protected void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
-		Intent queryIntent = getIntent();
-		String queryAction = queryIntent.getAction();
 
 		_adapter = new CMISAdapter(this, android.R.layout.simple_list_item_1);
-		setListAdapter(_adapter);
+		setListAdapter(_adapter);		
+	}
+	
+	@Override
+	protected void onResume()
+	{
+		super.onResume();
+		handleSearchIntent();
+	}
+
+	@Override
+	protected void onNewIntent(Intent intent)
+	{
+		setIntent(intent);
+	}
+
+	protected void handleSearchIntent()
+	{
+		Intent queryIntent = getIntent();
+		String queryAction = queryIntent.getAction();
 		
 		if (Intent.ACTION_SEARCH.equals(queryAction)) {
 			String queryString = queryIntent.getStringExtra(SearchManager.QUERY);
 			search(queryString);
-		}		
+		}				
 	}
 	
 	protected void search(String term)
