@@ -15,7 +15,7 @@ import android.widget.ListView;
 import com.zia.freshdocs.R;
 import com.zia.freshdocs.widget.CMISAdapter;
 
-public class Main extends ListActivity
+public class NodeBrowseActivity extends ListActivity
 {
 	public static final int SETTINGS_ITEM = 0;
 	public static final int QUIT_ITEM = 1;
@@ -28,17 +28,14 @@ public class Main extends ListActivity
 	public void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
-
+		initializeListAdapter();
+		
 		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
 
 		if (!prefs.contains("hostname"))
 		{
-			Intent prefsIntent = new Intent(this, Preferences.class);
+			Intent prefsIntent = new Intent(this, PreferencesActivity.class);
 			startActivity(prefsIntent);
-		}
-		else
-		{
-			initializeListView();
 		}
 	}
 
@@ -66,10 +63,13 @@ public class Main extends ListActivity
 		switch (item.getItemId())
 		{
 		case REFRESH_ITEM:
-			initializeListView();
+			initializeListAdapter();
+			return true;
+		case SEARCH_ITEM:
+			onSearch();
 			return true;
 		case SETTINGS_ITEM:
-			Intent prefsIntent = new Intent(this, Preferences.class);
+			Intent prefsIntent = new Intent(this, PreferencesActivity.class);
 			startActivity(prefsIntent);
 			return true;
 		case QUIT_ITEM:
@@ -79,29 +79,7 @@ public class Main extends ListActivity
 			return false;
 		}
 	}
-
-	protected void initializeListView()
-	{
-		CMISAdapter adapter = (CMISAdapter) getListAdapter();
-
-		if (adapter != null)
-		{
-			adapter.refresh();
-		}
-		else
-		{
-			adapter = new CMISAdapter(this, android.R.layout.simple_list_item_1);
-			setListAdapter(adapter);
-		}
-	}
-
-	@Override
-	protected void onListItemClick(ListView l, View v, int position, long id)
-	{
-		CMISAdapter adapter = (CMISAdapter) getListAdapter();
-		adapter.getChildren(position);
-	}
-
+	
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event)
 	{
@@ -112,9 +90,40 @@ public class Main extends ListActivity
 			adapter.previous();
 			return true;
 		} 
+		else if(keyCode == KeyEvent.KEYCODE_SEARCH)
+		{
+			onSearch();
+			return true;
+		}
 		else
 		{
 			return super.onKeyDown(keyCode, event);
 		}
+	}
+
+	@Override
+	protected void onListItemClick(ListView l, View v, int position, long id)
+	{
+		CMISAdapter adapter = (CMISAdapter) getListAdapter();
+		adapter.getChildren(position);
+	}
+
+	protected void initializeListAdapter()
+	{
+		CMISAdapter adapter = (CMISAdapter) getListAdapter();
+
+		if (adapter == null)
+		{
+			adapter = new CMISAdapter(this, android.R.layout.simple_list_item_1);
+			setListAdapter(adapter);
+		}
+
+		adapter.home();
+	}
+	
+	protected void onSearch()
+	{
+		Intent searchIntent = new Intent(this, SearchActivity.class);
+		startActivity(searchIntent);
 	}
 }

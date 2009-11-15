@@ -1,4 +1,4 @@
-package com.zia.freshdocs.net;
+package com.zia.freshdocs.cmis;
 
 import java.io.ByteArrayInputStream;
 import java.net.URL;
@@ -13,6 +13,8 @@ import org.apache.http.HttpStatus;
 import org.apache.http.StatusLine;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.util.EntityUtils;
 import org.w3c.dom.Document;
@@ -30,6 +32,7 @@ public class CMIS
 	public static final String CHILDREN_URI = ALF_SERVICE_URI + "/node/workspace/SpacesStore/%s/children?alf_ticket=%s";
 	public static final String LOGIN_URI = ALF_SERVICE_URI + "/login?u=%s&pw=%s";
 	public static final String SCRIPT_INFO_URI = ALF_SERVICE_URI + "/cmis?alf_ticket=%s";
+	public static final String QUERY_URI = ALF_SERVICE_URI + "/query?alf_ticket=%s";
 
 	private String _hostname;
 	private String _username;
@@ -103,6 +106,17 @@ public class CMIS
 	public NodeRef[] getChildren(String uuid)
 	{
 		String res = get(String.format(CHILDREN_URI, uuid, ticket));
+		if (res != null)
+		{
+			return parseChildren(res);
+		}
+
+		return null;
+	}
+	
+	public NodeRef[] query(String xmlQuery)
+	{
+		String res = post(String.format(QUERY_URI, ticket), xmlQuery);
 		if (res != null)
 		{
 			return parseChildren(res);
@@ -201,6 +215,41 @@ public class CMIS
 
 			try
 			{
+				HttpResponse response = client.execute(request);
+				StatusLine status = response.getStatusLine();
+				HttpEntity entity = response.getEntity();
+
+				if (status.getStatusCode() == HttpStatus.SC_OK && entity != null)
+				{
+					// Just return the whole chunk
+					return EntityUtils.toString(entity);
+				}
+			}
+			catch (Exception ex)
+			{
+				Log.e(CMIS.class.getName(), "Get method error", ex);
+			}
+		}
+		catch (Exception ex)
+		{
+			Log.e(CMIS.class.getName(), "Get method error", ex);
+		}
+
+		return null;
+	}
+	
+	protected String post(String path, String payLoad)
+	{
+		try
+		{
+			URL url = new URL("http", _hostname, path);
+			HttpClient client = new DefaultHttpClient();
+			HttpPost request = new HttpPost(url.toString());
+
+			try
+			{
+				request.setEntity(new StringEntity(payLoad));
+				request.setHeader("Content-type", "application/cmisquery+xml");
 				HttpResponse response = client.execute(request);
 				StatusLine status = response.getStatusLine();
 				HttpEntity entity = response.getEntity();

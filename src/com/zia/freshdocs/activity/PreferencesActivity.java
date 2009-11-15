@@ -5,7 +5,7 @@ import android.preference.PreferenceActivity;
 
 import com.zia.freshdocs.R;
 
-public class Preferences extends PreferenceActivity
+public class PreferencesActivity extends PreferenceActivity
 {
 
 	@Override

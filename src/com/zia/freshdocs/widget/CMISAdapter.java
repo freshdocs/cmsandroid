@@ -2,6 +2,8 @@ package com.zia.freshdocs.widget;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.Stack;
@@ -31,8 +33,8 @@ import android.widget.Toast;
 
 import com.zia.freshdocs.Constants;
 import com.zia.freshdocs.R;
+import com.zia.freshdocs.cmis.CMIS;
 import com.zia.freshdocs.model.NodeRef;
-import com.zia.freshdocs.net.CMIS;
 import com.zia.freshdocs.util.URLUtils;
 
 public class CMISAdapter extends ArrayAdapter<NodeRef>
@@ -47,39 +49,36 @@ public class CMISAdapter extends ArrayAdapter<NodeRef>
 	public CMISAdapter(Context context, int textViewResourceId, NodeRef[] objects)
 	{
 		super(context, textViewResourceId, objects);
-		refresh();
+		initCMIS();
 	}
 
 	public CMISAdapter(Context context, int textViewResourceId)
 	{
 		super(context, textViewResourceId);
-		refresh();
+		initCMIS();
 	}
 
-	public void refresh()
+	protected void initCMIS()
 	{
-		if (_cmis == null)
+		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this
+				.getContext());
+		_cmis = new CMIS(prefs.getString("hostname", ""), 
+				prefs.getString("username", ""),
+				prefs.getString("password", ""), 
+				Integer.parseInt(prefs.getString("port", "80")));
+		
+		if (_cmis != null)
 		{
-			SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this
-					.getContext());
-			_cmis = new CMIS(prefs.getString("hostname", ""), 
-					prefs.getString("username", ""),
-					prefs.getString("password", ""), 
-					Integer.parseInt(prefs.getString("port", "80")));
-			String ticket = _cmis.authenticate();
-
-			if (ticket != null)
-			{
-				home();
-			}
+			_cmis.authenticate();
 		} 
-		else
-		{
-			getChildren(_currentUuid);
-		}
 	}
 	
-	protected void home()
+	public void refresh()
+	{
+		getChildren(_currentUuid);
+	}
+	
+	public void home()
 	{
 		NodeRef companyHome = _cmis.getCompanyHome();
 		
@@ -194,6 +193,32 @@ public class CMISAdapter extends ArrayAdapter<NodeRef>
 		_dlThread.start();
 	}
 
+	public void query(String term)
+	{
+		clear();
+		
+		Context context = getContext();
+		Resources res = context.getResources();
+		InputStream is = res.openRawResource(R.raw.query);
+		String xml = null;
+		
+		try
+		{
+			xml = String.format(IOUtils.toString(is), term);
+			NodeRef[] nodes = _cmis.query(xml);
+			
+			for(int i = 0; i < nodes.length; i++)
+			{
+				add(nodes[i]);
+			}
+
+		}
+		catch (IOException e)
+		{
+			Log.e(CMISAdapter.class.getSimpleName(), "", e);
+		}
+	}
+	
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent)
 	{
@@ -232,7 +257,6 @@ public class CMISAdapter extends ArrayAdapter<NodeRef>
 			{
 				add(nodes[i]);
 			}
-
 		}
 	};
 
