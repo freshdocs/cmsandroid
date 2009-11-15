@@ -180,43 +180,61 @@ public class CMISAdapter extends ArrayAdapter<NodeRef>
 		context.deleteFile(ref.getName());
 	}
 	
-	protected void getChildren(String uuid)
+	protected void getChildren(final String uuid)
 	{
 		clear();
 
-		Context context = getContext();
-		Resources res = context.getResources();
-		_progressDlg = ProgressDialog.show(context, "", res.getString(R.string.loading), 
-				true, true);
+		startProgressDlg();
 		
-		_dlThread = new ChildDownloadThread(_childrenHandler, uuid);
+		_dlThread = new ChildDownloadThread(_resultHandler, new Downloadable()
+		{
+			
+			public NodeRef[] execute()
+			{
+				return _cmis.getChildren(uuid);
+			}
+		});
 		_dlThread.start();
 	}
 
-	public void query(String term)
+	protected void startProgressDlg()
+	{
+		Context context = getContext();
+		Resources res = context.getResources();
+		_progressDlg = ProgressDialog.show(context, "", res.getString(R.string.loading), 
+				true, true);		
+	}
+	
+	public void query(final String term)
 	{
 		clear();
 		
-		Context context = getContext();
-		Resources res = context.getResources();
-		InputStream is = res.openRawResource(R.raw.query);
-		String xml = null;
+		startProgressDlg();
 		
-		try
+		_dlThread = new ChildDownloadThread(_resultHandler, new Downloadable()
 		{
-			xml = String.format(IOUtils.toString(is), term);
-			NodeRef[] nodes = _cmis.query(xml);
-			
-			for(int i = 0; i < nodes.length; i++)
+			public NodeRef[] execute()
 			{
-				add(nodes[i]);
+				Context context = getContext();
+				Resources res = context.getResources();
+				InputStream is = res.openRawResource(R.raw.query);
+				String xml = null;
+				
+				try
+				{
+					xml = String.format(IOUtils.toString(is), term);
+					return _cmis.query(xml);
+				}
+				catch (IOException e)
+				{
+					Log.e(CMISAdapter.class.getSimpleName(), "", e);
+				}
+				
+				return null;
 			}
+		});
+		_dlThread.start();
 
-		}
-		catch (IOException e)
-		{
-			Log.e(CMISAdapter.class.getSimpleName(), "", e);
-		}
 	}
 	
 	@Override
@@ -241,7 +259,7 @@ public class CMISAdapter extends ArrayAdapter<NodeRef>
 		return icon;
 	}
 
-	final Handler _childrenHandler = new Handler() 
+	final Handler _resultHandler = new Handler() 
 	{
 		public void handleMessage(Message msg) 
 		{
@@ -260,19 +278,24 @@ public class CMISAdapter extends ArrayAdapter<NodeRef>
 		}
 	};
 
+	private interface Downloadable
+	{
+		public NodeRef[] execute();
+	}
+	
 	private class ChildDownloadThread extends Thread {
 		Handler _handler;
-		String _uuid = null;
+		Downloadable _delegate;
 		NodeRef[] _result = null;
 
-		ChildDownloadThread(Handler h, String uuid) {
+		ChildDownloadThread(Handler h, Downloadable delegate) {
 			_handler = h;
-			_uuid = uuid;
+			_delegate = delegate;
 		}
 
 		public void run() 
 		{
-			_result = _cmis.getChildren(_uuid);
+			_result = _delegate.execute();
 
 			Message msg = _handler.obtainMessage();
 			Bundle b = new Bundle();

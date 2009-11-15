@@ -1,55 +1,42 @@
 package com.zia.freshdocs.activity;
 
-import android.app.Activity;
+import android.app.ListActivity;
+import android.app.SearchManager;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.ListView;
-import android.widget.AdapterView.OnItemClickListener;
 
-import com.zia.freshdocs.R;
 import com.zia.freshdocs.widget.CMISAdapter;
 
-public class SearchActivity extends Activity implements OnItemClickListener
+public class SearchActivity extends ListActivity
 {
-	ListView _listView;
-	ImageButton _searchButton;
-	EditText _queryText;
+	private CMISAdapter _adapter = null;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.search);
-		
-		_listView = (ListView) findViewById(R.id.search_list);
-		_listView.setOnItemClickListener(this);
-		_searchButton = (ImageButton) findViewById(R.id.query_button);
-		_queryText = (EditText) findViewById(R.id.query_text);
+		Intent queryIntent = getIntent();
+		String queryAction = queryIntent.getAction();
 
-		_searchButton.setOnClickListener(new View.OnClickListener() 
-		{
-            public void onClick(View v) 
-            {
-                search(_queryText.getText().toString());
-            }
-        });
+		_adapter = new CMISAdapter(this, android.R.layout.simple_list_item_1);
+		setListAdapter(_adapter);
 		
-		CMISAdapter adapter = new CMISAdapter(this, android.R.layout.simple_list_item_1);
-		_listView.setAdapter(adapter);
+		if (Intent.ACTION_SEARCH.equals(queryAction)) {
+			String queryString = queryIntent.getStringExtra(SearchManager.QUERY);
+			search(queryString);
+		}		
 	}
 	
 	protected void search(String term)
 	{
-		CMISAdapter adapter = (CMISAdapter) _listView.getAdapter();
-		adapter.query(term);
+		_adapter.query(term);
 	}
-
-	public void onItemClick(AdapterView<?> parent, View view, int position, long id)
+	
+	@Override
+	protected void onListItemClick(ListView l, View v, int position, long id)
 	{
-		CMISAdapter adapter = (CMISAdapter) _listView.getAdapter();
-		adapter.getChildren(position);
+		_adapter.getChildren(position);
 	}
 }

@@ -22,6 +22,8 @@ public class NodeBrowseActivity extends ListActivity
 	public static final int REFRESH_ITEM = 2;
 	public static final int SEARCH_ITEM = 3;
 	public static final int FAVORITES_ITEM = 4;
+	
+	private CMISAdapter _adapter;
 
 	/** Called when the activity is first created. */
 	@Override
@@ -83,18 +85,11 @@ public class NodeBrowseActivity extends ListActivity
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event)
 	{
-		CMISAdapter adapter = (CMISAdapter) getListAdapter();
-
-		if(keyCode == KeyEvent.KEYCODE_BACK && adapter.hasPrevious())
+		if(keyCode == KeyEvent.KEYCODE_BACK && _adapter.hasPrevious())
 		{			
-			adapter.previous();
+			_adapter.previous();
 			return true;
 		} 
-		else if(keyCode == KeyEvent.KEYCODE_SEARCH)
-		{
-			onSearch();
-			return true;
-		}
 		else
 		{
 			return super.onKeyDown(keyCode, event);
@@ -104,26 +99,22 @@ public class NodeBrowseActivity extends ListActivity
 	@Override
 	protected void onListItemClick(ListView l, View v, int position, long id)
 	{
-		CMISAdapter adapter = (CMISAdapter) getListAdapter();
-		adapter.getChildren(position);
+		_adapter.getChildren(position);
 	}
 
 	protected void initializeListAdapter()
 	{
-		CMISAdapter adapter = (CMISAdapter) getListAdapter();
-
-		if (adapter == null)
+		if (_adapter == null)
 		{
-			adapter = new CMISAdapter(this, android.R.layout.simple_list_item_1);
-			setListAdapter(adapter);
+			_adapter = new CMISAdapter(this, android.R.layout.simple_list_item_1);
+			setListAdapter(_adapter);
 		}
 
-		adapter.home();
+		_adapter.home();
 	}
 	
 	protected void onSearch()
 	{
-		Intent searchIntent = new Intent(this, SearchActivity.class);
-		startActivity(searchIntent);
+		onSearchRequested();
 	}
 }
