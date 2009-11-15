@@ -116,39 +116,62 @@ public class CMISAdapter extends ArrayAdapter<NodeRef>
 		}
 		else
 		{
-			if(downloadContent(ref) > 0)
-			{
-				viewContent(ref);
-			}
+			downloadContent(ref);
 		}
 	}
 	
-	protected int downloadContent(NodeRef ref)
+	protected void downloadContent(final NodeRef ref)
 	{
-		int bytes = 0;
-		Context context = getContext();
-		
-		// Display the content
-		Builder builder = URLUtils.toUriBuilder(ref.getContent());
-		builder.appendQueryParameter("alf_ticket", _cmis.getTicket());
-		FileOutputStream fos =  null;
-		
-		try
+		startProgressDlg();
+
+		final Handler _downloadResultHandler = new Handler() 
 		{
-			String name = ref.getName();
-			fos = context.openFileOutput(name, Context.MODE_WORLD_READABLE);
-			URL url = new URL(builder.build().toString());
-			URLConnection conn = url.openConnection();
-			bytes = IOUtils.copy(conn.getInputStream(), fos);
-			fos.flush();
-			fos.close();	
-		} 
-		catch(Exception e)
+			public void handleMessage(Message msg) 
+			{
+				boolean done = msg.getData().getBoolean("done");
+				if(done && _progressDlg != null)
+				{	
+					_progressDlg.dismiss();
+					int bytes = (Integer) _dlThread.getResult();
+					
+					if(bytes > 0)
+					{
+						viewContent(ref);
+					}
+				}			
+			}
+		};
+
+		_dlThread = new ChildDownloadThread(_downloadResultHandler, new Downloadable()
 		{
-			Log.e(CMISAdapter.class.getSimpleName(), "", e);
-		}		
-		
-		return bytes;
+			public Object execute()
+			{
+				Context context = getContext();
+				FileOutputStream fos =  null;
+				int bytes = 0;
+				
+				Builder builder = URLUtils.toUriBuilder(ref.getContent());
+				builder.appendQueryParameter("alf_ticket", _cmis.getTicket());
+
+				try
+				{
+					String name = ref.getName();
+					fos = context.openFileOutput(name, Context.MODE_WORLD_READABLE);
+					URL url = new URL(builder.build().toString());
+					URLConnection conn = url.openConnection();
+					bytes = IOUtils.copy(conn.getInputStream(), fos);
+					fos.flush();
+					fos.close();	
+				} 
+				catch(Exception e)
+				{
+					Log.e(CMISAdapter.class.getSimpleName(), "", e);
+				}		
+				
+				return bytes;
+			}
+		});
+		_dlThread.start();		
 	}
 
 	protected void viewContent(NodeRef ref)
@@ -189,7 +212,7 @@ public class CMISAdapter extends ArrayAdapter<NodeRef>
 		_dlThread = new ChildDownloadThread(_resultHandler, new Downloadable()
 		{
 			
-			public NodeRef[] execute()
+			public Object execute()
 			{
 				return _cmis.getChildren(uuid);
 			}
@@ -213,7 +236,7 @@ public class CMISAdapter extends ArrayAdapter<NodeRef>
 		
 		_dlThread = new ChildDownloadThread(_resultHandler, new Downloadable()
 		{
-			public NodeRef[] execute()
+			public Object execute()
 			{
 				Context context = getContext();
 				Resources res = context.getResources();
@@ -267,28 +290,29 @@ public class CMISAdapter extends ArrayAdapter<NodeRef>
 			if(done && _progressDlg != null)
 			{	
 				_progressDlg.dismiss();
-			}
-			
-			NodeRef[] nodes = _dlThread.getResult();
-			
-			for(int i = 0; i < nodes.length; i++)
-			{
-				add(nodes[i]);
-			}
+				NodeRef[] nodes = (NodeRef[]) _dlThread.getResult();
+				
+				for(int i = 0; i < nodes.length; i++)
+				{
+					add(nodes[i]);
+				}
+			}			
 		}
 	};
 
 	private interface Downloadable
 	{
-		public NodeRef[] execute();
+		public Object execute();
 	}
 	
-	private class ChildDownloadThread extends Thread {
+	private class ChildDownloadThread extends Thread 
+	{
 		Handler _handler;
 		Downloadable _delegate;
-		NodeRef[] _result = null;
+		Object _result = null;
 
-		ChildDownloadThread(Handler h, Downloadable delegate) {
+		ChildDownloadThread(Handler h, Downloadable delegate) 
+		{
 			_handler = h;
 			_delegate = delegate;
 		}
@@ -304,7 +328,7 @@ public class CMISAdapter extends ArrayAdapter<NodeRef>
 			_handler.sendMessage(msg);
 		}
 		
-		public NodeRef[] getResult()
+		public Object getResult()
 		{
 			return _result;
 		}
