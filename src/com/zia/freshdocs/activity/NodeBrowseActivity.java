@@ -42,6 +42,12 @@ public class NodeBrowseActivity extends ListActivity
 	}
 
 	@Override
+	protected void onResume()
+	{
+		super.onResume();
+	}
+	
+	@Override
 	public boolean onCreateOptionsMenu(Menu menu)
 	{
 		Resources res = getResources();
@@ -108,9 +114,8 @@ public class NodeBrowseActivity extends ListActivity
 		{
 			_adapter = new CMISAdapter(this, android.R.layout.simple_list_item_1);
 			setListAdapter(_adapter);
+			_adapter.home();
 		}
-
-		_adapter.home();
 	}
 	
 	protected void onSearch()
