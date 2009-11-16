@@ -3,6 +3,7 @@ package com.zia.freshdocs.activity;
 import android.app.ListActivity;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -31,6 +32,13 @@ public class NodeBrowseActivity extends ListActivity
 	{
 		super.onCreate(savedInstanceState);
 	}
+	
+	@Override
+	public void onConfigurationChanged(Configuration newConfig)
+	{
+		super.onConfigurationChanged(newConfig);
+	}
+
 
 	@Override
 	protected void onResume()
@@ -49,7 +57,7 @@ public class NodeBrowseActivity extends ListActivity
 			initializeListAdapter();
 		}
 	}
-	
+
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu)
 	{

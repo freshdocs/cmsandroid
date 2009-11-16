@@ -303,7 +303,7 @@ public class CMISAdapter extends ArrayAdapter<NodeRef>
 			boolean done = msg.getData().getBoolean("done");
 			if(done && _progressDlg != null)
 			{	
-				_progressDlg.dismiss();
+				_progressDlg.cancel();
 				NodeRef[] nodes = (NodeRef[]) _dlThread.getResult();
 				
 				for(int i = 0; i < nodes.length; i++)

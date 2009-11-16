@@ -31,5 +31,4 @@ public class SplashActivity extends Activity
 		
 		_handler.sendMessageDelayed(new Message(), DELAY);
 	}
-	
 }
