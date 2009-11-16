@@ -42,7 +42,7 @@ public final class R {
         public static final int app_name=0x7f060001;
         public static final int auth_heading=0x7f060005;
         public static final int browse=0x7f06000f;
-        public static final int connection_failed=0x7f060011;
+        public static final int connection_failed=0x7f060012;
         public static final int favorites=0x7f06000d;
         public static final int hello=0x7f060000;
         public static final int hidden_files=0x7f060008;
@@ -54,6 +54,7 @@ public final class R {
         public static final int refresh=0x7f06000c;
         public static final int search=0x7f06000b;
         public static final int search_hint=0x7f060010;
+        public static final int search_invoke=0x7f060011;
         public static final int settings=0x7f06000a;
         public static final int username=0x7f060002;
     }

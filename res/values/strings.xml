@@ -17,5 +17,6 @@
 <string name="loading">Loading ...</string>
 <string name="browse">Browse</string>
 <string name="search_hint"></string>
+<string name="search_invoke">search</string>
 <string name="connection_failed">Server Connection Failed</string>
 </resources>
