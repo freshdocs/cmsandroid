@@ -30,7 +30,12 @@ public class NodeBrowseActivity extends ListActivity
 	public void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
-		initializeListAdapter();
+	}
+
+	@Override
+	protected void onResume()
+	{
+		super.onResume();
 		
 		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
 
@@ -39,12 +44,10 @@ public class NodeBrowseActivity extends ListActivity
 			Intent prefsIntent = new Intent(this, PreferencesActivity.class);
 			startActivity(prefsIntent);
 		}
-	}
-
-	@Override
-	protected void onResume()
-	{
-		super.onResume();
+		else
+		{
+			initializeListAdapter();
+		}
 	}
 	
 	@Override

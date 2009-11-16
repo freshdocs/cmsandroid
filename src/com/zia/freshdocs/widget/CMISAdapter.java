@@ -84,10 +84,24 @@ public class CMISAdapter extends ArrayAdapter<NodeRef>
 		
 		// Save reference to current entry
 		_stack.clear();		
-		_currentUuid = companyHome.getContent(); 
 		
-		// Get Company Home children
-		getChildren(_currentUuid);		
+		if(companyHome != null)
+		{
+			_currentUuid = companyHome.getContent(); 
+
+			// Get Company Home children
+			getChildren(_currentUuid);
+		}
+		else
+		{
+			Context context = getContext();
+			Resources res = context.getResources();
+			String text = res.getString(R.string.connection_failed);
+			int duration = Toast.LENGTH_SHORT;
+			Toast toast = Toast.makeText(context, text, duration);
+			toast.show();
+
+		}
 	}
 	
 	public boolean hasPrevious()
@@ -190,7 +204,7 @@ public class CMISAdapter extends ArrayAdapter<NodeRef>
 		catch(ActivityNotFoundException e)
 		{
 			deleteContent(ref);
-			CharSequence text = "No viewer found for " + ref.getContentType();
+			String text = "No viewer found for " + ref.getContentType();
 			int duration = Toast.LENGTH_SHORT;
 			Toast toast = Toast.makeText(context, text, duration);
 			toast.show();
