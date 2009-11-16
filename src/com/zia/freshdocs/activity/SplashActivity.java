@@ -17,9 +17,7 @@ public class SplashActivity extends Activity
 		@Override
 		public void handleMessage(Message msg)
 		{
-			Intent browseActivity = new Intent(getBaseContext(), NodeBrowseActivity.class);
-			startActivity(browseActivity);
-			
+			launchMain();
 		}
 	};
 	
@@ -30,5 +28,11 @@ public class SplashActivity extends Activity
 		setContentView(R.layout.splash);
 		
 		_handler.sendMessageDelayed(new Message(), DELAY);
+	}
+
+	protected void launchMain()
+	{
+		Intent browseActivity = new Intent(getBaseContext(), NodeBrowseActivity.class);
+		startActivity(browseActivity);	
 	}
 }
