@@ -310,7 +310,7 @@ public class CMISAdapter extends ArrayAdapter<NodeRef>
 				
 				try
 				{
-					xml = String.format(IOUtils.toString(is), term);
+					xml = String.format(IOUtils.toString(is), term, term);
 					return _cmis.query(xml);
 				}
 				catch (IOException e)

@@ -116,7 +116,7 @@ public class CMIS
 	
 	public NodeRef[] query(String xmlQuery)
 	{
-		String res = post(String.format(QUERY_URI, ticket), xmlQuery);
+		String res = post(String.format(QUERY_URI, ticket), xmlQuery, "application/cmisquery+xml");
 		if (res != null)
 		{
 			return parseChildren(res);
@@ -238,7 +238,7 @@ public class CMIS
 		return null;
 	}
 	
-	protected String post(String path, String payLoad)
+	protected String post(String path, String payLoad, String contentType)
 	{
 		try
 		{
@@ -249,7 +249,7 @@ public class CMIS
 			try
 			{
 				request.setEntity(new StringEntity(payLoad));
-				request.setHeader("Content-type", "application/cmisquery+xml");
+				request.setHeader("Content-type", contentType);
 				HttpResponse response = client.execute(request);
 				StatusLine status = response.getStatusLine();
 				HttpEntity entity = response.getEntity();
