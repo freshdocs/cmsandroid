@@ -10,16 +10,16 @@
 			android:value=".activity.SearchActivity" />
 
 		<activity android:name=".activity.SplashActivity"
-			android:launchMode="singleInstance"
-			android:noHistory="true">
+			android:launchMode="standard"
+			android:noHistory="true"/>
+		
+		<activity android:name=".activity.NodeBrowseActivity"
+			android:configChanges="orientation|keyboardHidden">
 			<intent-filter>
 				<action android:name="android.intent.action.MAIN" />
 				<category android:name="android.intent.category.LAUNCHER" />
 			</intent-filter>
 		</activity>
-		
-		<activity android:name=".activity.NodeBrowseActivity"
-			android:configChanges="orientation|keyboardHidden"/>
 			
 		<activity android:name=".activity.PreferencesActivity"/>
 		

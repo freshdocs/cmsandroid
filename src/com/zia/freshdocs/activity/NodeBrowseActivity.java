@@ -4,25 +4,25 @@ import android.app.ListActivity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
-import android.content.res.Resources;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.view.ContextMenu;
 import android.view.KeyEvent;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ContextMenu.ContextMenuInfo;
 import android.widget.ListView;
+import android.widget.AdapterView.AdapterContextMenuInfo;
 
 import com.zia.freshdocs.R;
 import com.zia.freshdocs.widget.CMISAdapter;
 
 public class NodeBrowseActivity extends ListActivity
 {
-	public static final int SETTINGS_ITEM = 0;
-	public static final int QUIT_ITEM = 1;
-	public static final int REFRESH_ITEM = 2;
-	public static final int SEARCH_ITEM = 3;
-	public static final int FAVORITES_ITEM = 4;
+	private static final int SETTINGS_REQUEST_CODE = 0;
+	private static final int SPLASH_REQUEST_CODE = 1;
 	
 	private CMISAdapter _adapter;
 
@@ -31,8 +31,19 @@ public class NodeBrowseActivity extends ListActivity
 	public void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
+		registerForContextMenu(getListView());
+		startActivityForResult(new Intent(this, SplashActivity.class), SPLASH_REQUEST_CODE);
 	}
 	
+	@Override
+	protected void onResume()
+	{
+		super.onResume();		
+	}
+
+	/**
+	 * Handles rotation by doing nothing (instead of onCreate being called)
+	 */
 	@Override
 	public void onConfigurationChanged(Configuration newConfig)
 	{
@@ -41,38 +52,10 @@ public class NodeBrowseActivity extends ListActivity
 
 
 	@Override
-	protected void onResume()
-	{
-		super.onResume();
-		
-		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-
-		if (!prefs.contains("hostname"))
-		{
-			Intent prefsIntent = new Intent(this, PreferencesActivity.class);
-			startActivity(prefsIntent);
-		}
-		else
-		{
-			initializeListAdapter();
-		}
-	}
-
-	@Override
 	public boolean onCreateOptionsMenu(Menu menu)
 	{
-		Resources res = getResources();
-		menu.add(0, REFRESH_ITEM, 0, R.string.refresh).setIcon(
-				res.getDrawable(R.drawable.refresh));
-		menu.add(0, SETTINGS_ITEM, 0, R.string.settings).setIcon(
-				res.getDrawable(android.R.drawable.ic_menu_preferences));
-		menu.add(0, SEARCH_ITEM, 0, R.string.search).setIcon(
-				res.getDrawable(android.R.drawable.ic_menu_search));
-		menu.add(0, FAVORITES_ITEM, 0, R.string.favorites).setIcon(
-				res.getDrawable(android.R.drawable.btn_star));
-		menu.add(0, QUIT_ITEM, 0, R.string.quit).setIcon(
-				res.getDrawable(android.R.drawable.ic_lock_power_off));
-
+		MenuInflater inflater = getMenuInflater();
+	    inflater.inflate(R.menu.main, menu);    
 		return true;
 	}
 
@@ -81,17 +64,19 @@ public class NodeBrowseActivity extends ListActivity
 	{
 		switch (item.getItemId())
 		{
-		case REFRESH_ITEM:
-			initializeListAdapter();
+		case R.id.menu_item_refresh:
+			_adapter.refresh();
 			return true;
-		case SEARCH_ITEM:
+		case R.id.menu_item_search:
 			onSearch();
 			return true;
-		case SETTINGS_ITEM:
+		case R.id.menu_item_settings:
 			Intent prefsIntent = new Intent(this, PreferencesActivity.class);
-			startActivity(prefsIntent);
+			startActivityForResult(prefsIntent, SETTINGS_REQUEST_CODE);
 			return true;
-		case QUIT_ITEM:
+		case R.id.menu_item_favorites:
+			return true;
+		case R.id.menu_item_quit:
 			this.finish();
 			return true;
 		default:
@@ -99,6 +84,67 @@ public class NodeBrowseActivity extends ListActivity
 		}
 	}
 	
+	@Override
+	public void onCreateContextMenu(ContextMenu menu, View v,
+			ContextMenuInfo menuInfo)
+	{
+		int position = ((AdapterContextMenuInfo) menuInfo).position;
+		
+		if(!_adapter.isFolder(position))
+		{
+			MenuInflater inflater = getMenuInflater();
+			inflater.inflate(R.menu.node_context_menu, menu);
+		}
+	}
+
+	@Override
+	public boolean onContextItemSelected(MenuItem item)
+	{
+		switch (item.getItemId())
+		{
+		case R.id.menu_item_send:
+			AdapterContextMenuInfo info = (AdapterContextMenuInfo) item.getMenuInfo();
+			_adapter.emailContent(info.position);
+			return true;
+		}
+		
+		return false;
+	}
+
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data)
+	{
+		super.onActivityResult(requestCode, resultCode, data);
+		
+		switch(requestCode)
+		{
+		case SETTINGS_REQUEST_CODE:
+			_adapter.initCMIS();
+			_adapter.home();
+			break;
+		case SPLASH_REQUEST_CODE:			
+			initializeListAdapter();
+			_adapter.home();
+			break;
+		}
+	}
+	
+	protected void initializeListAdapter()
+	{
+		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+		if (!prefs.contains("hostname"))
+		{
+			Intent prefsIntent = new Intent(this, PreferencesActivity.class);
+			startActivity(prefsIntent);
+		} 
+		else if (_adapter == null)
+		{
+			_adapter = new CMISAdapter(this, android.R.layout.simple_list_item_1);
+			setListAdapter(_adapter);
+		}
+	}
+	
+
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event)
 	{
@@ -117,16 +163,6 @@ public class NodeBrowseActivity extends ListActivity
 	protected void onListItemClick(ListView l, View v, int position, long id)
 	{
 		_adapter.getChildren(position);
-	}
-
-	protected void initializeListAdapter()
-	{
-		if (_adapter == null)
-		{
-			_adapter = new CMISAdapter(this, android.R.layout.simple_list_item_1);
-			setListAdapter(_adapter);
-			_adapter.home();
-		}
 	}
 	
 	protected void onSearch()

@@ -58,8 +58,10 @@ public class CMISAdapter extends ArrayAdapter<NodeRef>
 		initCMIS();
 	}
 
-	protected void initCMIS()
+	public boolean initCMIS()
 	{
+		boolean status = false;
+		
 		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this
 				.getContext());
 		_cmis = new CMIS(prefs.getString("hostname", ""), 
@@ -69,8 +71,10 @@ public class CMISAdapter extends ArrayAdapter<NodeRef>
 		
 		if (_cmis != null)
 		{
-			_cmis.authenticate();
-		} 
+			status = _cmis.authenticate() != null;
+		}
+		
+		return status;
 	}
 	
 	public void refresh()
@@ -104,6 +108,10 @@ public class CMISAdapter extends ArrayAdapter<NodeRef>
 		}
 	}
 	
+	public boolean isFolder(int position)
+	{
+		return getItem(position).isFolder();
+	}
 	public boolean hasPrevious()
 	{
 		return _stack.size() > 0;
@@ -120,7 +128,7 @@ public class CMISAdapter extends ArrayAdapter<NodeRef>
 	
 	public void getChildren(int position)
 	{
-		NodeRef ref = getItem(position);
+		final NodeRef ref = getItem(position);
 		
 		if(ref.isFolder())
 		{
@@ -130,19 +138,36 @@ public class CMISAdapter extends ArrayAdapter<NodeRef>
 		}
 		else
 		{
-			downloadContent(ref);
+			downloadContent(ref,  new Handler() 
+			{
+				public void handleMessage(Message msg) 
+				{
+					boolean done = msg.getData().getBoolean("done");
+					if(done && _progressDlg != null)
+					{	
+						_progressDlg.dismiss();
+						int bytes = (Integer) _dlThread.getResult();
+						
+						if(bytes > 0)
+						{
+							viewContent(ref);
+						}
+					}			
+				}
+			});
 		}
 	}
 	
-	protected void downloadContent(final NodeRef ref)
+	public void emailContent(int position)
 	{
-		startProgressDlg();
-
-		final Handler _downloadResultHandler = new Handler() 
+		final NodeRef ref = getItem(position);
+		downloadContent(ref, new Handler() 
 		{
 			public void handleMessage(Message msg) 
 			{
+				Context context = getContext();
 				boolean done = msg.getData().getBoolean("done");
+				
 				if(done && _progressDlg != null)
 				{	
 					_progressDlg.dismiss();
@@ -150,13 +175,39 @@ public class CMISAdapter extends ArrayAdapter<NodeRef>
 					
 					if(bytes > 0)
 					{
-						viewContent(ref);
+						Resources res = context.getResources();
+						File file = context.getFileStreamPath(ref.getName());
+						Uri uri = Uri.fromFile(file);
+						Intent emailIntent = new Intent(Intent.ACTION_SEND);
+						emailIntent.putExtra(Intent.EXTRA_STREAM, uri);
+						emailIntent.putExtra(Intent.EXTRA_SUBJECT, ref.getName());
+						emailIntent.putExtra(Intent.EXTRA_TEXT, res.getString(R.string.email_text));
+						emailIntent.setType("text/plain");
+						try
+						{
+							context.startActivity(Intent.createChooser(emailIntent, 
+									res.getString(R.string.email_title)));
+						}
+						catch(ActivityNotFoundException e)
+						{
+							String text = "No suitable applications registered to send " + 
+								ref.getContentType();
+							int duration = Toast.LENGTH_SHORT;
+							Toast toast = Toast.makeText(context, text, duration);
+							toast.show();
+						}
 					}
 				}			
 			}
-		};
+		});
+	}
+	
+	protected void downloadContent(final NodeRef ref, Handler handler)
+	{
+		startProgressDlg();
 
-		_dlThread = new ChildDownloadThread(_downloadResultHandler, new Downloadable()
+
+		_dlThread = new ChildDownloadThread(handler, new Downloadable()
 		{
 			public Object execute()
 			{
@@ -306,7 +357,7 @@ public class CMISAdapter extends ArrayAdapter<NodeRef>
 				_progressDlg.cancel();
 				NodeRef[] nodes = (NodeRef[]) _dlThread.getResult();
 				
-				for(int i = 0; i < nodes.length; i++)
+				for(int i = 0; nodes != null && i < nodes.length; i++)
 				{
 					add(nodes[i]);
 				}
