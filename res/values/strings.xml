@@ -19,7 +19,7 @@
 	<string name="search_hint"></string>
 	<string name="search_invoke">search</string>
 	<string name="connection_failed">Server Connection Failed</string>
-	<string name="send">Send</string>
+	<string name="send">Send Email</string>
 	<string name="favorite">Add Favorite</string>
 	<string name="email_text">Sent using the Alfresco Android client.</string>
 	<string name="email_title">Send Email...</string>

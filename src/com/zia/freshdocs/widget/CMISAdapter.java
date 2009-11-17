@@ -182,7 +182,7 @@ public class CMISAdapter extends ArrayAdapter<NodeRef>
 						emailIntent.putExtra(Intent.EXTRA_STREAM, uri);
 						emailIntent.putExtra(Intent.EXTRA_SUBJECT, ref.getName());
 						emailIntent.putExtra(Intent.EXTRA_TEXT, res.getString(R.string.email_text));
-						emailIntent.setType("text/plain");
+						emailIntent.setType("message/rfc822");
 						try
 						{
 							context.startActivity(Intent.createChooser(emailIntent, 
