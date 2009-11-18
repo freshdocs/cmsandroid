@@ -17,6 +17,7 @@ import android.widget.ListView;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 
 import com.zia.freshdocs.R;
+import com.zia.freshdocs.app.CMISApplication;
 import com.zia.freshdocs.widget.CMISAdapter;
 
 public class NodeBrowseActivity extends ListActivity
@@ -119,7 +120,9 @@ public class NodeBrowseActivity extends ListActivity
 		switch(requestCode)
 		{
 		case SETTINGS_REQUEST_CODE:
-			_adapter.initCMIS();
+			CMISApplication app = (CMISApplication) getApplication();
+			app.initCMIS();
+			_adapter.setCmis(app.getCMIS());
 			_adapter.home();
 			break;
 		case SPLASH_REQUEST_CODE:			
@@ -132,6 +135,7 @@ public class NodeBrowseActivity extends ListActivity
 	protected void initializeListAdapter()
 	{
 		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+		
 		if (!prefs.contains("hostname"))
 		{
 			Intent prefsIntent = new Intent(this, PreferencesActivity.class);
@@ -139,11 +143,13 @@ public class NodeBrowseActivity extends ListActivity
 		} 
 		else if (_adapter == null)
 		{
+			CMISApplication app = (CMISApplication) getApplication();
+			app.initCMIS();
 			_adapter = new CMISAdapter(this, android.R.layout.simple_list_item_1);
+			_adapter.setCmis(app.getCMIS());
 			setListAdapter(_adapter);
 		}
-	}
-	
+	}	
 
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event)

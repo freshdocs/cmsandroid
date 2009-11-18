@@ -37,7 +37,8 @@ public class CMIS
 	private String _hostname;
 	private String _username;
 	private String _password;
-	private String ticket;
+	private String _ticket;
+	private String _version;
 	private int _port;
 
 	public CMIS(String hostname, String username, String password, int port)
@@ -60,7 +61,7 @@ public class CMIS
 			{
 				docBuilder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
 				Document doc = docBuilder.parse(new ByteArrayInputStream(res.getBytes()));
-				ticket = doc.getDocumentElement().getFirstChild().getNodeValue();
+				_ticket = doc.getDocumentElement().getFirstChild().getNodeValue();
 			}
 			catch (Exception e)
 			{
@@ -68,12 +69,12 @@ public class CMIS
 			}
 		}
 
-		return ticket;
+		return _ticket;
 	}
 
 	public NodeRef getCompanyHome()
 	{
-		String res = get(String.format(SCRIPT_INFO_URI, ticket));
+		String res = get(String.format(SCRIPT_INFO_URI, _ticket));
 		if (res != null)
 		{
 			DocumentBuilder docBuilder = null;
@@ -82,7 +83,11 @@ public class CMIS
 				docBuilder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
 				Document doc = docBuilder.parse(new ByteArrayInputStream(res.getBytes()));
 				
-				NodeList nodes = doc.getElementsByTagName("cmis:rootFolderId");
+				NodeList nodes = doc.getElementsByTagName("cmis:productVersion");
+				String rawVersion = nodes.item(0).getFirstChild().getNodeValue();
+				_version = rawVersion.split("\\s")[0];
+
+				nodes = doc.getElementsByTagName("cmis:rootFolderId");
 				int n = nodes.getLength();
 				
 				if(n > 0)
@@ -90,7 +95,7 @@ public class CMIS
 					Node node = nodes.item(0); 
 					StringBuilder buf = new StringBuilder(
 							new URL(node.getFirstChild().getNodeValue()).getPath());
-					buf.append("?alf_ticket=").append(ticket);
+					buf.append("?alf_ticket=").append(_ticket);
 					return parseChildren(get(buf.toString()))[0];
 				}
 			}
@@ -105,7 +110,7 @@ public class CMIS
 	
 	public NodeRef[] getChildren(String uuid)
 	{
-		String res = get(String.format(CHILDREN_URI, uuid, ticket));
+		String res = get(String.format(CHILDREN_URI, uuid, _ticket));
 		if (res != null)
 		{
 			return parseChildren(res);
@@ -116,7 +121,7 @@ public class CMIS
 	
 	public NodeRef[] query(String xmlQuery)
 	{
-		String res = post(String.format(QUERY_URI, ticket), xmlQuery, "application/cmisquery+xml");
+		String res = post(String.format(QUERY_URI, _ticket), xmlQuery, "application/cmisquery+xml");
 		if (res != null)
 		{
 			return parseChildren(res);
@@ -315,6 +320,16 @@ public class CMIS
 
 	public String getTicket()
 	{
-		return ticket;
+		return _ticket;
+	}
+
+	public String getVersion()
+	{
+		return _version;
+	}
+
+	public void setVersion(String version)
+	{
+		this._version = version;
 	}
 }

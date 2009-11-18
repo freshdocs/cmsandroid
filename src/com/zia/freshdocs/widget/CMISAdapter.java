@@ -14,7 +14,6 @@ import android.app.ProgressDialog;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
@@ -23,7 +22,6 @@ import android.net.Uri.Builder;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -44,39 +42,27 @@ public class CMISAdapter extends ArrayAdapter<NodeRef>
 	private CMIS _cmis;
 	private ProgressDialog _progressDlg = null;
 	private ChildDownloadThread _dlThread = null;
-	
 
 	public CMISAdapter(Context context, int textViewResourceId, NodeRef[] objects)
 	{
 		super(context, textViewResourceId, objects);
-		initCMIS();
 	}
 
 	public CMISAdapter(Context context, int textViewResourceId)
 	{
 		super(context, textViewResourceId);
-		initCMIS();
-	}
-
-	public boolean initCMIS()
-	{
-		boolean status = false;
-		
-		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this
-				.getContext());
-		_cmis = new CMIS(prefs.getString("hostname", ""), 
-				prefs.getString("username", ""),
-				prefs.getString("password", ""), 
-				Integer.parseInt(prefs.getString("port", "80")));
-		
-		if (_cmis != null)
-		{
-			status = _cmis.authenticate() != null;
-		}
-		
-		return status;
 	}
 	
+	public CMIS getCmis()
+	{
+		return _cmis;
+	}
+
+	public void setCmis(CMIS cmis)
+	{
+		this._cmis = cmis;
+	}
+
 	public void refresh()
 	{
 		getChildren(_currentUuid);
@@ -305,7 +291,8 @@ public class CMISAdapter extends ArrayAdapter<NodeRef>
 			{
 				Context context = getContext();
 				Resources res = context.getResources();
-				InputStream is = res.openRawResource(R.raw.query);
+				InputStream is = res.openRawResource(
+						_cmis.getVersion().contains("3.1") ? R.raw.query : R.raw.query_32);
 				String xml = null;
 				
 				try
@@ -398,5 +385,4 @@ public class CMISAdapter extends ArrayAdapter<NodeRef>
 			return _result;
 		}
 	}
-
 }

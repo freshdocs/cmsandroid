@@ -7,19 +7,24 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.ListView;
 
+import com.zia.freshdocs.app.CMISApplication;
 import com.zia.freshdocs.widget.CMISAdapter;
 
 public class SearchActivity extends ListActivity
 {
 	private CMISAdapter _adapter = null;
+	private boolean _isDirty = true;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
 
+		// CMIS should already be initialized at this point
+		CMISApplication app = (CMISApplication) getApplication();
 		_adapter = new CMISAdapter(this, android.R.layout.simple_list_item_1);
-		setListAdapter(_adapter);		
+		_adapter.setCmis(app.getCMIS());
+		setListAdapter(_adapter);	
 	}
 	
 	@Override
@@ -33,6 +38,7 @@ public class SearchActivity extends ListActivity
 	protected void onNewIntent(Intent intent)
 	{
 		setIntent(intent);
+		_isDirty = true;
 	}
 
 	protected void handleSearchIntent()
@@ -40,9 +46,10 @@ public class SearchActivity extends ListActivity
 		Intent queryIntent = getIntent();
 		String queryAction = queryIntent.getAction();
 		
-		if (Intent.ACTION_SEARCH.equals(queryAction)) {
+		if (Intent.ACTION_SEARCH.equals(queryAction) && _isDirty) {
 			String queryString = queryIntent.getStringExtra(SearchManager.QUERY);
 			search(queryString);
+			_isDirty = false;
 		}				
 	}
 	
