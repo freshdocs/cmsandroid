@@ -120,14 +120,8 @@ public class NodeBrowseActivity extends ListActivity
 		switch(requestCode)
 		{
 		case SETTINGS_REQUEST_CODE:
-			CMISApplication app = (CMISApplication) getApplication();
-			app.initCMIS();
-			_adapter.setCmis(app.getCMIS());
-			_adapter.home();
-			break;
 		case SPLASH_REQUEST_CODE:			
 			initializeListAdapter();
-			_adapter.home();
 			break;
 		}
 	}
@@ -141,13 +135,14 @@ public class NodeBrowseActivity extends ListActivity
 			Intent prefsIntent = new Intent(this, PreferencesActivity.class);
 			startActivity(prefsIntent);
 		} 
-		else if (_adapter == null)
+		else 
 		{
 			CMISApplication app = (CMISApplication) getApplication();
 			app.initCMIS();
 			_adapter = new CMISAdapter(this, android.R.layout.simple_list_item_1);
 			_adapter.setCmis(app.getCMIS());
 			setListAdapter(_adapter);
+			_adapter.home();
 		}
 	}	
 
