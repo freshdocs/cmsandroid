@@ -30,6 +30,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.zia.freshdocs.Constants;
+import com.zia.freshdocs.Pair;
 import com.zia.freshdocs.R;
 import com.zia.freshdocs.cmis.CMIS;
 import com.zia.freshdocs.model.NodeRef;
@@ -37,8 +38,8 @@ import com.zia.freshdocs.util.URLUtils;
 
 public class CMISAdapter extends ArrayAdapter<NodeRef>
 {	
-	private String _currentUuid = null;
-	private Stack<String> _stack = new Stack<String>(); 
+	private Pair<String, NodeRef[]> _currentState = new Pair<String, NodeRef[]>(null, null);
+	private Stack<Pair<String, NodeRef[]>> _stack = new Stack<Pair<String,NodeRef[]>>();
 	private CMIS _cmis;
 	private ProgressDialog _progressDlg = null;
 	private ChildDownloadThread _dlThread = null;
@@ -65,7 +66,7 @@ public class CMISAdapter extends ArrayAdapter<NodeRef>
 
 	public void refresh()
 	{
-		getChildren(_currentUuid);
+		getChildren(_currentState.getFirst());
 	}
 	
 	public void home()
@@ -77,10 +78,10 @@ public class CMISAdapter extends ArrayAdapter<NodeRef>
 		
 		if(companyHome != null)
 		{
-			_currentUuid = companyHome.getContent(); 
-
 			// Get Company Home children
-			getChildren(_currentUuid);
+			String uuid = companyHome.getContent();
+			_currentState = new Pair<String, NodeRef[]>(uuid, null);
+			getChildren(uuid);
 		}
 		else
 		{
@@ -98,6 +99,7 @@ public class CMISAdapter extends ArrayAdapter<NodeRef>
 	{
 		return getItem(position).isFolder();
 	}
+	
 	public boolean hasPrevious()
 	{
 		return _stack.size() > 0;
@@ -107,8 +109,8 @@ public class CMISAdapter extends ArrayAdapter<NodeRef>
 	{
 		if(_stack.size() > 0)
 		{
-			_currentUuid = _stack.pop();
-			getChildren(_currentUuid);
+			_currentState = _stack.pop();
+			populateList(_currentState.getSecond());
 		}
 	}
 	
@@ -118,9 +120,10 @@ public class CMISAdapter extends ArrayAdapter<NodeRef>
 		
 		if(ref.isFolder())
 		{
-			_stack.push(_currentUuid);
-			_currentUuid = ref.getContent();
-			getChildren(_currentUuid);
+			_stack.push(_currentState);
+			String uuid = ref.getContent();
+			_currentState = new Pair<String, NodeRef[]>(uuid, null);
+			getChildren(uuid);
 		}
 		else
 		{
@@ -260,7 +263,6 @@ public class CMISAdapter extends ArrayAdapter<NodeRef>
 		
 		_dlThread = new ChildDownloadThread(_resultHandler, new Downloadable()
 		{
-			
 			public Object execute()
 			{
 				return _cmis.getChildren(uuid);
@@ -350,6 +352,7 @@ public class CMISAdapter extends ArrayAdapter<NodeRef>
 			{	
 				_progressDlg.cancel();
 				NodeRef[] nodes = (NodeRef[]) _dlThread.getResult();
+				_currentState = new Pair<String, NodeRef[]>(_currentState.getFirst(), nodes);
 				populateList(nodes);
 			}			
 		}
