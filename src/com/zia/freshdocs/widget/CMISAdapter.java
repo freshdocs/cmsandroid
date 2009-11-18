@@ -256,8 +256,6 @@ public class CMISAdapter extends ArrayAdapter<NodeRef>
 	
 	protected void getChildren(final String uuid)
 	{
-		clear();
-
 		startProgressDlg();
 		
 		_dlThread = new ChildDownloadThread(_resultHandler, new Downloadable()
@@ -281,8 +279,6 @@ public class CMISAdapter extends ArrayAdapter<NodeRef>
 	
 	public void query(final String term)
 	{
-		clear();
-		
 		startProgressDlg();
 		
 		_dlThread = new ChildDownloadThread(_resultHandler, new Downloadable()
@@ -334,6 +330,17 @@ public class CMISAdapter extends ArrayAdapter<NodeRef>
 		return icon;
 	}
 
+	protected void populateList(NodeRef[] nodes)
+	{
+		clear();
+		
+		int n = nodes.length;
+		for(int i = 0; nodes != null && i < n; i++)
+		{
+			add(nodes[i]);
+		}
+	}
+
 	final Handler _resultHandler = new Handler() 
 	{
 		public void handleMessage(Message msg) 
@@ -343,11 +350,7 @@ public class CMISAdapter extends ArrayAdapter<NodeRef>
 			{	
 				_progressDlg.cancel();
 				NodeRef[] nodes = (NodeRef[]) _dlThread.getResult();
-				
-				for(int i = 0; nodes != null && i < nodes.length; i++)
-				{
-					add(nodes[i]);
-				}
+				populateList(nodes);
 			}			
 		}
 	};
