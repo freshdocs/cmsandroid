@@ -1,10 +1,21 @@
-<PreferenceScreen
-        xmlns:android="http://schemas.android.com/apk/res/android" android:key="main_preferencesscreen">
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+	android:key="main_preferencesscreen">
 
 
 
-<PreferenceCategory android:title="@string/auth_heading"><EditTextPreference android:title="@string/hostname" android:key="hostname"></EditTextPreference><EditTextPreference android:key="username" android:title="@string/username"></EditTextPreference><EditTextPreference android:key="password" android:title="@string/password"></EditTextPreference></PreferenceCategory>
-<PreferenceCategory android:title="@string/advanced_heading"><EditTextPreference android:key="port" android:title="@string/port" android:defaultValue="80"></EditTextPreference>
-<CheckBoxPreference android:title="@string/hidden_files" android:defaultValue="false" android:key="hidden_files"></CheckBoxPreference>
-</PreferenceCategory>
+	<PreferenceCategory android:title="@string/auth_heading">
+		<EditTextPreference android:title="@string/hostname"
+			android:key="hostname"></EditTextPreference>
+		<EditTextPreference android:key="username"
+			android:title="@string/username"></EditTextPreference>
+		<EditTextPreference android:key="password"
+			android:title="@string/password"
+			android:password="true"></EditTextPreference>
+	</PreferenceCategory>
+	<PreferenceCategory android:title="@string/advanced_heading">
+		<EditTextPreference android:key="port"
+			android:title="@string/port" android:defaultValue="80"></EditTextPreference>
+		<CheckBoxPreference android:title="@string/hidden_files"
+			android:defaultValue="false" android:key="hidden_files"></CheckBoxPreference>
+	</PreferenceCategory>
 </PreferenceScreen> 
