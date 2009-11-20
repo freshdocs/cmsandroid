@@ -87,14 +87,29 @@ public class CMISAdapter extends ArrayAdapter<NodeRef>
 		}
 		else
 		{
-			Context context = getContext();
-			Resources res = context.getResources();
-			String text = res.getString(R.string.connection_failed);
-			int duration = Toast.LENGTH_SHORT;
-			Toast toast = Toast.makeText(context, text, duration);
-			toast.show();
-
+			handleNetworkStatus();
 		}
+	}
+
+	protected void handleNetworkStatus()
+	{
+		Context context = getContext();
+		Resources res = context.getResources();
+		String text = res.getString(R.string.error_server_error);
+		
+		switch(_cmis.getNetworkStatus())
+		{
+		case CONNECTION_ERROR:
+			text = res.getString(R.string.error_connection_failed);
+			break;
+		case CREDENTIALS_ERROR:
+			text = res.getString(R.string.error_invalid_credentials);
+			break;
+		}
+
+		int duration = Toast.LENGTH_SHORT;
+		Toast toast = Toast.makeText(context, text, duration);
+		toast.show();
 	}
 	
 	public boolean isFolder(int position)
@@ -173,7 +188,7 @@ public class CMISAdapter extends ArrayAdapter<NodeRef>
 						emailIntent.putExtra(Intent.EXTRA_STREAM, uri);
 						emailIntent.putExtra(Intent.EXTRA_SUBJECT, ref.getName());
 						emailIntent.putExtra(Intent.EXTRA_TEXT, res.getString(R.string.email_text));
-						emailIntent.setType("message/rfc822");
+//						emailIntent.setType("message/rfc822");
 						try
 						{
 							context.startActivity(Intent.createChooser(emailIntent, 
@@ -196,7 +211,6 @@ public class CMISAdapter extends ArrayAdapter<NodeRef>
 	protected void downloadContent(final NodeRef ref, Handler handler)
 	{
 		startProgressDlg();
-
 
 		_dlThread = new ChildDownloadThread(handler, new Downloadable()
 		{
@@ -338,19 +352,21 @@ public class CMISAdapter extends ArrayAdapter<NodeRef>
 	{
 		clear();
 		
-		Arrays.sort(nodes, new Comparator<NodeRef>()
+		if(nodes != null)
 		{
+			Arrays.sort(nodes, new Comparator<NodeRef>()
+					{
+				public int compare(NodeRef left, NodeRef right)
+				{
+					return left.getName().compareTo(right.getName());
+				}
+					});
 
-			public int compare(NodeRef left, NodeRef right)
+			int n = nodes.length;
+			for(int i = 0; nodes != null && i < n; i++)
 			{
-				return left.getName().compareTo(right.getName());
+				add(nodes[i]);
 			}
-		});
-		
-		int n = nodes.length;
-		for(int i = 0; nodes != null && i < n; i++)
-		{
-			add(nodes[i]);
 		}
 	}
 

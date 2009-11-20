@@ -28,6 +28,14 @@ import com.zia.freshdocs.model.NodeRef;
 
 public class CMIS
 {
+	public enum NetworkStatus
+	{
+		OK,
+		CREDENTIALS_ERROR,
+		CONNECTION_ERROR,
+		UNKNOWN_ERROR
+	}
+	
 	public static final String ALF_SERVICE_URI = "/alfresco/service/api";
 	public static final String CHILDREN_URI = ALF_SERVICE_URI + "/node/workspace/SpacesStore/%s/children?alf_ticket=%s";
 	public static final String LOGIN_URI = ALF_SERVICE_URI + "/login?u=%s&pw=%s";
@@ -40,6 +48,7 @@ public class CMIS
 	private String _ticket;
 	private String _version;
 	private int _port;
+	private NetworkStatus _networkStatus;
 
 	public CMIS(String hostname, String username, String password, int port)
 	{
@@ -48,6 +57,7 @@ public class CMIS
 		_username = username;
 		_password = password;
 		_port = port;
+		_networkStatus = NetworkStatus.OK;
 	}
 
 	public String authenticate()
@@ -217,27 +227,35 @@ public class CMIS
 			URL url = new URL("http", _hostname, path);
 			HttpClient client = new DefaultHttpClient();
 			HttpGet request = new HttpGet(url.toString());
+			_networkStatus = NetworkStatus.OK;
 
 			try
 			{
 				HttpResponse response = client.execute(request);
 				StatusLine status = response.getStatusLine();
 				HttpEntity entity = response.getEntity();
-
-				if (status.getStatusCode() == HttpStatus.SC_OK && entity != null)
+				int statusCode = status.getStatusCode();
+				
+				if (statusCode == HttpStatus.SC_OK && entity != null)
 				{
 					// Just return the whole chunk
 					return EntityUtils.toString(entity);
+				}
+				else if(statusCode == HttpStatus.SC_UNAUTHORIZED)
+				{
+					_networkStatus = NetworkStatus.CREDENTIALS_ERROR;
 				}
 			}
 			catch (Exception ex)
 			{
 				Log.e(CMIS.class.getName(), "Get method error", ex);
+				_networkStatus = NetworkStatus.CONNECTION_ERROR;
 			}
 		}
 		catch (Exception ex)
 		{
 			Log.e(CMIS.class.getName(), "Get method error", ex);
+			_networkStatus = NetworkStatus.UNKNOWN_ERROR;
 		}
 
 		return null;
@@ -250,6 +268,7 @@ public class CMIS
 			URL url = new URL("http", _hostname, path);
 			HttpClient client = new DefaultHttpClient();
 			HttpPost request = new HttpPost(url.toString());
+			_networkStatus = NetworkStatus.OK;
 
 			try
 			{
@@ -257,22 +276,30 @@ public class CMIS
 				request.setHeader("Content-type", contentType);
 				HttpResponse response = client.execute(request);
 				StatusLine status = response.getStatusLine();
+				int statusCode = status.getStatusCode();
 				HttpEntity entity = response.getEntity();
 
-				if (status.getStatusCode() == HttpStatus.SC_OK && entity != null)
+				if (statusCode == HttpStatus.SC_OK && entity != null)
 				{
+					_networkStatus = NetworkStatus.OK;
 					// Just return the whole chunk
 					return EntityUtils.toString(entity);
+				}
+				else if(statusCode == HttpStatus.SC_UNAUTHORIZED)
+				{
+					_networkStatus = NetworkStatus.CREDENTIALS_ERROR;
 				}
 			}
 			catch (Exception ex)
 			{
-				Log.e(CMIS.class.getName(), "Get method error", ex);
+				Log.e(CMIS.class.getName(), "Post method error", ex);
+				_networkStatus = NetworkStatus.CONNECTION_ERROR;
 			}
 		}
 		catch (Exception ex)
 		{
 			Log.e(CMIS.class.getName(), "Get method error", ex);
+			_networkStatus = NetworkStatus.UNKNOWN_ERROR;
 		}
 
 		return null;
@@ -331,5 +358,10 @@ public class CMIS
 	public void setVersion(String version)
 	{
 		this._version = version;
+	}
+
+	public NetworkStatus getNetworkStatus()
+	{
+		return _networkStatus;
 	}
 }
