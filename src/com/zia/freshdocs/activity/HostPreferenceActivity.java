@@ -1,8 +1,5 @@
 package com.zia.freshdocs.activity;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -12,16 +9,13 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import com.zia.freshdocs.R;
-import com.zia.freshdocs.preference.MapPreferencesManager;
+import com.zia.freshdocs.preference.CMISHost;
+import com.zia.freshdocs.preference.CMISPreferencesManager;
 
 public class HostPreferenceActivity extends Activity
 {
 	public static final String EXTRA_EDIT_SERVER = "edit_server";
 
-	public static final String HOSTNAME_KEY = "hostname";
-	public static final String USERNAME_KEY = "username";
-	public static final String PASSWORD_KEY = "password";
-	
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
@@ -54,55 +48,36 @@ public class HostPreferenceActivity extends Activity
 		});
 	}
 
-	@SuppressWarnings("unchecked")
 	protected void editServer(String servername)
 	{
-		MapPreferencesManager prefsMgr = MapPreferencesManager.getInstance();
-		Map<String, Object> prefs = prefsMgr.readPreferences(this);
+		CMISPreferencesManager prefsMgr = CMISPreferencesManager.getInstance();
+		CMISHost hostPrefs = prefsMgr.getPreferences(this, servername);
 
-		if(prefs != null && prefs.containsKey(servername))
+		if(hostPrefs != null)
 		{
-			Map<String, Object> hostPrefs = (Map<String, Object>) prefs.get(servername);
-
 			((EditText) findViewById(R.id.hostname_edittext)).setText(
-					(String) hostPrefs.get(HOSTNAME_KEY)); 
+					(String) hostPrefs.getHostname());
 			((EditText) findViewById(R.id.username_edittext)).setText(
-					(String) hostPrefs.get(USERNAME_KEY)); 
+					(String) hostPrefs.getUsername());
 			((EditText) findViewById(R.id.password_edittext)).setText(
-					(String) hostPrefs.get(PASSWORD_KEY)); 			
+					(String) hostPrefs.getPassword()); 			
 		}
 	}
 	
-	@SuppressWarnings("unchecked")
 	protected void onServerOkClick(View v)
 	{
-		MapPreferencesManager prefsMgr = MapPreferencesManager.getInstance();
-		Map<String, Object> prefs = prefsMgr.readPreferences(this);
+		CMISPreferencesManager prefsMgr = CMISPreferencesManager.getInstance();
 
 		String hostname = ((EditText) findViewById(R.id.hostname_edittext)).getText().toString();
 		String username = ((EditText) findViewById(R.id.username_edittext)).getText().toString();
 		String password = ((EditText) findViewById(R.id.password_edittext)).getText().toString();
 
-		if(prefs != null)
-		{
-			Map<String, Object> hostPrefs = null;
+		CMISHost hostPrefs = new CMISHost();
+		hostPrefs.setHostname(hostname);
+		hostPrefs.setUsername(username);
+		hostPrefs.setPassword(password);
 			
-			if(prefs.containsKey(hostname))
-			{
-				hostPrefs = (Map<String, Object>) prefs.get(hostname);
-			}
-			else
-			{
-				hostPrefs = new HashMap<String, Object>();
-				prefs.put(hostname, hostPrefs);
-			}
-			
-			hostPrefs.put(HOSTNAME_KEY, hostname);
-			hostPrefs.put(USERNAME_KEY, username);
-			hostPrefs.put(PASSWORD_KEY, password);
-			
-			prefsMgr.storePreferences(this, prefs);
-		}
+		prefsMgr.setPreferences(this, hostPrefs);
 		
 		finish();
 	}

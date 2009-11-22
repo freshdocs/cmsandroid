@@ -1,7 +1,6 @@
 package com.zia.freshdocs.activity;
 
-import java.util.Map;
-import java.util.Set;
+import java.util.Collection;
 
 import android.app.ListActivity;
 import android.content.Intent;
@@ -19,7 +18,7 @@ import android.widget.AdapterView.AdapterContextMenuInfo;
 
 import com.zia.freshdocs.R;
 import com.zia.freshdocs.app.CMISApplication;
-import com.zia.freshdocs.preference.MapPreferencesManager;
+import com.zia.freshdocs.preference.CMISPreferencesManager;
 
 public class HostsActivity extends ListActivity
 {
@@ -45,16 +44,12 @@ public class HostsActivity extends ListActivity
 	
 	protected void initializeHostList()
 	{
-		Map<String, Object> prefs = MapPreferencesManager.getInstance().readPreferences(this);
-		
-		if(prefs != null)
-		{
-			Set<String> keys = prefs.keySet();
-			ArrayAdapter<String> serverAdapter = new ArrayAdapter<String>(this, 
-					android.R.layout.simple_list_item_1, 
-					keys.toArray(new String[]{}));
-			setListAdapter(serverAdapter);
-		}
+		CMISPreferencesManager prefsMgr = CMISPreferencesManager.getInstance();
+		Collection<String> keys = prefsMgr.getHostnames(this);
+		ArrayAdapter<String> serverAdapter = new ArrayAdapter<String>(this, 
+				android.R.layout.simple_list_item_1, 
+				keys.toArray(new String[]{}));
+		setListAdapter(serverAdapter);
 	}
 	
 	@Override
@@ -117,15 +112,9 @@ public class HostsActivity extends ListActivity
 
 	protected void deleteServer(String hostname)
 	{
-		MapPreferencesManager prefsMgr = MapPreferencesManager.getInstance();
-		Map<String, Object> prefs = prefsMgr.readPreferences(this);
-		
-		if(prefs.containsKey(hostname))
-		{
-			prefs.remove(hostname);
-			prefsMgr.storePreferences(this, prefs);
-			initializeHostList();
-		}
+		CMISPreferencesManager prefsMgr = CMISPreferencesManager.getInstance();
+		prefsMgr.deletePreferences(this, hostname);
+		initializeHostList();
 	}
 	
 	@Override

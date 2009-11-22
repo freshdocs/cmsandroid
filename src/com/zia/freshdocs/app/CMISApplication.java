@@ -1,12 +1,10 @@
 package com.zia.freshdocs.app;
 
-import java.util.Map;
-
 import android.app.Application;
 
-import com.zia.freshdocs.activity.HostPreferenceActivity;
 import com.zia.freshdocs.cmis.CMIS;
-import com.zia.freshdocs.preference.MapPreferencesManager;
+import com.zia.freshdocs.preference.CMISHost;
+import com.zia.freshdocs.preference.CMISPreferencesManager;
 
 public class CMISApplication extends Application
 {
@@ -22,21 +20,17 @@ public class CMISApplication extends Application
 		return _cmis;
 	}
 
-	@SuppressWarnings("unchecked")
 	public boolean initCMIS(String hostname)
 	{
 		boolean status = false;
 
-		Map<String, Object> prefs = MapPreferencesManager.getInstance().readPreferences(this);
+		CMISPreferencesManager prefMgr = CMISPreferencesManager.getInstance();
+		CMISHost prefs = prefMgr.getPreferences(this, hostname);
 		
-		if(prefs != null && prefs.containsKey(hostname))
+		if(prefs != null)
 		{
-			Map<String, String> hostPrefs = (Map<String, String>) prefs.get(hostname);
-			int port = 80;
-			String username = (String) hostPrefs.get(HostPreferenceActivity.USERNAME_KEY); 
-			String password = (String) hostPrefs.get(HostPreferenceActivity.PASSWORD_KEY);
-			
-			_cmis = new CMIS(hostname, username, password, port);
+			_cmis = new CMIS(prefs.getHostname(), prefs.getUsername(), 
+					prefs.getPassword(), prefs.getPort());
 
 			if (_cmis != null)
 			{
