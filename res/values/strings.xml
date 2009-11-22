@@ -25,4 +25,11 @@
 	<string name="favorite">Add Favorite</string>
 	<string name="email_text">Sent using the Alfresco Android client.</string>
 	<string name="email_title">Send Email...</string>
+	<string name="preference_filename">prefs.dat</string>
+	<string name="add_server">Add Server</string>
+	<string name="delete_server">Delete</string>
+	<string name="edit_server">Edit</string>
+	<string name="ok_button">OK</string>
+	<string name="cancel_button">Cancel</string>
+	<string name="empty_servers">No Servers</string>	
 </resources>

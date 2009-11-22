@@ -9,19 +9,19 @@
 		<meta-data android:name="android.app.default_searchable"
 			android:value=".activity.SearchActivity" />
 
+		<activity android:name=".activity.NodeBrowseActivity"
+			android:configChanges="orientation|keyboardHidden"/>
+			
 		<activity android:name=".activity.SplashActivity"
 			android:launchMode="standard"
 			android:noHistory="true"/>
 		
-		<activity android:name=".activity.NodeBrowseActivity"
-			android:configChanges="orientation|keyboardHidden">
+		<activity android:name=".activity.HostsActivity">
 			<intent-filter>
 				<action android:name="android.intent.action.MAIN" />
 				<category android:name="android.intent.category.LAUNCHER" />
 			</intent-filter>
 		</activity>
-			
-		<activity android:name=".activity.PreferencesActivity"/>
 		
 		<activity android:name=".activity.SearchActivity"
 			android:launchMode="singleTop">
@@ -32,6 +32,9 @@
 			<meta-data android:name="android.app.searchable"
 				android:resource="@xml/searchable"/>
 		</activity>
+
+		<activity android:name=".activity.HostPreferenceActivity"
+			android:launchMode="standard"/>
 	</application>
 	<uses-sdk android:minSdkVersion="4" />
 	<uses-permission android:name="android.permission.INTERNET"></uses-permission>

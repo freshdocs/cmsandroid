@@ -1,8 +1,6 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
 	android:key="main_preferencesscreen">
-
-
-
+	
 	<PreferenceCategory android:title="@string/auth_heading">
 		<EditTextPreference android:title="@string/hostname"
 			android:key="hostname"></EditTextPreference>
@@ -18,4 +16,5 @@
 		<CheckBoxPreference android:title="@string/hidden_files"
 			android:defaultValue="false" android:key="hidden_files"></CheckBoxPreference>
 	</PreferenceCategory>
+	
 </PreferenceScreen> 

@@ -1,10 +1,12 @@
 package com.zia.freshdocs.app;
 
-import android.app.Application;
-import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
+import java.util.Map;
 
+import android.app.Application;
+
+import com.zia.freshdocs.activity.HostPreferenceActivity;
 import com.zia.freshdocs.cmis.CMIS;
+import com.zia.freshdocs.preference.MapPreferencesManager;
 
 public class CMISApplication extends Application
 {
@@ -20,22 +22,28 @@ public class CMISApplication extends Application
 		return _cmis;
 	}
 
-	public boolean initCMIS()
+	@SuppressWarnings("unchecked")
+	public boolean initCMIS(String hostname)
 	{
 		boolean status = false;
+
+		Map<String, Object> prefs = MapPreferencesManager.getInstance().readPreferences(this);
 		
-		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-		_cmis = new CMIS(prefs.getString("hostname", ""), 
-				prefs.getString("username", ""),
-				prefs.getString("password", ""), 
-				Integer.parseInt(prefs.getString("port", "80")));
-		
-		if (_cmis != null)
+		if(prefs != null && prefs.containsKey(hostname))
 		{
-			status = _cmis.authenticate() != null;
+			Map<String, String> hostPrefs = (Map<String, String>) prefs.get(hostname);
+			int port = 80;
+			String username = (String) hostPrefs.get(HostPreferenceActivity.USERNAME_KEY); 
+			String password = (String) hostPrefs.get(HostPreferenceActivity.PASSWORD_KEY);
+			
+			_cmis = new CMIS(hostname, username, password, port);
+
+			if (_cmis != null)
+			{
+				status = _cmis.authenticate() != null;
+			}
 		}
 		
 		return status;
 	}
-	
 }

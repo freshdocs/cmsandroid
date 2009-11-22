@@ -1,11 +1,8 @@
 package com.zia.freshdocs.activity;
 
 import android.app.ListActivity;
-import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.view.ContextMenu;
 import android.view.KeyEvent;
 import android.view.Menu;
@@ -22,9 +19,6 @@ import com.zia.freshdocs.widget.CMISAdapter;
 
 public class NodeBrowseActivity extends ListActivity
 {
-	private static final int SETTINGS_REQUEST_CODE = 0;
-	private static final int SPLASH_REQUEST_CODE = 1;
-	
 	private CMISAdapter _adapter;
 
 	/** Called when the activity is first created. */
@@ -33,7 +27,7 @@ public class NodeBrowseActivity extends ListActivity
 	{
 		super.onCreate(savedInstanceState);
 		registerForContextMenu(getListView());
-		startActivityForResult(new Intent(this, SplashActivity.class), SPLASH_REQUEST_CODE);
+		initializeListAdapter();
 	}
 	
 	@Override
@@ -50,7 +44,6 @@ public class NodeBrowseActivity extends ListActivity
 	{
 		super.onConfigurationChanged(newConfig);
 	}
-
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu)
@@ -70,10 +63,6 @@ public class NodeBrowseActivity extends ListActivity
 			return true;
 		case R.id.menu_item_search:
 			onSearch();
-			return true;
-		case R.id.menu_item_settings:
-			Intent prefsIntent = new Intent(this, PreferencesActivity.class);
-			startActivityForResult(prefsIntent, SETTINGS_REQUEST_CODE);
 			return true;
 		case R.id.menu_item_favorites:
 			return true;
@@ -112,44 +101,19 @@ public class NodeBrowseActivity extends ListActivity
 		return false;
 	}
 
-	@Override
-	protected void onActivityResult(int requestCode, int resultCode, Intent data)
-	{
-		super.onActivityResult(requestCode, resultCode, data);
-		
-		switch(requestCode)
-		{
-		case SETTINGS_REQUEST_CODE:
-		case SPLASH_REQUEST_CODE:			
-			initializeListAdapter();
-			break;
-		}
-	}
-	
 	protected void initializeListAdapter()
 	{
-		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-		
-		if (!prefs.contains("hostname"))
-		{
-			Intent prefsIntent = new Intent(this, PreferencesActivity.class);
-			startActivity(prefsIntent);
-		} 
-		else 
-		{
-			CMISApplication app = (CMISApplication) getApplication();
-			app.initCMIS();
-			_adapter = new CMISAdapter(this, android.R.layout.simple_list_item_1);
-			_adapter.setCmis(app.getCMIS());
-			setListAdapter(_adapter);
-			_adapter.home();
-		}
+		CMISApplication app = (CMISApplication) getApplication();
+		_adapter = new CMISAdapter(this, android.R.layout.simple_list_item_1);
+		_adapter.setCmis(app.getCMIS());
+		setListAdapter(_adapter);
+		_adapter.home();
 	}	
 
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event)
 	{
-		if(keyCode == KeyEvent.KEYCODE_BACK && _adapter.hasPrevious())
+		if(keyCode == KeyEvent.KEYCODE_BACK && _adapter != null && _adapter.hasPrevious())
 		{			
 			_adapter.previous();
 			return true;
