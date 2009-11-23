@@ -73,8 +73,15 @@ public class HostPreferenceActivity extends Activity
 		String hostname = ((EditText) findViewById(R.id.hostname_edittext)).getText().toString();
 		String username = ((EditText) findViewById(R.id.username_edittext)).getText().toString();
 		String password = ((EditText) findViewById(R.id.password_edittext)).getText().toString();
-		int port = Integer.parseInt(((EditText) findViewById(
-				R.id.port_edittext)).getText().toString());
+		
+		int port = 80;
+		
+		String portVal = ((EditText) findViewById(
+				R.id.port_edittext)).getText().toString();
+		if(portVal != null)
+		{
+			port = Integer.parseInt(portVal);
+		}
 
 		CMISHost hostPrefs = new CMISHost();
 		hostPrefs.setHostname(hostname);

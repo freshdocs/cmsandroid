@@ -16,6 +16,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 
+import com.zia.freshdocs.Constants;
 import com.zia.freshdocs.R;
 import com.zia.freshdocs.app.CMISApplication;
 import com.zia.freshdocs.preference.CMISPreferencesManager;
@@ -24,7 +25,8 @@ public class HostsActivity extends ListActivity
 {
 	private static final int NEW_HOST_REQ = 0;
 	private static final int EDIT_HOST_REQ = 1;
-	private static final int SPLASH_REQUEST_CODE = 2;
+	private static final int SPLASH_REQUEST_REQ = 2;
+	private static final int NODE_BROWSE_REQ = 3;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
@@ -32,7 +34,7 @@ public class HostsActivity extends ListActivity
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.hosts);
 		registerForContextMenu(getListView());
-		startActivityForResult(new Intent(this, SplashActivity.class), SPLASH_REQUEST_CODE);		
+		startActivityForResult(new Intent(this, SplashActivity.class), SPLASH_REQUEST_REQ);		
 	}
 
 	@Override
@@ -99,7 +101,7 @@ public class HostsActivity extends ListActivity
 		case R.id.menu_edit_server:
 			Intent newHostIntent = new Intent(this, HostPreferenceActivity.class);
 			newHostIntent.putExtra(HostPreferenceActivity.EXTRA_EDIT_SERVER, hostname);
-			startActivityForResult(newHostIntent, NEW_HOST_REQ);
+			startActivityForResult(newHostIntent, EDIT_HOST_REQ);
 			
 			return true;
 		case R.id.menu_delete_server:
@@ -126,12 +128,19 @@ public class HostsActivity extends ListActivity
 		{
 		case NEW_HOST_REQ:			
 		case EDIT_HOST_REQ:			
-		case SPLASH_REQUEST_CODE:			
+		case SPLASH_REQUEST_REQ:			
 			initializeHostList();
+			break;
+		case NODE_BROWSE_REQ:
+			if(resultCode == RESULT_OK && data != null && 
+					data.getBooleanExtra(Constants.QUIT, false))
+			{
+				finish();
+			}
 			break;
 		}
 	}
-
+	
 	protected void onSearch()
 	{
 		onSearchRequested();
@@ -146,7 +155,7 @@ public class HostsActivity extends ListActivity
 		if(app.initCMIS(hostname))
 		{
 			Intent browseIntent = new Intent(this, NodeBrowseActivity.class);
-			startActivity(browseIntent);
+			startActivityForResult(browseIntent, NODE_BROWSE_REQ);
 		}
 	}
 }

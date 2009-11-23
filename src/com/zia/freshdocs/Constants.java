@@ -23,4 +23,5 @@ public class Constants
 		Constants.mimeMap.put(null, R.drawable.document);
 	}
 
+	public static final String QUIT = "quit";
 }

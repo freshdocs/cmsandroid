@@ -9,7 +9,7 @@ import com.zia.freshdocs.R;
 
 public class SplashActivity extends Activity
 {
-	private static final int DELAY = 3000;
+	private static final int DELAY = 2000;
 		
 	@Override
 	protected void onCreate(Bundle savedInstanceState)

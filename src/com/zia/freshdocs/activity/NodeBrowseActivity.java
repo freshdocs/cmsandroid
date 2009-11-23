@@ -1,6 +1,7 @@
 package com.zia.freshdocs.activity;
 
 import android.app.ListActivity;
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.view.ContextMenu;
@@ -13,6 +14,7 @@ import android.view.ContextMenu.ContextMenuInfo;
 import android.widget.ListView;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 
+import com.zia.freshdocs.Constants;
 import com.zia.freshdocs.R;
 import com.zia.freshdocs.app.CMISApplication;
 import com.zia.freshdocs.widget.CMISAdapter;
@@ -67,7 +69,10 @@ public class NodeBrowseActivity extends ListActivity
 		case R.id.menu_item_favorites:
 			return true;
 		case R.id.menu_item_quit:
-			this.finish();
+			Intent quitIntent = new Intent();
+			quitIntent.putExtra(Constants.QUIT, true);
+			setResult(RESULT_OK, quitIntent);
+			finish();
 			return true;
 		default:
 			return false;
