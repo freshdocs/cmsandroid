@@ -34,6 +34,7 @@ import android.widget.Toast;
 import com.zia.freshdocs.Constants;
 import com.zia.freshdocs.Pair;
 import com.zia.freshdocs.R;
+import com.zia.freshdocs.app.CMISApplication;
 import com.zia.freshdocs.cmis.CMIS;
 import com.zia.freshdocs.model.NodeRef;
 import com.zia.freshdocs.util.URLUtils;
@@ -87,30 +88,11 @@ public class CMISAdapter extends ArrayAdapter<NodeRef>
 		}
 		else
 		{
-			handleNetworkStatus();
+			CMISApplication app = (CMISApplication) getContext().getApplicationContext();
+			app.handleNetworkStatus();
 		}
 	}
 
-	protected void handleNetworkStatus()
-	{
-		Context context = getContext();
-		Resources res = context.getResources();
-		String text = res.getString(R.string.error_server_error);
-		
-		switch(_cmis.getNetworkStatus())
-		{
-		case CONNECTION_ERROR:
-			text = res.getString(R.string.error_connection_failed);
-			break;
-		case CREDENTIALS_ERROR:
-			text = res.getString(R.string.error_invalid_credentials);
-			break;
-		}
-
-		int duration = Toast.LENGTH_SHORT;
-		Toast toast = Toast.makeText(context, text, duration);
-		toast.show();
-	}
 	
 	public boolean isFolder(int position)
 	{
@@ -355,17 +337,21 @@ public class CMISAdapter extends ArrayAdapter<NodeRef>
 		if(nodes != null)
 		{
 			Arrays.sort(nodes, new Comparator<NodeRef>()
-					{
+			{
 				public int compare(NodeRef left, NodeRef right)
 				{
 					return left.getName().compareTo(right.getName());
 				}
-					});
+			});
 
 			int n = nodes.length;
 			for(int i = 0; nodes != null && i < n; i++)
 			{
-				add(nodes[i]);
+				NodeRef ref = nodes[i];
+				if(!ref.getName().startsWith("."))
+				{
+					add(nodes[i]);
+				}
 			}
 		}
 	}

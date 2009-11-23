@@ -35,6 +35,15 @@
 				android:password="true"/>
 	
 		</TableRow>
+
+		<TableRow>
+	
+			<TextView android:text="@string/port"
+				android:layout_width="wrap_content"/>
+			<EditText android:id="@+id/port_edittext"
+				android:hint="@string/port"/>
+	
+		</TableRow>
 	
 	</TableLayout>
 

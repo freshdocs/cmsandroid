@@ -32,7 +32,7 @@ public class HostsActivity extends ListActivity
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.hosts);
 		registerForContextMenu(getListView());
-//		startActivityForResult(new Intent(this, SplashActivity.class), SPLASH_REQUEST_CODE);		
+		startActivityForResult(new Intent(this, SplashActivity.class), SPLASH_REQUEST_CODE);		
 	}
 
 	@Override

@@ -61,6 +61,8 @@ public class HostPreferenceActivity extends Activity
 					(String) hostPrefs.getUsername());
 			((EditText) findViewById(R.id.password_edittext)).setText(
 					(String) hostPrefs.getPassword()); 			
+			((EditText) findViewById(R.id.port_edittext)).setText(Integer.toString(
+					(int) hostPrefs.getPort())); 			
 		}
 	}
 	
@@ -71,11 +73,14 @@ public class HostPreferenceActivity extends Activity
 		String hostname = ((EditText) findViewById(R.id.hostname_edittext)).getText().toString();
 		String username = ((EditText) findViewById(R.id.username_edittext)).getText().toString();
 		String password = ((EditText) findViewById(R.id.password_edittext)).getText().toString();
+		int port = Integer.parseInt(((EditText) findViewById(
+				R.id.port_edittext)).getText().toString());
 
 		CMISHost hostPrefs = new CMISHost();
 		hostPrefs.setHostname(hostname);
 		hostPrefs.setUsername(username);
 		hostPrefs.setPassword(password);
+		hostPrefs.setPort(port);
 			
 		prefsMgr.setPreferences(this, hostPrefs);
 		

@@ -28,20 +28,21 @@ public final class R {
         public static final int xml=0x7f02000e;
     }
     public static final class id {
-        public static final int ImageView01=0x7f080006;
-        public static final int LinearLayout01=0x7f080005;
-        public static final int add_server_cancel=0x7f080004;
-        public static final int add_server_ok=0x7f080003;
+        public static final int ImageView01=0x7f080007;
+        public static final int LinearLayout01=0x7f080006;
+        public static final int add_server_cancel=0x7f080005;
+        public static final int add_server_ok=0x7f080004;
         public static final int hostname_edittext=0x7f080000;
-        public static final int menu_add_server=0x7f080009;
-        public static final int menu_delete_server=0x7f080008;
-        public static final int menu_edit_server=0x7f080007;
-        public static final int menu_item_favorites=0x7f08000d;
-        public static final int menu_item_quit=0x7f08000b;
-        public static final int menu_item_refresh=0x7f08000c;
-        public static final int menu_item_search=0x7f08000a;
-        public static final int menu_item_send=0x7f08000e;
+        public static final int menu_add_server=0x7f08000a;
+        public static final int menu_delete_server=0x7f080009;
+        public static final int menu_edit_server=0x7f080008;
+        public static final int menu_item_favorites=0x7f08000e;
+        public static final int menu_item_quit=0x7f08000c;
+        public static final int menu_item_refresh=0x7f08000d;
+        public static final int menu_item_search=0x7f08000b;
+        public static final int menu_item_send=0x7f08000f;
         public static final int password_edittext=0x7f080002;
+        public static final int port_edittext=0x7f080003;
         public static final int username_edittext=0x7f080001;
     }
     public static final class layout {
