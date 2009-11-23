@@ -32,5 +32,8 @@
 	<string name="ok_button">OK</string>
 	<string name="cancel_button">Cancel</string>
 	<string name="empty_servers">No Servers</string>	
-	<string name="connecting_host">Contacting </string>	
+	<string name="connecting_host">Contacting</string>	
+	<string name="ssl">SSL</string>	
+	<string name="webapp_root">URL</string>	
+	<string name="search_ambiguaous">You must choose a server before searching</string>	
 </resources>

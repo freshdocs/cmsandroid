@@ -38,11 +38,43 @@
 
 		<TableRow>
 	
+			<TextView android:text="@string/ssl"
+				android:layout_width="wrap_content"/>
+			<CheckBox
+				android:id="@+id/ssl"
+				android:layout_width="wrap_content"
+				android:checked="false"/>
+	
+		</TableRow>
+
+		<TableRow>
+	
+			<TextView android:text="@string/hidden_files"
+				android:layout_width="wrap_content"/>
+			<CheckBox 
+				android:id="@+id/hidden_files" 
+				android:layout_width="wrap_content"
+				android:checked="false"/>
+	
+		</TableRow>
+
+		<TableRow>
+	
 			<TextView android:text="@string/port"
 				android:layout_width="wrap_content"/>
 			<EditText android:id="@+id/port_edittext"
 				android:hint="@string/port"
 				android:text="80"/>
+	
+		</TableRow>
+	
+		<TableRow>
+	
+			<TextView android:text="@string/webapp_root"
+				android:layout_width="wrap_content"/>
+			<EditText android:id="@+id/webapp_root"
+				android:hint="@string/port"
+				android:text="/alfresco"/>
 	
 		</TableRow>
 	

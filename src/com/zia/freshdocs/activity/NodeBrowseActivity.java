@@ -51,7 +51,7 @@ public class NodeBrowseActivity extends ListActivity
 	public boolean onCreateOptionsMenu(Menu menu)
 	{
 		MenuInflater inflater = getMenuInflater();
-	    inflater.inflate(R.menu.main, menu);    
+	    inflater.inflate(R.menu.browser, menu);    
 		return true;
 	}
 

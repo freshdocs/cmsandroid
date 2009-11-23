@@ -33,7 +33,7 @@ public class CMISApplication extends Application
 		if(prefs != null)
 		{
 			_cmis = new CMIS(prefs.getHostname(), prefs.getUsername(), 
-					prefs.getPassword(), prefs.getPort());
+					prefs.getPassword(), prefs.getPort(), prefs.isSSL(), prefs.getWebappRoot());
 
 			if (_cmis != null)
 			{

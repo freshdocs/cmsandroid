@@ -14,6 +14,7 @@ import org.apache.http.StatusLine;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.util.EntityUtils;
@@ -38,7 +39,7 @@ public class CMIS
 
 	public static final int TIMEOUT = 12500;
 	
-	public static final String ALF_SERVICE_URI = "/alfresco/service/api";
+	public static final String ALF_SERVICE_URI = "/service/api";
 	public static final String CHILDREN_URI = ALF_SERVICE_URI + "/node/workspace/SpacesStore/%s/children?alf_ticket=%s";
 	public static final String LOGIN_URI = ALF_SERVICE_URI + "/login?u=%s&pw=%s";
 	public static final String SCRIPT_INFO_URI = ALF_SERVICE_URI + "/cmis?alf_ticket=%s";
@@ -49,22 +50,27 @@ public class CMIS
 	private String _password;
 	private String _ticket;
 	private String _version;
+	private String _rootURI;
 	private int _port;
+	boolean _SSL;
 	private NetworkStatus _networkStatus;
 
-	public CMIS(String hostname, String username, String password, int port)
+	public CMIS(String hostname, String username, String password, int port, 
+			boolean ssl, String rootURI)
 	{
 		super();
 		_hostname = hostname;
 		_username = username;
 		_password = password;
 		_port = port;
+		_SSL = ssl;
+		_rootURI = rootURI;
 		_networkStatus = NetworkStatus.OK;
 	}
 
 	public String authenticate()
 	{
-		String res = get(String.format(LOGIN_URI, _username, _password));
+		String res = makeHttpRequest(String.format(LOGIN_URI, _username, _password));
 
 		if (res != null)
 		{
@@ -86,7 +92,7 @@ public class CMIS
 
 	public NodeRef getCompanyHome()
 	{
-		String res = get(String.format(SCRIPT_INFO_URI, _ticket));
+		String res = makeHttpRequest(String.format(SCRIPT_INFO_URI, _ticket));
 		if (res != null)
 		{
 			DocumentBuilder docBuilder = null;
@@ -105,10 +111,17 @@ public class CMIS
 				if(n > 0)
 				{
 					Node node = nodes.item(0); 
-					StringBuilder buf = new StringBuilder(
-							new URL(node.getFirstChild().getNodeValue()).getPath());
+					String rootUrl = node.getFirstChild().getNodeValue(); 
+					StringBuilder buf = new StringBuilder(new URL(rootUrl).getPath());
 					buf.append("?alf_ticket=").append(_ticket);
-					return parseChildren(get(buf.toString()))[0];
+					String path = buf.toString();
+					
+					if(buf.toString().startsWith(_rootURI))
+					{
+						path = buf.substring(_rootURI.length());
+					}
+					
+					return parseChildren(makeHttpRequest(path))[0];
 				}
 			}
 			catch (Exception e)
@@ -122,7 +135,7 @@ public class CMIS
 	
 	public NodeRef[] getChildren(String uuid)
 	{
-		String res = get(String.format(CHILDREN_URI, uuid, _ticket));
+		String res = makeHttpRequest(String.format(CHILDREN_URI, uuid, _ticket));
 		if (res != null)
 		{
 			return parseChildren(res);
@@ -133,7 +146,8 @@ public class CMIS
 	
 	public NodeRef[] query(String xmlQuery)
 	{
-		String res = post(String.format(QUERY_URI, _ticket), xmlQuery, "application/cmisquery+xml");
+		String res = makeHttpRequest(true, String.format(QUERY_URI, _ticket), xmlQuery, 
+				"application/cmisquery+xml");
 		if (res != null)
 		{
 			return parseChildren(res);
@@ -221,19 +235,61 @@ public class CMIS
 		
 		return refs;
 	}
+	
+	protected String buildRelativeURI(String path)
+	{
+		StringBuilder uri = new StringBuilder();
+		
+		if(_rootURI.endsWith("/"))
+		{
+			uri.append(_rootURI.subSequence(0, _rootURI.length() - 2));
+		}
+		else
+		{
+			uri.append(_rootURI);
+		}
 
-	protected String get(String path)
+		uri.append(path);
+		
+		return uri.toString();
+	}
+
+	protected String makeHttpRequest(String path)
+	{
+		return makeHttpRequest(false, path, null, null);
+	}
+
+	protected String makeHttpRequest(boolean isPost, String path, 
+			String payLoad, String contentType)
 	{
 		try
-		{
-			URL url = new URL("http", _hostname, path);
+		{	
+			String url = new URL(
+					_SSL ? "https" : "http", _hostname, buildRelativeURI(path)).toString();
 			HttpClient client = new DefaultHttpClient();
 			client.getParams().setParameter("http.connection.timeout", new Integer(TIMEOUT));
-			HttpGet request = new HttpGet(url.toString());
 			_networkStatus = NetworkStatus.OK;
+
+			HttpRequestBase request = null;
+			
+			if(isPost)
+			{
+				request = new HttpPost(url);
+				((HttpPost) request).setEntity(new StringEntity(payLoad));
+			}
+			else
+			{
+				request = new HttpGet(url);
+			}
 
 			try
 			{
+				
+				if(contentType != null)
+				{
+					request.setHeader("Content-type", contentType);					
+				}
+				
 				HttpResponse response = client.execute(request);
 				StatusLine status = response.getStatusLine();
 				HttpEntity entity = response.getEntity();
@@ -264,51 +320,6 @@ public class CMIS
 		return null;
 	}
 	
-	protected String post(String path, String payLoad, String contentType)
-	{
-		try
-		{
-			URL url = new URL("http", _hostname, path);
-			HttpClient client = new DefaultHttpClient();
-			client.getParams().setParameter("http.connection.timeout", new Integer(TIMEOUT));
-			HttpPost request = new HttpPost(url.toString());
-			_networkStatus = NetworkStatus.OK;
-
-			try
-			{
-				request.setEntity(new StringEntity(payLoad));
-				request.setHeader("Content-type", contentType);
-				HttpResponse response = client.execute(request);
-				StatusLine status = response.getStatusLine();
-				int statusCode = status.getStatusCode();
-				HttpEntity entity = response.getEntity();
-
-				if (statusCode == HttpStatus.SC_OK && entity != null)
-				{
-					_networkStatus = NetworkStatus.OK;
-					// Just return the whole chunk
-					return EntityUtils.toString(entity);
-				}
-				else if(statusCode == HttpStatus.SC_UNAUTHORIZED)
-				{
-					_networkStatus = NetworkStatus.CREDENTIALS_ERROR;
-				}
-			}
-			catch (Exception ex)
-			{
-				Log.e(CMIS.class.getName(), "Post method error", ex);
-				_networkStatus = NetworkStatus.CONNECTION_ERROR;
-			}
-		}
-		catch (Exception ex)
-		{
-			Log.e(CMIS.class.getName(), "Get method error", ex);
-			_networkStatus = NetworkStatus.UNKNOWN_ERROR;
-		}
-
-		return null;
-	}
-
 	public String getHostname()
 	{
 		return _hostname;
@@ -367,5 +378,25 @@ public class CMIS
 	public NetworkStatus getNetworkStatus()
 	{
 		return _networkStatus;
+	}
+
+	public String getRootURI()
+	{
+		return _rootURI;
+	}
+
+	public void setRootURI(String rootURI)
+	{
+		this._rootURI = rootURI;
+	}
+
+	public boolean isSSL()
+	{
+		return _SSL;
+	}
+
+	public void setSSL(boolean sSL)
+	{
+		_SSL = sSL;
 	}
 }

@@ -6,7 +6,9 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ListView;
+import android.widget.Toast;
 
+import com.zia.freshdocs.R;
 import com.zia.freshdocs.app.CMISApplication;
 import com.zia.freshdocs.widget.CMISAdapter;
 
@@ -24,7 +26,7 @@ public class SearchActivity extends ListActivity
 		CMISApplication app = (CMISApplication) getApplication();
 		_adapter = new CMISAdapter(this, android.R.layout.simple_list_item_1);
 		_adapter.setCmis(app.getCMIS());
-		setListAdapter(_adapter);	
+		setListAdapter(_adapter);
 	}
 	
 	@Override
@@ -46,10 +48,21 @@ public class SearchActivity extends ListActivity
 		Intent queryIntent = getIntent();
 		String queryAction = queryIntent.getAction();
 		
-		if (Intent.ACTION_SEARCH.equals(queryAction) && _isDirty) {
-			String queryString = queryIntent.getStringExtra(SearchManager.QUERY);
-			search(queryString);
-			_isDirty = false;
+		if (Intent.ACTION_SEARCH.equals(queryAction) && _isDirty) 
+		{
+			if(_adapter.getCmis() == null)
+			{
+				int duration = Toast.LENGTH_SHORT;
+				Toast toast = Toast.makeText(this, R.string.search_ambiguaous, duration);
+				toast.show();
+				finish();
+			}
+			else
+			{
+				String queryString = queryIntent.getStringExtra(SearchManager.QUERY);
+				search(queryString);
+				_isDirty = false;
+			}
 		}				
 	}
 	

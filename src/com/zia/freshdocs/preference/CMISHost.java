@@ -9,7 +9,9 @@ public class CMISHost implements Serializable
 	private String _hostname;
 	private String _username;
 	private String _password;
+	private String _webappRoot = "/alfresco";
 	private int _port = 80;
+	private boolean _SSL = false;
 	private boolean _showHidden = true;
 
 	public boolean isShowHidden() {
@@ -50,5 +52,25 @@ public class CMISHost implements Serializable
 
 	public void setPort(int port) {
 		this._port = port;
+	}
+
+	public String getWebappRoot()
+	{
+		return _webappRoot;
+	}
+
+	public void setWebappRoot(String webappRoot)
+	{
+		this._webappRoot = webappRoot;
+	}
+
+	public boolean isSSL()
+	{
+		return _SSL;
+	}
+
+	public void setSSL(boolean sSL)
+	{
+		_SSL = sSL;
 	}
 }

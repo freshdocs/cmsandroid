@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 
 import com.zia.freshdocs.R;
@@ -61,8 +62,12 @@ public class HostPreferenceActivity extends Activity
 					(String) hostPrefs.getUsername());
 			((EditText) findViewById(R.id.password_edittext)).setText(
 					(String) hostPrefs.getPassword()); 			
+			((EditText) findViewById(R.id.webapp_root)).setText(
+					(String) hostPrefs.getWebappRoot()); 			
 			((EditText) findViewById(R.id.port_edittext)).setText(Integer.toString(
 					(int) hostPrefs.getPort())); 			
+			((CheckBox) findViewById(R.id.ssl)).setChecked(hostPrefs.isSSL()); 			
+			((CheckBox) findViewById(R.id.hidden_files)).setChecked(hostPrefs.isShowHidden()); 			
 		}
 	}
 	
@@ -73,6 +78,9 @@ public class HostPreferenceActivity extends Activity
 		String hostname = ((EditText) findViewById(R.id.hostname_edittext)).getText().toString();
 		String username = ((EditText) findViewById(R.id.username_edittext)).getText().toString();
 		String password = ((EditText) findViewById(R.id.password_edittext)).getText().toString();
+		String webappRoot = ((EditText) findViewById(R.id.webapp_root)).getText().toString();
+		boolean isSSL = ((CheckBox) findViewById(R.id.ssl)).isChecked();
+		boolean showHidden = ((CheckBox) findViewById(R.id.hidden_files)).isChecked();
 		
 		int port = 80;
 		
@@ -88,6 +96,13 @@ public class HostPreferenceActivity extends Activity
 		hostPrefs.setUsername(username);
 		hostPrefs.setPassword(password);
 		hostPrefs.setPort(port);
+		hostPrefs.setSSL(isSSL);
+		hostPrefs.setShowHidden(showHidden);
+		
+		if(webappRoot != null && webappRoot.length() > 0)
+		{
+			hostPrefs.setWebappRoot(webappRoot);
+		}
 			
 		prefsMgr.setPreferences(this, hostPrefs);
 		
