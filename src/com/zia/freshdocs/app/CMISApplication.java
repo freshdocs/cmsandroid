@@ -38,11 +38,6 @@ public class CMISApplication extends Application
 			if (_cmis != null)
 			{
 				status = _cmis.authenticate() != null;
-				
-				if(!status)
-				{
-					handleNetworkStatus();
-				}
 			}
 		}
 		

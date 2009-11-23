@@ -67,6 +67,7 @@ public final class R {
         public static final int auth_heading=0x7f060005;
         public static final int browse=0x7f06000f;
         public static final int cancel_button=0x7f06001e;
+        public static final int connecting_host=0x7f060020;
         public static final int delete_server=0x7f06001b;
         public static final int edit_server=0x7f06001c;
         public static final int email_text=0x7f060017;

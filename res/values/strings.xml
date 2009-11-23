@@ -32,4 +32,5 @@
 	<string name="ok_button">OK</string>
 	<string name="cancel_button">Cancel</string>
 	<string name="empty_servers">No Servers</string>	
+	<string name="connecting_host">Contacting </string>	
 </resources>
