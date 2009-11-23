@@ -38,6 +38,9 @@
 
 		<activity android:name=".activity.HostPreferenceActivity"
 			android:launchMode="standard"/>
+
+		<activity android:name=".activity.AboutActivity"
+			android:launchMode="standard"/>
 	</application>
 	<uses-sdk android:minSdkVersion="4" />
 	<uses-permission android:name="android.permission.INTERNET"></uses-permission>

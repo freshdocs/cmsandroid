@@ -23,9 +23,10 @@ public final class R {
         public static final int refresh=0x7f020009;
         public static final int splash=0x7f02000a;
         public static final int txt=0x7f02000b;
-        public static final int welcome=0x7f02000c;
-        public static final int word=0x7f02000d;
-        public static final int xml=0x7f02000e;
+        public static final int word=0x7f02000c;
+        public static final int xml=0x7f02000d;
+        public static final int zialogo=0x7f02000e;
+        public static final int zialogo_sm=0x7f02000f;
     }
     public static final class id {
         public static final int ImageView01=0x7f08000a;
@@ -34,14 +35,15 @@ public final class R {
         public static final int add_server_ok=0x7f080007;
         public static final int hidden_files=0x7f080004;
         public static final int hostname_edittext=0x7f080000;
-        public static final int menu_add_server=0x7f080011;
-        public static final int menu_delete_server=0x7f080010;
-        public static final int menu_edit_server=0x7f08000f;
+        public static final int menu_add_server=0x7f080012;
+        public static final int menu_delete_server=0x7f080011;
+        public static final int menu_edit_server=0x7f080010;
+        public static final int menu_item_about=0x7f08000e;
         public static final int menu_item_favorites=0x7f08000d;
-        public static final int menu_item_quit=0x7f08000e;
+        public static final int menu_item_quit=0x7f08000f;
         public static final int menu_item_refresh=0x7f08000b;
         public static final int menu_item_search=0x7f08000c;
-        public static final int menu_item_send=0x7f080012;
+        public static final int menu_item_send=0x7f080013;
         public static final int password_edittext=0x7f080002;
         public static final int port_edittext=0x7f080005;
         public static final int ssl=0x7f080003;
@@ -49,9 +51,10 @@ public final class R {
         public static final int webapp_root=0x7f080006;
     }
     public static final class layout {
-        public static final int host_preference=0x7f030000;
-        public static final int hosts=0x7f030001;
-        public static final int splash=0x7f030002;
+        public static final int about=0x7f030000;
+        public static final int host_preference=0x7f030001;
+        public static final int hosts=0x7f030002;
+        public static final int splash=0x7f030003;
     }
     public static final class menu {
         public static final int browser=0x7f070000;
@@ -64,11 +67,14 @@ public final class R {
         public static final int query_32=0x7f050001;
     }
     public static final class string {
+        public static final int about=0x7f060024;
+        public static final int about_description=0x7f060025;
         public static final int add_server=0x7f06001a;
         public static final int advanced_heading=0x7f060006;
         public static final int app_name=0x7f060001;
         public static final int auth_heading=0x7f060005;
         public static final int browse=0x7f06000f;
+        public static final int build_date=0x7f060026;
         public static final int cancel_button=0x7f06001e;
         public static final int connecting_host=0x7f060020;
         public static final int delete_server=0x7f06001b;
@@ -100,6 +106,7 @@ public final class R {
         public static final int ssl=0x7f060021;
         public static final int username=0x7f060002;
         public static final int webapp_root=0x7f060022;
+        public static final int zia_www=0x7f060027;
     }
     public static final class xml {
         public static final int preferences=0x7f040000;

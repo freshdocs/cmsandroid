@@ -3,6 +3,10 @@
           android:title="@string/add_server" 
           android:icon="@android:drawable/ic_menu_add"/>
     
+    <item android:id="@+id/menu_item_about"
+          android:title="@string/about" 
+          android:icon="@drawable/zialogo_sm"/>
+
     <item android:id="@+id/menu_item_quit"
           android:title="@string/quit" 
           android:icon="@android:drawable/ic_lock_power_off"/>

@@ -68,6 +68,10 @@ public class NodeBrowseActivity extends ListActivity
 			return true;
 		case R.id.menu_item_favorites:
 			return true;
+		case R.id.menu_item_about:
+			Intent aboutIntent = new Intent(this, AboutActivity.class);
+			startActivity(aboutIntent);
+			return true;
 		case R.id.menu_item_quit:
 			Intent quitIntent = new Intent();
 			quitIntent.putExtra(Constants.QUIT, true);

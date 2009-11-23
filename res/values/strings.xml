@@ -36,4 +36,8 @@
 	<string name="ssl">SSL</string>	
 	<string name="webapp_root">URL</string>	
 	<string name="search_ambiguaous">You must choose a server before searching</string>	
+	<string name="about">About</string>	
+	<string name="about_description">Another sandbox project from ...</string>	
+	<string name="build_date">Build date:</string>	
+	<string name="zia_www">http://www.ziaconsulting.com</string>	
 </resources>

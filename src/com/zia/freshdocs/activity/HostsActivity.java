@@ -82,6 +82,10 @@ public class HostsActivity extends ListActivity
 			Intent newHostIntent = new Intent(this, HostPreferenceActivity.class);
 			startActivityForResult(newHostIntent, NEW_HOST_REQ);
 			return true;
+		case R.id.menu_item_about:
+			Intent aboutIntent = new Intent(this, AboutActivity.class);
+			startActivity(aboutIntent);
+			return true;
 		case R.id.menu_item_quit:
 			this.finish();
 			return true;
