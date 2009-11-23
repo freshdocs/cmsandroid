@@ -6,6 +6,7 @@ import android.app.ListActivity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.os.Handler;
@@ -92,6 +93,15 @@ public class HostsActivity extends ListActivity
 		default:
 			return false;
 		}
+	}
+
+	/**
+	 * Handles rotation by doing nothing (instead of onCreate being called)
+	 */
+	@Override
+	public void onConfigurationChanged(Configuration newConfig)
+	{
+		super.onConfigurationChanged(newConfig);
 	}
 
 	@Override
