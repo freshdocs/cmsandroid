@@ -37,6 +37,7 @@ import com.zia.freshdocs.R;
 import com.zia.freshdocs.app.CMISApplication;
 import com.zia.freshdocs.cmis.CMIS;
 import com.zia.freshdocs.model.NodeRef;
+import com.zia.freshdocs.util.Downloadable;
 import com.zia.freshdocs.util.URLUtils;
 
 public class CMISAdapter extends ArrayAdapter<NodeRef>
@@ -170,7 +171,7 @@ public class CMISAdapter extends ArrayAdapter<NodeRef>
 						emailIntent.putExtra(Intent.EXTRA_STREAM, uri);
 						emailIntent.putExtra(Intent.EXTRA_SUBJECT, ref.getName());
 						emailIntent.putExtra(Intent.EXTRA_TEXT, res.getString(R.string.email_text));
-//						emailIntent.setType("message/rfc822");
+						emailIntent.setType("message/rfc822");
 						try
 						{
 							context.startActivity(Intent.createChooser(emailIntent, 
@@ -371,11 +372,6 @@ public class CMISAdapter extends ArrayAdapter<NodeRef>
 		}
 	};
 
-	private interface Downloadable
-	{
-		public Object execute();
-	}
-	
 	private class ChildDownloadThread extends Thread 
 	{
 		Handler _handler;

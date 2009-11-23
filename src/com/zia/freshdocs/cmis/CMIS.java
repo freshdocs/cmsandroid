@@ -35,6 +35,8 @@ public class CMIS
 		CONNECTION_ERROR,
 		UNKNOWN_ERROR
 	}
+
+	public static final int TIMEOUT = 12500;
 	
 	public static final String ALF_SERVICE_URI = "/alfresco/service/api";
 	public static final String CHILDREN_URI = ALF_SERVICE_URI + "/node/workspace/SpacesStore/%s/children?alf_ticket=%s";
@@ -226,6 +228,7 @@ public class CMIS
 		{
 			URL url = new URL("http", _hostname, path);
 			HttpClient client = new DefaultHttpClient();
+			client.getParams().setParameter("http.connection.timeout", new Integer(TIMEOUT));
 			HttpGet request = new HttpGet(url.toString());
 			_networkStatus = NetworkStatus.OK;
 
@@ -267,6 +270,7 @@ public class CMIS
 		{
 			URL url = new URL("http", _hostname, path);
 			HttpClient client = new DefaultHttpClient();
+			client.getParams().setParameter("http.connection.timeout", new Integer(TIMEOUT));
 			HttpPost request = new HttpPost(url.toString());
 			_networkStatus = NetworkStatus.OK;
 
