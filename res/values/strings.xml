@@ -21,7 +21,7 @@
 	<string name="error_connection_failed">Server Connection Failed</string>
 	<string name="error_invalid_credentials">Invalid Credentials</string>
 	<string name="error_server_error">Unknown Server Error</string>
-	<string name="send">Send Email</string>
+	<string name="send">Share</string>
 	<string name="favorite">Add Favorite</string>
 	<string name="email_text">Sent using the Alfresco Android client.</string>
 	<string name="email_title">Send Email...</string>
