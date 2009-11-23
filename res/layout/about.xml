@@ -1,27 +1,35 @@
-<LinearLayout 
+<RelativeLayout 
 	xmlns:android="http://schemas.android.com/apk/res/android"
 	android:layout_width="fill_parent" 
 	android:layout_height="fill_parent"
-	android:orientation="vertical"
-	android:gravity="center_vertical">
+	android:orientation="vertical">
 
-	<TextView 
-		android:text="@string/about_description"
+	<LinearLayout
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
-		android:layout_gravity="center_horizontal"/>
+		android:layout_centerInParent="true"
+		android:orientation="vertical">
 
-	<ImageView
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:src="@drawable/zialogo"
-		android:layout_gravity="center_horizontal"/>
+		<TextView 
+			android:text="@string/about_description"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_gravity="center_horizontal"/>
+	
+		<ImageView
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:src="@drawable/zialogo"
+			android:layout_gravity="center_horizontal"/>
 
+	</LinearLayout>
+	
 	<TextView 
 		android:text="@string/zia_www"
 		android:autoLink="web"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
-		android:layout_gravity="center_horizontal|bottom"/>
+		android:layout_centerHorizontal="true"
+		android:layout_alignParentBottom="true"/>
 		
-</LinearLayout>
+</RelativeLayout>
