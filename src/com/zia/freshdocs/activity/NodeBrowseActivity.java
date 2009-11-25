@@ -67,6 +67,8 @@ public class NodeBrowseActivity extends ListActivity
 			onSearch();
 			return true;
 		case R.id.menu_item_favorites:
+			Intent favoritesIntent = new Intent(this, FavoritesActivity.class);
+			startActivity(favoritesIntent);
 			return true;
 		case R.id.menu_item_about:
 			Intent aboutIntent = new Intent(this, AboutActivity.class);

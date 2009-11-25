@@ -40,4 +40,5 @@
 	<string name="about_description">Another sandbox project from ...</string>	
 	<string name="build_date">Build date:</string>	
 	<string name="zia_www">http://www.ziaconsulting.com</string>	
+	<string name="no_favorites">No Favorites</string>	
 </resources>

@@ -3,11 +3,9 @@ package com.zia.freshdocs.activity;
 import java.util.Collection;
 
 import android.app.ListActivity;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
-import android.content.res.Resources;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -17,7 +15,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ContextMenu.ContextMenuInfo;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.AdapterView.AdapterContextMenuInfo;
@@ -27,6 +24,7 @@ import com.zia.freshdocs.R;
 import com.zia.freshdocs.app.CMISApplication;
 import com.zia.freshdocs.preference.CMISPreferencesManager;
 import com.zia.freshdocs.util.Downloadable;
+import com.zia.freshdocs.widget.HostAdapter;
 
 public class HostsActivity extends ListActivity
 {
@@ -38,7 +36,6 @@ public class HostsActivity extends ListActivity
 	private static final String OK_KEY = "ok";
 	
 	private ChildDownloadThread _dlThread = null;
-	private ProgressDialog _progressDlg = null;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
@@ -46,22 +43,22 @@ public class HostsActivity extends ListActivity
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.hosts);
 		registerForContextMenu(getListView());
-		startActivityForResult(new Intent(this, SplashActivity.class), SPLASH_REQUEST_REQ);		
+//		startActivityForResult(new Intent(this, SplashActivity.class), SPLASH_REQUEST_REQ);		
+		initializeHostList();
 	}
 
 	@Override
 	protected void onResume()
 	{
 		super.onResume();
-		initializeHostList();
 	}
 	
 	protected void initializeHostList()
 	{
 		CMISPreferencesManager prefsMgr = CMISPreferencesManager.getInstance();
 		Collection<String> keys = prefsMgr.getHostnames(this);
-		ArrayAdapter<String> serverAdapter = new ArrayAdapter<String>(this, 
-				android.R.layout.simple_list_item_1, 
+		HostAdapter serverAdapter = new HostAdapter(this, 
+				R.layout.host_list_item, R.id.host_textview,
 				keys.toArray(new String[]{}));
 		setListAdapter(serverAdapter);
 	}
@@ -173,27 +170,35 @@ public class HostsActivity extends ListActivity
 	{
 		final CMISApplication app = (CMISApplication) getApplication();
 		final Context ctx = this;
-		final String hostname = ((TextView) v).getText().toString();
+		final HostAdapter adapter = (HostAdapter) getListAdapter();
+		final View container = v;
 	
+		TextView hostTextView = (TextView) v.findViewById(R.id.host_textview);
+		final String hostname = hostTextView.getText().toString();
+
+		adapter.toggleError(container, false);
+		adapter.toggleProgress(container, true);
+		
 		_dlThread = new ChildDownloadThread(new Handler() 
 		{
 			public void handleMessage(Message msg) 
 			{
 				boolean ok = msg.getData().getBoolean(OK_KEY);
-				if(_progressDlg != null)
-				{	
-					_progressDlg.cancel();
-				}
-				
+
+				adapter.toggleProgress(container, false);
+
 				if(ok)
 				{
 					Intent browseIntent = new Intent(ctx, NodeBrowseActivity.class);
 					startActivityForResult(browseIntent, NODE_BROWSE_REQ);
+					adapter.toggleError(container, false);
 				}			
 				else
 				{
 					app.handleNetworkStatus();
+					adapter.toggleError(container, true);
 				}
+
 			}
 		}, 
 		new Downloadable()
@@ -204,16 +209,7 @@ public class HostsActivity extends ListActivity
 			}
 		});
 		
-		startProgressDlg(hostname);
 		_dlThread.start();
-	}
-	
-	protected void startProgressDlg(String hostname)
-	{
-		Resources res = getResources();
-		StringBuilder msg = new StringBuilder(res.getString(R.string.connecting_host)).
-			append(" ").append(hostname);
-		_progressDlg = ProgressDialog.show(this, "",  msg.toString(), true, true);		
 	}
 	
 	private class ChildDownloadThread extends Thread 

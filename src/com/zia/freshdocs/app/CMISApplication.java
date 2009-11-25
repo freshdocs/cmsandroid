@@ -12,6 +12,7 @@ import com.zia.freshdocs.preference.CMISPreferencesManager;
 public class CMISApplication extends Application
 {
 	CMIS _cmis;
+	String _reason;
 	
 	public CMISApplication()
 	{
@@ -21,6 +22,11 @@ public class CMISApplication extends Application
 	public CMIS getCMIS()
 	{
 		return _cmis;
+	}
+
+	public String getReason()
+	{
+		return _reason;
 	}
 
 	public boolean initCMIS(String hostname)
@@ -47,20 +53,20 @@ public class CMISApplication extends Application
 	public void handleNetworkStatus()
 	{
 		Resources res = getResources();
-		String text = res.getString(R.string.error_server_error);
+		_reason = res.getString(R.string.error_server_error);
 		
 		switch(_cmis.getNetworkStatus())
 		{
 		case CONNECTION_ERROR:
-			text = res.getString(R.string.error_connection_failed);
+			_reason = res.getString(R.string.error_connection_failed);
 			break;
 		case CREDENTIALS_ERROR:
-			text = res.getString(R.string.error_invalid_credentials);
+			_reason = res.getString(R.string.error_invalid_credentials);
 			break;
 		}
 
 		int duration = Toast.LENGTH_SHORT;
-		Toast toast = Toast.makeText(this, text, duration);
+		Toast toast = Toast.makeText(this, _reason, duration);
 		toast.show();
 	}
 }
