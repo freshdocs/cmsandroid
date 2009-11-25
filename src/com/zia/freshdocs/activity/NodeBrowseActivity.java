@@ -3,6 +3,7 @@ package com.zia.freshdocs.activity;
 import android.app.ListActivity;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.view.ContextMenu;
 import android.view.KeyEvent;
@@ -17,6 +18,7 @@ import android.widget.AdapterView.AdapterContextMenuInfo;
 import com.zia.freshdocs.Constants;
 import com.zia.freshdocs.R;
 import com.zia.freshdocs.app.CMISApplication;
+import com.zia.freshdocs.cmis.CMIS;
 import com.zia.freshdocs.widget.CMISAdapter;
 
 public class NodeBrowseActivity extends ListActivity
@@ -116,9 +118,14 @@ public class NodeBrowseActivity extends ListActivity
 	{
 		CMISApplication app = (CMISApplication) getApplication();
 		_adapter = new CMISAdapter(this, android.R.layout.simple_list_item_1);
+		CMIS cmis = app.getCMIS();
 		_adapter.setCmis(app.getCMIS());
 		setListAdapter(_adapter);
 		_adapter.home();
+		
+		Resources res = getResources();
+		StringBuilder title = new StringBuilder(res.getString(R.string.app_name)).append(" - ").append(cmis.getHostname());
+		setTitle(title.toString());
 	}	
 
 	@Override

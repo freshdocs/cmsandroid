@@ -54,7 +54,7 @@ public class FavoritesActivity extends ListActivity
 		Uri uri = Uri.fromFile(file);
 		Intent viewIntent = new Intent(Intent.ACTION_VIEW);
 		viewIntent.setData(uri);
-//		viewIntent.setDataAndType(uri, ref.getContentType());
+//		viewIntent.setDataAndType(uri, "text/plain");
 		try
 		{
 			startActivity(viewIntent);
