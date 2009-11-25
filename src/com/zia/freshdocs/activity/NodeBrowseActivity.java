@@ -30,6 +30,7 @@ public class NodeBrowseActivity extends ListActivity
 	public void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
+		setContentView(R.layout.nodes);
 		registerForContextMenu(getListView());
 		initializeListAdapter();
 	}
@@ -124,7 +125,8 @@ public class NodeBrowseActivity extends ListActivity
 		_adapter.home();
 		
 		Resources res = getResources();
-		StringBuilder title = new StringBuilder(res.getString(R.string.app_name)).append(" - ").append(cmis.getHostname());
+		StringBuilder title = new StringBuilder(res.getString(R.string.app_name)).append(" - ").
+			append(cmis.getHostname());
 		setTitle(title.toString());
 	}	
 

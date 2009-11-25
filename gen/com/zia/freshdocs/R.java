@@ -57,7 +57,8 @@ public final class R {
         public static final int host_list_item=0x7f030002;
         public static final int host_preference=0x7f030003;
         public static final int hosts=0x7f030004;
-        public static final int splash=0x7f030005;
+        public static final int nodes=0x7f030005;
+        public static final int splash=0x7f030006;
     }
     public static final class menu {
         public static final int browser=0x7f070000;
@@ -70,20 +71,21 @@ public final class R {
         public static final int query_32=0x7f050001;
     }
     public static final class string {
-        public static final int about=0x7f060024;
-        public static final int about_description=0x7f060025;
+        public static final int about=0x7f060025;
+        public static final int about_description=0x7f060026;
         public static final int add_server=0x7f06001a;
         public static final int advanced_heading=0x7f060006;
         public static final int app_name=0x7f060001;
         public static final int auth_heading=0x7f060005;
         public static final int browse=0x7f06000f;
-        public static final int build_date=0x7f060026;
+        public static final int build_date=0x7f060027;
         public static final int cancel_button=0x7f06001e;
-        public static final int connecting_host=0x7f060020;
+        public static final int connecting_host=0x7f060021;
         public static final int delete_server=0x7f06001b;
         public static final int edit_server=0x7f06001c;
         public static final int email_text=0x7f060017;
         public static final int email_title=0x7f060018;
+        public static final int empty_folder=0x7f060020;
         public static final int empty_servers=0x7f06001f;
         public static final int error_connection_failed=0x7f060012;
         public static final int error_invalid_credentials=0x7f060013;
@@ -94,7 +96,7 @@ public final class R {
         public static final int hidden_files=0x7f060008;
         public static final int hostname=0x7f060004;
         public static final int loading=0x7f06000e;
-        public static final int no_favorites=0x7f060028;
+        public static final int no_favorites=0x7f060029;
         public static final int ok_button=0x7f06001d;
         public static final int password=0x7f060003;
         public static final int port=0x7f060007;
@@ -102,15 +104,15 @@ public final class R {
         public static final int quit=0x7f060009;
         public static final int refresh=0x7f06000c;
         public static final int search=0x7f06000b;
-        public static final int search_ambiguaous=0x7f060023;
+        public static final int search_ambiguaous=0x7f060024;
         public static final int search_hint=0x7f060010;
         public static final int search_invoke=0x7f060011;
         public static final int send=0x7f060015;
         public static final int settings=0x7f06000a;
-        public static final int ssl=0x7f060021;
+        public static final int ssl=0x7f060022;
         public static final int username=0x7f060002;
-        public static final int webapp_root=0x7f060022;
-        public static final int zia_www=0x7f060027;
+        public static final int webapp_root=0x7f060023;
+        public static final int zia_www=0x7f060028;
     }
     public static final class xml {
         public static final int preferences=0x7f040000;
