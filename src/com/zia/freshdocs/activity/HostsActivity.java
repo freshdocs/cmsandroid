@@ -1,6 +1,7 @@
 package com.zia.freshdocs.activity;
 
-import java.util.Collection;
+import java.util.Collections;
+import java.util.Set;
 
 import android.app.ListActivity;
 import android.content.Context;
@@ -56,7 +57,7 @@ public class HostsActivity extends ListActivity
 	protected void initializeHostList()
 	{
 		CMISPreferencesManager prefsMgr = CMISPreferencesManager.getInstance();
-		Collection<String> keys = prefsMgr.getHostnames(this);
+		Set<String> keys = prefsMgr.getHostnames(this);
 		HostAdapter serverAdapter = new HostAdapter(this, 
 				R.layout.host_list_item, R.id.host_textview,
 				keys.toArray(new String[]{}));

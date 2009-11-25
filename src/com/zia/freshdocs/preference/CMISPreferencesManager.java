@@ -5,10 +5,11 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
+import java.util.TreeSet;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.commons.codec.binary.Base64;
@@ -147,15 +148,15 @@ public class CMISPreferencesManager
 		}
 	}
 	
-	public Collection<String> getHostnames(Context ctx)
+	public Set<String> getHostnames(Context ctx)
 	{
 		Map<String, CMISHost> prefs = readPreferences(ctx);
 
 		if(prefs != null)
 		{
-			return prefs.keySet();
+			return new TreeSet<String>(prefs.keySet());
 		}		
 		
-		return new ArrayList<String>();
+		return new HashSet<String>();
 	}
 }
