@@ -165,12 +165,11 @@ public class CMISAdapter extends ArrayAdapter<NodeRef>
 				if(done && _progressDlg != null)
 				{	
 					_progressDlg.dismiss();
-					int bytes = (Integer) _dlThread.getResult();
+					File file = (File) _dlThread.getResult();
 					
-					if(bytes > 0)
+					if(file != null)
 					{
 						Resources res = context.getResources();
-						File file = context.getFileStreamPath(ref.getName());
 						Uri uri = Uri.fromFile(file);
 						Intent emailIntent = new Intent(Intent.ACTION_SEND);
 						emailIntent.putExtra(Intent.EXTRA_STREAM, uri);
