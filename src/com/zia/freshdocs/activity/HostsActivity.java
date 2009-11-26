@@ -53,6 +53,15 @@ public class HostsActivity extends ListActivity
 		super.onResume();
 	}
 	
+	
+	@Override
+	protected void onDestroy()
+	{
+		super.onDestroy();
+		CMISApplication app = (CMISApplication) getApplication();
+		app.cleanupCache();
+	}
+
 	protected void initializeHostList()
 	{
 		CMISPreferencesManager prefsMgr = CMISPreferencesManager.getInstance();

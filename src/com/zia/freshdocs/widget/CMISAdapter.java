@@ -213,7 +213,8 @@ public class CMISAdapter extends ArrayAdapter<NodeRef>
 				try
 				{
 					String name = ref.getName();
-					f = getFile(name);
+					CMISApplication app = (CMISApplication) getContext().getApplicationContext();
+					f = app.getFile(name);
 					URL url = new URL(builder.build().toString());
 					URLConnection conn = url.openConnection();
 					FileOutputStream fos = new FileOutputStream(f);
@@ -232,52 +233,6 @@ public class CMISAdapter extends ArrayAdapter<NodeRef>
 		_dlThread.start();		
 	}
 	
-	protected File getFile(String name)
-	{
-		File sdCard = Environment.getExternalStorageDirectory();
-		StringBuilder targetPath = new StringBuilder(sdCard.getAbsolutePath()).
-			append(File.separator);
-		
-		if(sdCard.canWrite())
-		{
-			String packageName = Constants.class.getPackage().getName();
-			targetPath.append(packageName);
-			
-			File appStorage = new File(targetPath.toString());
-			
-			if(!appStorage.exists())
-			{
-				if(!appStorage.mkdir())
-				{
-					return null;
-				}
-			}
-			
-			targetPath.append(File.separator).append(name);
-			File target = new File(targetPath.toString());
-			
-			try
-			{
-				if(target.exists())
-				{
-					target.delete();
-				}
-				
-				if(target.createNewFile())
-				{
-					target.deleteOnExit();
-					return target;
-				}
-			}
-			catch (IOException e)
-			{
-				Log.e("FILE_ERROR", "Error in getFileStream", e);
-			}
-		}
-		
-		return null;
-	}
-
 	protected void viewContent(File file, NodeRef ref)
 	{
 		Context context = getContext();
