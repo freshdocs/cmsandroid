@@ -3,8 +3,12 @@ package com.zia.freshdocs.model;
 public class NodeRef
 {
 	private String _content;
-	private String contentType;
+	private String _contentType;
 	private String _name;
+	private String _lastModificationDate;
+	private String _lastModifiedBy;
+	private String _version;
+	private int _contentLength;
 	private boolean _isFolder;
 
 	public String getContent()
@@ -19,12 +23,12 @@ public class NodeRef
 
 	public String getContentType()
 	{
-		return contentType;
+		return _contentType;
 	}
 
 	public void setContentType(String contentType)
 	{
-		this.contentType = contentType;
+		this._contentType = contentType;
 	}	
 	
 	public String getName()
@@ -45,6 +49,46 @@ public class NodeRef
 	public void setFolder(boolean isFolder)
 	{
 		this._isFolder = isFolder;
+	}
+
+	public String getLastModificationDate()
+	{
+		return _lastModificationDate;
+	}
+
+	public void setLastModificationDate(String lastModificationDate)
+	{
+		this._lastModificationDate = lastModificationDate;
+	}
+
+	public String getLastModifiedBy()
+	{
+		return _lastModifiedBy;
+	}
+
+	public void setLastModifiedBy(String lastModifiedBy)
+	{
+		this._lastModifiedBy = lastModifiedBy;
+	}
+
+	public int getContentLength()
+	{
+		return _contentLength;
+	}
+
+	public void setContentLength(int contentLength)
+	{
+		this._contentLength = contentLength;
+	}
+
+	public String getVersion()
+	{
+		return _version;
+	}
+
+	public void setVersion(String version)
+	{
+		this._version = version;
 	}
 
 	@Override

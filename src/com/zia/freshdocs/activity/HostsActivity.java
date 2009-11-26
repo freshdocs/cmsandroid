@@ -1,6 +1,5 @@
 package com.zia.freshdocs.activity;
 
-import java.util.Collections;
 import java.util.Set;
 
 import android.app.ListActivity;

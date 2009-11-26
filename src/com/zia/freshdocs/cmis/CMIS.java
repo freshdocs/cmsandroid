@@ -208,22 +208,76 @@ public class CMIS
 					}
 
 					children = node.getElementsByTagName("cmis:propertyString");
-					if(children.getLength() > 0)
+					int nChildren = children.getLength();
+					
+					if(nChildren > 0)
 					{
-						for(int j = 0; j < children.getLength(); j++)
+						for(int j = 0; j < nChildren; j++)
 						{
 							Element child = (Element) children.item(j);
 							
 							if(child.getAttribute("cmis:name").equals("BaseType"))
 							{
-								children = child.getElementsByTagName("cmis:value");
-								String baseType = children.item(0).getFirstChild().getNodeValue(); 
+								NodeList valueNode = child.getElementsByTagName("cmis:value");
+								String baseType = valueNode.item(0).getFirstChild().getNodeValue(); 
 								nodeRef.setFolder(baseType.equals("folder"));
+							} 
+							else if(child.getAttribute("cmis:name").equals("LastModifiedBy"))
+							{
+								NodeList valueNode = child.getElementsByTagName("cmis:value");
+								nodeRef.setLastModifiedBy(
+										valueNode.item(0).getFirstChild().getNodeValue()); 
+							}
+							else if(child.getAttribute("cmis:name").equals("VersionLabel"))
+							{
+								NodeList valueNode = child.getElementsByTagName("cmis:value");
+								if(valueNode.getLength() > 0)
+								{
+									nodeRef.setVersion(
+											valueNode.item(0).getFirstChild().getNodeValue());
+								}
+							}
+						}
+					}
+					
+					children = node.getElementsByTagName("cmis:propertyDateTime");
+					nChildren = children.getLength();
+
+					if(nChildren > 0)
+					{
+						for(int j = 0; j < nChildren; j++)
+						{
+							Element child = (Element) children.item(j);
+							
+							if(child.getAttribute("cmis:name").equals("LastModificationDate"))
+							{
+								children = child.getElementsByTagName("cmis:value");
+								nodeRef.setLastModificationDate(
+										children.item(0).getFirstChild().getNodeValue());
+								break;
+							} 
+						}
+					}
+
+					children = node.getElementsByTagName("cmis:propertyInteger");
+					nChildren = children.getLength();
+
+					if(nChildren > 0)
+					{
+						for(int j = 0; j < nChildren; j++)
+						{
+							Element child = (Element) children.item(j);
+							
+							if(child.getAttribute("cmis:name").equals("ContentStreamLength"))
+							{
+								NodeList valueNode = child.getElementsByTagName("cmis:value");
+								nodeRef.setContentLength(
+										Integer.valueOf(valueNode.item(0).getFirstChild().getNodeValue()));
 								break;
 							}
 						}
 					}
-
+					
 					refs[i] = nodeRef;
 				}
 			}

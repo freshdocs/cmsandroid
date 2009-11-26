@@ -22,6 +22,7 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.net.Uri.Builder;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
@@ -127,23 +128,27 @@ public class CMISAdapter extends ArrayAdapter<NodeRef>
 		}
 		else
 		{
-			downloadContent(ref,  new Handler() 
+			String storageState = Environment.getExternalStorageState();
+			if (Environment.MEDIA_MOUNTED.equals(storageState))
 			{
-				public void handleMessage(Message msg) 
+				downloadContent(ref,  new Handler() 
 				{
-					boolean done = msg.getData().getBoolean("done");
-					if(done && _progressDlg != null)
-					{	
-						_progressDlg.dismiss();
-						int bytes = (Integer) _dlThread.getResult();
-						
-						if(bytes > 0)
-						{
-							viewContent(ref);
-						}
-					}			
-				}
-			});
+					public void handleMessage(Message msg) 
+					{
+						boolean done = msg.getData().getBoolean("done");
+						if(done && _progressDlg != null)
+						{	
+							_progressDlg.dismiss();
+							File file = (File) _dlThread.getResult();
+
+							if(file != null)
+							{
+								viewContent(file, ref);
+							}
+						}			
+					}
+				});
+			}
 		}
 	}
 	
@@ -201,9 +206,7 @@ public class CMISAdapter extends ArrayAdapter<NodeRef>
 		{
 			public Object execute()
 			{
-				Context context = getContext();
-				FileOutputStream fos =  null;
-				int bytes = 0;
+				File f =  null;
 				
 				Builder builder = URLUtils.toUriBuilder(ref.getContent());
 				builder.appendQueryParameter("alf_ticket", _cmis.getTicket());
@@ -211,10 +214,11 @@ public class CMISAdapter extends ArrayAdapter<NodeRef>
 				try
 				{
 					String name = ref.getName();
-					fos = context.openFileOutput(name, Context.MODE_WORLD_READABLE);
+					f = getFile(name);
 					URL url = new URL(builder.build().toString());
 					URLConnection conn = url.openConnection();
-					bytes = IOUtils.copy(conn.getInputStream(), fos);
+					FileOutputStream fos = new FileOutputStream(f);
+					IOUtils.copy(conn.getInputStream(), fos);
 					fos.flush();
 					fos.close();	
 				} 
@@ -223,18 +227,63 @@ public class CMISAdapter extends ArrayAdapter<NodeRef>
 					Log.e(CMISAdapter.class.getSimpleName(), "", e);
 				}		
 				
-				return bytes;
+				return f;
 			}
 		});
 		_dlThread.start();		
 	}
+	
+	protected File getFile(String name)
+	{
+		File sdCard = Environment.getExternalStorageDirectory();
+		StringBuilder targetPath = new StringBuilder(sdCard.getAbsolutePath()).
+			append(File.separator);
+		
+		if(sdCard.canWrite())
+		{
+			String packageName = Constants.class.getPackage().getName();
+			targetPath.append(packageName);
+			
+			File appStorage = new File(targetPath.toString());
+			
+			if(!appStorage.exists())
+			{
+				if(!appStorage.mkdir())
+				{
+					return null;
+				}
+			}
+			
+			targetPath.append(File.separator).append(name);
+			File target = new File(targetPath.toString());
+			
+			try
+			{
+				if(target.exists())
+				{
+					target.delete();
+				}
+				
+				if(target.createNewFile())
+				{
+					target.deleteOnExit();
+					return target;
+				}
+			}
+			catch (IOException e)
+			{
+				Log.e("FILE_ERROR", "Error in getFileStream", e);
+			}
+		}
+		
+		return null;
+	}
 
-	protected void viewContent(NodeRef ref)
+	protected void viewContent(File file, NodeRef ref)
 	{
 		Context context = getContext();
 		
 		// Ask for viewer
-		File file = context.getFileStreamPath(ref.getName());
 		Uri uri = Uri.fromFile(file);
 		Intent viewIntent = new Intent(Intent.ACTION_VIEW);
 		viewIntent.setDataAndType(uri, ref.getContentType());
@@ -244,7 +293,7 @@ public class CMISAdapter extends ArrayAdapter<NodeRef>
 		}
 		catch(ActivityNotFoundException e)
 		{
-			deleteContent(ref);
+			deleteContent(file);
 			String text = "No viewer found for " + ref.getContentType();
 			int duration = Toast.LENGTH_SHORT;
 			Toast toast = Toast.makeText(context, text, duration);
@@ -252,10 +301,12 @@ public class CMISAdapter extends ArrayAdapter<NodeRef>
 		}
 	}
 	
-	protected void deleteContent(NodeRef ref)
+	protected void deleteContent(File file)
 	{
-		Context context = getContext();
-		context.deleteFile(ref.getName());
+		if(file.exists())
+		{
+			file.delete();
+		}
 	}
 	
 	protected void getChildren(final String uuid)
