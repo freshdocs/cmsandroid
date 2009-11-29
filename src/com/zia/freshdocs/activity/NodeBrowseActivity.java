@@ -23,7 +23,8 @@ import com.zia.freshdocs.widget.CMISAdapter;
 
 public class NodeBrowseActivity extends ListActivity
 {
-	private CMISAdapter _adapter;
+	protected CMISAdapter _adapter;
+	protected boolean _adapterInitialized = false;
 
 	/** Called when the activity is first created. */
 	@Override
@@ -33,12 +34,19 @@ public class NodeBrowseActivity extends ListActivity
 		setContentView(R.layout.nodes);
 		registerForContextMenu(getListView());
 		initializeListAdapter();
+		
 	}
 	
 	@Override
 	protected void onResume()
 	{
-		super.onResume();		
+		super.onResume();
+		
+		if(!_adapterInitialized)
+		{
+			_adapterInitialized = true;
+			_adapter.home();
+		}
 	}
 
 	/**
@@ -71,21 +79,26 @@ public class NodeBrowseActivity extends ListActivity
 			return true;
 		case R.id.menu_item_favorites:
 			Intent favoritesIntent = new Intent(this, FavoritesActivity.class);
-			startActivity(favoritesIntent);
+			startActivityForResult(favoritesIntent, 0);
 			return true;
 		case R.id.menu_item_about:
 			Intent aboutIntent = new Intent(this, AboutActivity.class);
-			startActivity(aboutIntent);
+			startActivityForResult(aboutIntent, 0);
 			return true;
 		case R.id.menu_item_quit:
-			Intent quitIntent = new Intent();
-			quitIntent.putExtra(Constants.QUIT, true);
-			setResult(RESULT_OK, quitIntent);
-			finish();
+			onQuit();
 			return true;
 		default:
 			return false;
 		}
+	}
+	
+	protected void onQuit()
+	{
+		Intent quitIntent = new Intent();
+		quitIntent.putExtra(Constants.QUIT, true);
+		setResult(RESULT_OK, quitIntent);
+		finish();
 	}
 	
 	@Override
@@ -104,11 +117,15 @@ public class NodeBrowseActivity extends ListActivity
 	@Override
 	public boolean onContextItemSelected(MenuItem item)
 	{
+		AdapterContextMenuInfo info = (AdapterContextMenuInfo) item.getMenuInfo();
+		
 		switch (item.getItemId())
 		{
-		case R.id.menu_item_send:
-			AdapterContextMenuInfo info = (AdapterContextMenuInfo) item.getMenuInfo();
-			_adapter.emailContent(info.position);
+		case R.id.menu_item_send:	
+			_adapter.shareContent(info.position);
+			return true;
+		case R.id.menu_item_favorite:
+			_adapter.toggleFavorite(info.position);
 			return true;
 		}
 		
@@ -122,7 +139,6 @@ public class NodeBrowseActivity extends ListActivity
 		CMIS cmis = app.getCMIS();
 		_adapter.setCmis(app.getCMIS());
 		setListAdapter(_adapter);
-		_adapter.home();
 		
 		Resources res = getResources();
 		StringBuilder title = new StringBuilder(res.getString(R.string.app_name)).append(" - ").
@@ -153,5 +169,16 @@ public class NodeBrowseActivity extends ListActivity
 	protected void onSearch()
 	{
 		onSearchRequested();
+	}
+
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data)
+	{
+		super.onActivityResult(requestCode, resultCode, data);
+		
+		if(data != null && data.hasExtra(Constants.QUIT))
+		{
+			onQuit();
+		}
 	}
 }

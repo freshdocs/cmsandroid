@@ -3,6 +3,11 @@ package com.zia.freshdocs.app;
 import java.io.File;
 import java.io.FileFilter;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Set;
 
 import android.app.Application;
 import android.content.res.Resources;
@@ -13,6 +18,7 @@ import android.widget.Toast;
 import com.zia.freshdocs.Constants;
 import com.zia.freshdocs.R;
 import com.zia.freshdocs.cmis.CMIS;
+import com.zia.freshdocs.model.NodeRef;
 import com.zia.freshdocs.preference.CMISHost;
 import com.zia.freshdocs.preference.CMISPreferencesManager;
 
@@ -93,18 +99,20 @@ public class CMISApplication extends Application
 		return targetPath;
 	}
 	
-	public File getFile(String name)
+	public File getFile(String name, long filesize)
 	{
 		File sdCard = Environment.getExternalStorageDirectory();
 		StringBuilder targetPath = getAppStoragePath();
 		
-		if(sdCard.canWrite() && targetPath.length() > 0)
+		if(sdCard.canWrite() && targetPath.length() > 0  && _cmis != null)
 		{
+			// Each host has it's own file store
+			targetPath.append(File.separator).append(_cmis.getHostname());
 			File appStorage = new File(targetPath.toString());
 			
 			if(!appStorage.exists())
 			{
-				if(!appStorage.mkdir())
+				if(!appStorage.mkdirs())
 				{
 					return null;
 				}
@@ -117,7 +125,14 @@ public class CMISApplication extends Application
 			{
 				if(target.exists())
 				{
-					target.delete();
+					 if(target.length() != filesize)
+					 {
+						 target.delete();
+					 }
+					 else
+					 {
+						 return target;
+					 }
 				}
 				
 				if(target.createNewFile())
@@ -138,25 +153,57 @@ public class CMISApplication extends Application
 	public void cleanupCache()
 	{
 		StringBuilder appStoragePath = getAppStoragePath();
-		File storage = new File(appStoragePath.toString());
+		CMISPreferencesManager prefsMgr = CMISPreferencesManager.getInstance();
+		Set<String> hosts = prefsMgr.getHostnames(this);
+		File storage = null;
+		StringBuilder hostPath = null;
+		CMISHost hostPref = null;
+		Set<NodeRef> favorites = null;
 		
-		if(storage.exists() && storage.isDirectory())
+		// This next section needs some optimization
+		for(String hostname : hosts)
 		{
-			File[] files = storage.listFiles(new FileFilter()
-			{	
-				public boolean accept(File pathname)
-				{
-					return !pathname.isDirectory();
-				}
-			});
+			hostPref = prefsMgr.getPreferences(this, hostname);
+			favorites = hostPref.getFavorites();
+			final List<NodeRef> favList = new ArrayList<NodeRef>();
 			
-			int n = files.length;
-			File file = null;
+			hostPath = new StringBuilder(appStoragePath);
+			hostPath.append(File.separator).append(hostname);
+			storage = new File(hostPath.toString());
 			
-			for(int i = 0; i < n; i++)
+			if(favorites != null)
 			{
-				file = files[i];
-				file.delete();
+				favList.addAll(favorites);
+			}
+			
+			if(storage.exists() && storage.isDirectory())
+			{
+				File[] files = storage.listFiles(new FileFilter()
+				{	
+					public boolean accept(File pathname)
+					{
+						NodeRef ref = new NodeRef();
+						ref.setName(pathname.getName());
+						
+						int index = Collections.binarySearch(favList, ref, new Comparator<NodeRef>()
+						{
+							public int compare(NodeRef object1, NodeRef object2)
+							{
+								return object1.getName().compareTo(object2.getName());
+							}
+						});
+						return index < 0 && !pathname.isDirectory();
+					}
+				});
+
+				int n = files.length;
+				File file = null;
+
+				for(int i = 0; i < n; i++)
+				{
+					file = files[i];
+					file.delete();
+				}
 			}
 		}
 	}

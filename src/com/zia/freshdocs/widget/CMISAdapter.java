@@ -8,6 +8,7 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.Set;
 import java.util.Stack;
 
 import org.apache.commons.io.IOUtils;
@@ -38,6 +39,8 @@ import com.zia.freshdocs.R;
 import com.zia.freshdocs.app.CMISApplication;
 import com.zia.freshdocs.cmis.CMIS;
 import com.zia.freshdocs.model.NodeRef;
+import com.zia.freshdocs.preference.CMISHost;
+import com.zia.freshdocs.preference.CMISPreferencesManager;
 import com.zia.freshdocs.util.Downloadable;
 import com.zia.freshdocs.util.URLUtils;
 
@@ -152,7 +155,7 @@ public class CMISAdapter extends ArrayAdapter<NodeRef>
 		}
 	}
 	
-	public void emailContent(int position)
+	public void shareContent(int position)
 	{
 		final NodeRef ref = getItem(position);
 		downloadContent(ref, new Handler() 
@@ -196,6 +199,47 @@ public class CMISAdapter extends ArrayAdapter<NodeRef>
 			}
 		});
 	}
+
+	public void toggleFavorite(int position)
+	{
+		String hostname = _cmis.getHostname();
+		final Context context = getContext();
+		final CMISPreferencesManager prefsMgr = CMISPreferencesManager.getInstance();						
+		final CMISHost prefs = prefsMgr.getPreferences(context, hostname);
+		final NodeRef ref = getItem(position);
+		
+		Set<NodeRef> favorites = prefs.getFavorites();
+		
+		if(favorites.contains(ref))
+		{
+			remove(ref);
+			favorites.remove(ref);
+			prefsMgr.setPreferences(context, prefs);
+			notifyDataSetChanged();
+		} 
+		else
+		{		
+			downloadContent(ref, new Handler() 
+			{
+				public void handleMessage(Message msg) 
+				{
+					boolean done = msg.getData().getBoolean("done");
+
+					if(done && _progressDlg != null)
+					{	
+						_progressDlg.dismiss();
+						File file = (File) _dlThread.getResult();
+
+						if(file != null)
+						{
+							prefs.addFavorite(ref);
+							prefsMgr.setPreferences(context, prefs);
+						}
+					}			
+				}
+			});
+		}
+	}
 	
 	protected void downloadContent(final NodeRef ref, Handler handler)
 	{
@@ -214,13 +258,18 @@ public class CMISAdapter extends ArrayAdapter<NodeRef>
 				{
 					String name = ref.getName();
 					CMISApplication app = (CMISApplication) getContext().getApplicationContext();
-					f = app.getFile(name);
-					URL url = new URL(builder.build().toString());
-					URLConnection conn = url.openConnection();
-					FileOutputStream fos = new FileOutputStream(f);
-					IOUtils.copy(conn.getInputStream(), fos);
-					fos.flush();
-					fos.close();	
+					long fileSize = ref.getContentLength();
+					f = app.getFile(name, fileSize);
+					
+					if(f != null && f.length() != fileSize)
+					{
+						URL url = new URL(builder.build().toString());
+						URLConnection conn = url.openConnection();
+						FileOutputStream fos = new FileOutputStream(f);
+						IOUtils.copy(conn.getInputStream(), fos);
+						fos.flush();
+						fos.close();
+					}
 				} 
 				catch(Exception e)
 				{

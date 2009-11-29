@@ -272,7 +272,7 @@ public class CMIS
 							{
 								NodeList valueNode = child.getElementsByTagName("cmis:value");
 								nodeRef.setContentLength(
-										Integer.valueOf(valueNode.item(0).getFirstChild().getNodeValue()));
+										Long.valueOf(valueNode.item(0).getFirstChild().getNodeValue()));
 								break;
 							}
 						}

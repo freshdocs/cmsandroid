@@ -1,6 +1,10 @@
 package com.zia.freshdocs.preference;
 
 import java.io.Serializable;
+import java.util.HashSet;
+import java.util.Set;
+
+import com.zia.freshdocs.model.NodeRef;
 
 public class CMISHost implements Serializable
 {
@@ -13,7 +17,13 @@ public class CMISHost implements Serializable
 	private int _port = 80;
 	private boolean _SSL = false;
 	private boolean _showHidden = true;
+	private Set<NodeRef> _favorites;
 
+	public CMISHost()
+	{
+		_favorites = new HashSet<NodeRef>();		
+	}
+	
 	public boolean isShowHidden() {
 		return _showHidden;
 	}
@@ -72,5 +82,23 @@ public class CMISHost implements Serializable
 	public void setSSL(boolean sSL)
 	{
 		_SSL = sSL;
+	}
+
+	public Set<NodeRef> getFavorites()
+	{
+		return _favorites;
+	}
+
+	public void setFavorites(Set<NodeRef> favorites)
+	{
+		if(favorites != null)
+		{
+			this._favorites = favorites;
+		}
+	}
+	
+	public void addFavorite(NodeRef ref)
+	{
+		_favorites.add(ref);
 	}
 }

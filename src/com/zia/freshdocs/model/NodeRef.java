@@ -1,14 +1,18 @@
 package com.zia.freshdocs.model;
 
-public class NodeRef
+import java.io.Serializable;
+
+public class NodeRef implements Serializable
 {
+	private static final long serialVersionUID = 1203230939547509235L;
+	
 	private String _content;
 	private String _contentType;
 	private String _name;
 	private String _lastModificationDate;
 	private String _lastModifiedBy;
 	private String _version;
-	private int _contentLength;
+	private long _contentLength;
 	private boolean _isFolder;
 
 	public String getContent()
@@ -71,12 +75,12 @@ public class NodeRef
 		this._lastModifiedBy = lastModifiedBy;
 	}
 
-	public int getContentLength()
+	public long getContentLength()
 	{
 		return _contentLength;
 	}
 
-	public void setContentLength(int contentLength)
+	public void setContentLength(long contentLength)
 	{
 		this._contentLength = contentLength;
 	}
@@ -98,15 +102,40 @@ public class NodeRef
 	}
 
 	@Override
-	public boolean equals(Object o)
+	public int hashCode()
 	{
-		if(!(o instanceof NodeRef))
-		{
+		final int prime = 31;
+		int result = 1;
+		result = prime * result
+				+ ((_content == null) ? 0 : _content.hashCode());
+		result = prime * result + ((_name == null) ? 0 : _name.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj)
+	{
+		if (this == obj)
+			return true;
+		if (obj == null)
 			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		NodeRef other = (NodeRef) obj;
+		if (_content == null)
+		{
+			if (other._content != null)
+				return false;
 		}
-		
-		NodeRef other = (NodeRef) o;
-		return _name.equals(other.getName()) &&
-			_content.equals(other.getContent());
+		else if (!_content.equals(other._content))
+			return false;
+		if (_name == null)
+		{
+			if (other._name != null)
+				return false;
+		}
+		else if (!_name.equals(other._name))
+			return false;
+		return true;
 	}
 }

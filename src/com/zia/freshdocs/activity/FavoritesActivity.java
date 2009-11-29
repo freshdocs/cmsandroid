@@ -1,70 +1,68 @@
 package com.zia.freshdocs.activity;
 
-import java.io.File;
-
-import android.app.ListActivity;
-import android.content.ActivityNotFoundException;
-import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import com.zia.freshdocs.R;
+import com.zia.freshdocs.cmis.CMIS;
+import com.zia.freshdocs.model.NodeRef;
+import com.zia.freshdocs.preference.CMISHost;
+import com.zia.freshdocs.preference.CMISPreferencesManager;
 
-public class FavoritesActivity extends ListActivity
+public class FavoritesActivity extends NodeBrowseActivity
 {
 
 	@Override
-	protected void onCreate(Bundle savedInstanceState)
+	public void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.favorites);
-		initializeFavorites();
+		registerForContextMenu(getListView());
+		_adapterInitialized = true;
+		
+		StringBuilder title = new StringBuilder(getTitle());
+		title.append(" - ").append(getResources().getString(R.string.favorites));		
+		setTitle(title.toString());
 	}
+	
+	@Override
+	protected void onResume() 
+	{		
+		super.onResume();
+		initializeFavorites();
+	};
 	
 	protected void initializeFavorites()
 	{
-		ArrayAdapter<String> favorites = new ArrayAdapter<String>(this, 
-				android.R.layout.simple_list_item_1);
+		_adapter.clear();
 		
-		String[] files = fileList();
-		int n = files.length;
+		CMIS cmis = _adapter.getCmis();
+		CMISPreferencesManager prefsMgr = CMISPreferencesManager.getInstance();
+		CMISHost prefs = prefsMgr.getPreferences(this, cmis.getHostname());
 		
-		for(int i = 0; i < n; i++)
+		if(prefs != null)
 		{
-			favorites.add(files[i]);
+			for(NodeRef ref : prefs.getFavorites())
+			{
+				_adapter.add(ref);
+			}
 		}
-		
-		setListAdapter(favorites);
 	}
 
 	@Override
 	protected void onListItemClick(ListView l, View v, int position, long id)
 	{
-		super.onListItemClick(l, v, position, id);
-		viewFile((String) getListAdapter().getItem(position));
+		_adapter.getChildren(position);
 	}
 	
-	protected void viewFile(String name)
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu)
 	{
-		File file = getFileStreamPath(name);
-		Uri uri = Uri.fromFile(file);
-		Intent viewIntent = new Intent(Intent.ACTION_VIEW);
-		viewIntent.setData(uri);
-//		viewIntent.setDataAndType(uri, "text/plain");
-		try
-		{
-			startActivity(viewIntent);
-		}
-		catch(ActivityNotFoundException e)
-		{
-			String text = "No viewer found for " + name;
-			int duration = Toast.LENGTH_SHORT;
-			Toast toast = Toast.makeText(this, text, duration);
-			toast.show();
-		}
+		MenuInflater inflater = getMenuInflater();
+	    inflater.inflate(R.menu.favorites, menu);    
+		return true;
 	}
 }

@@ -1,39 +1,48 @@
 package com.zia.freshdocs.activity;
 
-import android.app.ListActivity;
 import android.app.SearchManager;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.widget.ListView;
 import android.widget.Toast;
 
 import com.zia.freshdocs.R;
-import com.zia.freshdocs.app.CMISApplication;
-import com.zia.freshdocs.widget.CMISAdapter;
 
-public class SearchActivity extends ListActivity
+public class SearchActivity extends NodeBrowseActivity
 {
-	private CMISAdapter _adapter = null;
 	private boolean _isDirty = true;
 	
 	@Override
-	protected void onCreate(Bundle savedInstanceState)
+	public void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
-
-		// CMIS should already be initialized at this point
-		CMISApplication app = (CMISApplication) getApplication();
-		_adapter = new CMISAdapter(this, android.R.layout.simple_list_item_1);
-		_adapter.setCmis(app.getCMIS());
-		setListAdapter(_adapter);
+		setContentView(R.layout.search);
+		registerForContextMenu(getListView());		
+		_adapterInitialized = true;
+		
+		StringBuilder title = new StringBuilder(getTitle());
+		title.append(" - ").append(getResources().getString(R.string.search));
+		setTitle(title.toString());
 	}
-	
+
 	@Override
 	protected void onResume()
 	{
 		super.onResume();
 		handleSearchIntent();
+	}
+	
+	/**
+	 * Handles rotation by doing nothing (instead of onCreate being called)
+	 */
+	@Override
+	public void onConfigurationChanged(Configuration newConfig)
+	{
+		super.onConfigurationChanged(newConfig);
 	}
 
 	@Override
@@ -76,4 +85,12 @@ public class SearchActivity extends ListActivity
 	{
 		_adapter.getChildren(position);
 	}
+	
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu)
+	{
+		MenuInflater inflater = getMenuInflater();
+	    inflater.inflate(R.menu.search, menu);    
+		return true;
+	}	
 }

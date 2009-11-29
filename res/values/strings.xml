@@ -22,7 +22,7 @@
 	<string name="error_invalid_credentials">Invalid Credentials</string>
 	<string name="error_server_error">Unknown Server Error</string>
 	<string name="send">Share</string>
-	<string name="favorite">Add Favorite</string>
+	<string name="favorite">Toggle Favorite</string>
 	<string name="email_text">Sent using the Alfresco Android client.</string>
 	<string name="email_title">Send Email...</string>
 	<string name="preference_filename">prefs.dat</string>
@@ -42,4 +42,5 @@
 	<string name="build_date">Build date:</string>	
 	<string name="zia_www">http://www.ziaconsulting.com</string>	
 	<string name="no_favorites">No Favorites</string>	
+	<string name="no_search_results">Empty Search Result</string>	
 </resources>
