@@ -30,7 +30,6 @@ import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -67,6 +66,12 @@ public class CMISAdapter extends ArrayAdapter<NodeRef>
 		super(context, textViewResourceId);
 	}
 	
+	
+	public CMISAdapter(Context context, int resource, int textViewResourceId)
+	{
+		super(context, resource, textViewResourceId);
+	}
+
 	public CMIS getCmis()
 	{
 		return _cmis;
@@ -373,10 +378,9 @@ public class CMISAdapter extends ArrayAdapter<NodeRef>
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent)
 	{
-		NodeRef nodeRef = getItem(position);
+		View view = super.getView(position, convertView, parent);
 		
-		LayoutInflater inflator = LayoutInflater.from(getContext());
-		View view = inflator.inflate(R.layout.node_ref_item, null);
+		NodeRef nodeRef = getItem(position);
 		
 		TextView textView = (TextView) view.findViewById(R.id.node_ref_label);
 		textView.setText(nodeRef.getName());

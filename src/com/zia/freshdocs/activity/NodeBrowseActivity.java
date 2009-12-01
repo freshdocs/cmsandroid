@@ -135,7 +135,7 @@ public class NodeBrowseActivity extends ListActivity
 	protected void initializeListAdapter()
 	{
 		CMISApplication app = (CMISApplication) getApplication();
-		_adapter = new CMISAdapter(this, android.R.layout.simple_list_item_1);
+		_adapter = new CMISAdapter(this, R.layout.node_ref_item, R.id.node_ref_label);
 		CMIS cmis = app.getCMIS();
 		_adapter.setCmis(app.getCMIS());
 		setListAdapter(_adapter);
