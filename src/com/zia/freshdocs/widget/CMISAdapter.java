@@ -6,8 +6,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.net.URLConnection;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.Set;
 import java.util.Stack;
 
@@ -27,9 +30,11 @@ import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -368,13 +373,49 @@ public class CMISAdapter extends ArrayAdapter<NodeRef>
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent)
 	{
-		TextView textView = (TextView) super.getView(position, convertView, parent);
 		NodeRef nodeRef = getItem(position);
+		
+		LayoutInflater inflator = LayoutInflater.from(getContext());
+		View view = inflator.inflate(R.layout.node_ref_item, null);
+		
+		TextView textView = (TextView) view.findViewById(R.id.node_ref_label);
+		textView.setText(nodeRef.getName());
+
+		TextView textModifiedView = (TextView) view.findViewById(R.id.node_ref_modified);
+		String lastModified = nodeRef.getLastModifiedBy();
+		textModifiedView.setText(lastModified);
+
+		String dateStr = nodeRef.getLastModificationDate();
+		SimpleDateFormat parseFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.S'Z'");
+		Date date = null;
+		
+		try
+		{
+			date = parseFormat.parse(dateStr);
+			SimpleDateFormat outFormat = new SimpleDateFormat("HH:mm:ss MM/dd/yyyy"); 
+			dateStr = outFormat.format(date);
+		}
+		catch (ParseException e)
+		{
+			e.printStackTrace();
+		}
+		
+		if(lastModified == null)
+		{
+			textModifiedView.setText(dateStr);
+		}
+		else
+		{
+			TextView textModDateView = (TextView) view.findViewById(R.id.node_ref_modified_date);
+			textModDateView.setText(dateStr);
+		}
+		
+		ImageView imgView = (ImageView) view.findViewById(R.id.node_ref_img);
 		String contentType = nodeRef.getContentType();
 		Drawable icon = getDrawableForType(contentType == null ? "cmis/folder" : contentType);
-		textView.setCompoundDrawablePadding(5);
-		textView.setCompoundDrawables(icon,	null, null, null);
-		return textView;
+		imgView.setImageDrawable(icon);
+
+		return view;
 	}
 	
 	protected Drawable getDrawableForType(String contentType)

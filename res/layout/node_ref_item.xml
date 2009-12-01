@@ -5,18 +5,40 @@
   android:layout_height="fill_parent">
   	
   	<ImageView 
-  		android:id="@+id/nodeRefImg"
+  		android:id="@+id/node_ref_img"
   		android:layout_width="wrap_content"
   		android:layout_height="wrap_content"/>
   		
   	<RelativeLayout
   		android:layout_width="wrap_content"
-  		android:layout_height="wrap_content">
+  		android:layout_height="fill_parent"
+  		android:paddingLeft="5px"
+  		android:paddingTop="1px"
+  		android:paddingBottom="1px">
   		
   		<TextView
-  			android:id="@+id/nodeRefLabel"
+  			android:id="@+id/node_ref_label"
+  			android:layout_width="fill_parent"
+  			android:layout_height="wrap_content"
+  			android:lines="1"
+  			android:textAppearance="?android:attr/textAppearanceMedium"/>
+  			
+  		<TextView
+  			android:id="@+id/node_ref_modified"
   			android:layout_width="wrap_content"
-  			android:layout_height="wrap_content"/>
+  			android:layout_height="wrap_content"
+  			android:textSize="10sp"
+  			android:textStyle="italic"
+  			android:layout_alignParentBottom="true"/>
+  			
+  		<TextView
+  			android:id="@+id/node_ref_modified_date"
+  			android:layout_width="wrap_content"
+  			android:layout_height="wrap_content"
+  			android:textSize="10sp"
+  			android:textStyle="italic"
+  			android:layout_alignParentBottom="true"
+  			android:layout_alignParentRight="true"/>
   			
   	</RelativeLayout>
   		

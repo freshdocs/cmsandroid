@@ -207,6 +207,13 @@ public class CMIS
 						nodeRef.setName(children.item(0).getFirstChild().getNodeValue());
 					}
 
+					children = node.getElementsByTagName("updated");
+					if(children.getLength() > 0)
+					{
+						nodeRef.setLastModificationDate(
+								children.item(0).getFirstChild().getNodeValue()); 
+					}
+
 					children = node.getElementsByTagName("cmis:propertyString");
 					int nChildren = children.getLength();
 					
@@ -240,25 +247,6 @@ public class CMIS
 						}
 					}
 					
-					children = node.getElementsByTagName("cmis:propertyDateTime");
-					nChildren = children.getLength();
-
-					if(nChildren > 0)
-					{
-						for(int j = 0; j < nChildren; j++)
-						{
-							Element child = (Element) children.item(j);
-							
-							if(child.getAttribute("cmis:name").equals("LastModificationDate"))
-							{
-								children = child.getElementsByTagName("cmis:value");
-								nodeRef.setLastModificationDate(
-										children.item(0).getFirstChild().getNodeValue());
-								break;
-							} 
-						}
-					}
-
 					children = node.getElementsByTagName("cmis:propertyInteger");
 					nChildren = children.getLength();
 
