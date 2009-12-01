@@ -2,9 +2,9 @@
 <LinearLayout
   xmlns:android="http://schemas.android.com/apk/res/android"
   android:layout_width="fill_parent"
-  android:layout_height="65px"
-  android:paddingTop="2px"
-  android:paddingBottom="2px">
+  android:layout_height="65dip"
+  android:paddingTop="2dip"
+  android:paddingBottom="2dip">
   	
   	<ImageView 
   		android:id="@+id/node_ref_img"
@@ -15,15 +15,17 @@
   	<RelativeLayout
   		android:layout_width="wrap_content"
   		android:layout_height="fill_parent"
-  		android:paddingLeft="5px"
-  		android:paddingTop="10px"
-  		android:paddingBottom="10px">
+  		android:paddingLeft="5dip"
+  		android:paddingRight="5dip"
+  		android:paddingTop="10dip"
+  		android:paddingBottom="10dip">
   		
   		<TextView
   			android:id="@+id/node_ref_label"
   			android:layout_width="fill_parent"
   			android:layout_height="wrap_content"
   			android:lines="1"
+  			android:ellipsize="middle"
   			android:textAppearance="?android:attr/textAppearanceMedium"/>
   			
   		<TextView
