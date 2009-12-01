@@ -6,7 +6,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.net.URLConnection;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Comparator;
@@ -399,7 +398,7 @@ public class CMISAdapter extends ArrayAdapter<NodeRef>
 			SimpleDateFormat outFormat = new SimpleDateFormat("HH:mm:ss MM/dd/yyyy"); 
 			dateStr = outFormat.format(date);
 		}
-		catch (ParseException e)
+		catch (Exception e)
 		{
 			e.printStackTrace();
 		}
