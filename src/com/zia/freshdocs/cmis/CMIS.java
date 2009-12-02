@@ -2,6 +2,8 @@ package com.zia.freshdocs.cmis;
 
 import java.io.ByteArrayInputStream;
 import java.net.URL;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -163,8 +165,12 @@ public class CMIS
 		
 		try
 		{
+			Pattern pattern = Pattern.compile("&(?![a-zA-Z0-9]+;)");
+			Matcher matcher = pattern.matcher(res);
+			String sanitized = matcher.replaceAll("&amp;");
+			
 			docBuilder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
-			Document doc = docBuilder.parse(new ByteArrayInputStream(res.getBytes()));
+			Document doc = docBuilder.parse(new ByteArrayInputStream(sanitized.getBytes()));
 			
 			// Iterate over all the entry nodes and build NodeRefs
 			NodeList nodes = doc.getElementsByTagName("entry");
