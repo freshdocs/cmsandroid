@@ -3,20 +3,22 @@ package com.zia.freshdocs.activity;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
-import android.view.View.OnClickListener;
-import android.widget.Button;
+import android.view.KeyEvent;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.zia.freshdocs.R;
 import com.zia.freshdocs.preference.CMISHost;
 import com.zia.freshdocs.preference.CMISPreferencesManager;
+import com.zia.freshdocs.util.StringUtils;
 
 public class HostPreferenceActivity extends Activity
 {
 	public static final String EXTRA_EDIT_SERVER = "edit_server";
-
+	
+	protected boolean _backPressed;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
@@ -29,24 +31,6 @@ public class HostPreferenceActivity extends Activity
 		{
 			editServer(intent.getStringExtra(EXTRA_EDIT_SERVER));
 		}
-		
-		Button okButton = (Button) findViewById(R.id.add_server_ok);
-		okButton.setOnClickListener(new OnClickListener()
-		{
-			public void onClick(View v)
-			{
-				onServerOkClick(v);
-			}
-		});
-
-		Button cancelButton = (Button) findViewById(R.id.add_server_cancel);
-		cancelButton.setOnClickListener(new OnClickListener()
-		{
-			public void onClick(View v)
-			{
-				finish();
-			}
-		});
 	}
 
 	protected void editServer(String servername)
@@ -70,8 +54,24 @@ public class HostPreferenceActivity extends Activity
 			((CheckBox) findViewById(R.id.hidden_files)).setChecked(hostPrefs.isShowHidden()); 			
 		}
 	}
-	
-	protected void onServerOkClick(View v)
+
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event)
+	{
+		if(keyCode == KeyEvent.KEYCODE_BACK && !updateHost())
+		{			
+			if(!_backPressed)
+			{
+				_backPressed = true;
+				return false;
+			}
+		} 
+
+		return super.onKeyDown(keyCode, event);
+	}
+
+
+	protected boolean updateHost()
 	{
 		CMISPreferencesManager prefsMgr = CMISPreferencesManager.getInstance();
 
@@ -86,27 +86,62 @@ public class HostPreferenceActivity extends Activity
 		
 		String portVal = ((EditText) findViewById(
 				R.id.port_edittext)).getText().toString();
-		if(portVal != null)
+
+		if(StringUtils.isEmpty(portVal))
 		{
-			port = Integer.parseInt(portVal);
+			toastError("Port is a required field.");
+			return false;
 		}
+		
+		port = Integer.parseInt(portVal);
 
 		CMISHost hostPrefs = new CMISHost();
+
+		if(StringUtils.isEmpty(hostname))
+		{
+			toastError("Hostname is a required field.");
+			return false;
+		}
+		
 		hostPrefs.setHostname(hostname);
+		
+		if(StringUtils.isEmpty(username))
+		{
+			toastError("Username is a required field.");
+			return false;
+		}
+
 		hostPrefs.setUsername(username);
+		
+		if(StringUtils.isEmpty(password))
+		{
+			toastError("Password is a required field.");
+			return false;
+		}
+		
 		hostPrefs.setPassword(password);
 		hostPrefs.setPort(port);
 		hostPrefs.setSSL(isSSL);
 		hostPrefs.setShowHidden(showHidden);
-		
-		if(webappRoot != null && webappRoot.length() > 0)
+
+		if(StringUtils.isEmpty(webappRoot))
 		{
-			hostPrefs.setWebappRoot(webappRoot);
+			toastError("URL is a required field.");
+			return false;
 		}
-			
+		
+		hostPrefs.setWebappRoot(webappRoot);
+
 		prefsMgr.setPreferences(this, hostPrefs);
 		
-		finish();
+		return true;
+	}
+	
+	protected void toastError(String msg)
+	{
+		int duration = Toast.LENGTH_SHORT;
+		Toast toast = Toast.makeText(this, msg + "\nPress back again to cancel editing.", duration);
+		toast.show();
 	}
 }
 
