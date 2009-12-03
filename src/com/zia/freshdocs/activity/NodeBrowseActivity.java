@@ -1,5 +1,7 @@
 package com.zia.freshdocs.activity;
 
+import java.util.Set;
+
 import android.app.ListActivity;
 import android.content.Intent;
 import android.content.res.Configuration;
@@ -19,6 +21,9 @@ import com.zia.freshdocs.Constants;
 import com.zia.freshdocs.R;
 import com.zia.freshdocs.app.CMISApplication;
 import com.zia.freshdocs.cmis.CMIS;
+import com.zia.freshdocs.model.NodeRef;
+import com.zia.freshdocs.preference.CMISHost;
+import com.zia.freshdocs.preference.CMISPreferencesManager;
 import com.zia.freshdocs.widget.CMISAdapter;
 
 public class NodeBrowseActivity extends ListActivity
@@ -111,6 +116,18 @@ public class NodeBrowseActivity extends ListActivity
 		{
 			MenuInflater inflater = getMenuInflater();
 			inflater.inflate(R.menu.node_context_menu, menu);
+			MenuItem item = menu.findItem(R.id.menu_item_favorite);
+			
+			CMISPreferencesManager prefsMgr = CMISPreferencesManager.getInstance();
+			String hostname = _adapter.getCmis().getHostname();
+			CMISHost prefs = prefsMgr.getPreferences(this, hostname);
+			NodeRef ref = _adapter.getItem(position);
+			Set<NodeRef> favorites = prefs.getFavorites();
+			if(favorites.contains(ref))
+			{
+				item.setTitle(R.string.remove_favorite);
+			}
+
 		}
 	}
 

@@ -22,7 +22,8 @@
 	<string name="error_invalid_credentials">Invalid Credentials</string>
 	<string name="error_server_error">Unknown Server Error</string>
 	<string name="send">Share</string>
-	<string name="favorite">Toggle Favorite</string>
+	<string name="add_favorite">Add Favorite</string>
+	<string name="remove_favorite">Remove Favorite</string>
 	<string name="email_text">Sent using the Alfresco Android client.</string>
 	<string name="email_title">Send Email...</string>
 	<string name="preference_filename">prefs.dat</string>

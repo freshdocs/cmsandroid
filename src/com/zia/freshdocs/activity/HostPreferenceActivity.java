@@ -73,8 +73,6 @@ public class HostPreferenceActivity extends Activity
 
 	protected boolean updateHost()
 	{
-		CMISPreferencesManager prefsMgr = CMISPreferencesManager.getInstance();
-
 		String hostname = ((EditText) findViewById(R.id.hostname_edittext)).getText().toString();
 		String username = ((EditText) findViewById(R.id.username_edittext)).getText().toString();
 		String password = ((EditText) findViewById(R.id.password_edittext)).getText().toString();
@@ -132,6 +130,7 @@ public class HostPreferenceActivity extends Activity
 		
 		hostPrefs.setWebappRoot(webappRoot);
 
+		CMISPreferencesManager prefsMgr = CMISPreferencesManager.getInstance();
 		prefsMgr.setPreferences(this, hostPrefs);
 		
 		return true;

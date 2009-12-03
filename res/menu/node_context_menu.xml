@@ -4,6 +4,6 @@
           android:icon="@android:drawable/ic_menu_send"/>
 
     <item android:id="@+id/menu_item_favorite"
-          android:title="@string/favorite" 
+          android:title="@string/add_favorite" 
           android:icon="@android:drawable/btn_star"/>
 </menu>
