@@ -18,6 +18,7 @@ public class HostPreferenceActivity extends Activity
 	public static final String EXTRA_EDIT_SERVER = "edit_server";
 	
 	protected boolean _backPressed;
+	protected CMISHost _currentHost;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
@@ -36,22 +37,22 @@ public class HostPreferenceActivity extends Activity
 	protected void editServer(String servername)
 	{
 		CMISPreferencesManager prefsMgr = CMISPreferencesManager.getInstance();
-		CMISHost hostPrefs = prefsMgr.getPreferences(this, servername);
+		_currentHost = prefsMgr.getPreferences(this, servername);
 
-		if(hostPrefs != null)
+		if(_currentHost != null)
 		{
 			((EditText) findViewById(R.id.hostname_edittext)).setText(
-					(String) hostPrefs.getHostname());
+					(String) _currentHost.getHostname());
 			((EditText) findViewById(R.id.username_edittext)).setText(
-					(String) hostPrefs.getUsername());
+					(String) _currentHost.getUsername());
 			((EditText) findViewById(R.id.password_edittext)).setText(
-					(String) hostPrefs.getPassword()); 			
+					(String) _currentHost.getPassword()); 			
 			((EditText) findViewById(R.id.webapp_root)).setText(
-					(String) hostPrefs.getWebappRoot()); 			
+					(String) _currentHost.getWebappRoot()); 			
 			((EditText) findViewById(R.id.port_edittext)).setText(Integer.toString(
-					(int) hostPrefs.getPort())); 			
-			((CheckBox) findViewById(R.id.ssl)).setChecked(hostPrefs.isSSL()); 			
-			((CheckBox) findViewById(R.id.hidden_files)).setChecked(hostPrefs.isShowHidden()); 			
+					(int) _currentHost.getPort())); 			
+			((CheckBox) findViewById(R.id.ssl)).setChecked(_currentHost.isSSL()); 			
+			((CheckBox) findViewById(R.id.hidden_files)).setChecked(_currentHost.isShowHidden()); 			
 		}
 	}
 
@@ -93,7 +94,10 @@ public class HostPreferenceActivity extends Activity
 		
 		port = Integer.parseInt(portVal);
 
-		CMISHost hostPrefs = new CMISHost();
+		if(_currentHost == null)
+		{
+			_currentHost = new CMISHost();
+		}
 
 		if(StringUtils.isEmpty(hostname))
 		{
@@ -101,7 +105,7 @@ public class HostPreferenceActivity extends Activity
 			return false;
 		}
 		
-		hostPrefs.setHostname(hostname);
+		_currentHost.setHostname(hostname);
 		
 		if(StringUtils.isEmpty(username))
 		{
@@ -109,7 +113,7 @@ public class HostPreferenceActivity extends Activity
 			return false;
 		}
 
-		hostPrefs.setUsername(username);
+		_currentHost.setUsername(username);
 		
 		if(StringUtils.isEmpty(password))
 		{
@@ -117,10 +121,10 @@ public class HostPreferenceActivity extends Activity
 			return false;
 		}
 		
-		hostPrefs.setPassword(password);
-		hostPrefs.setPort(port);
-		hostPrefs.setSSL(isSSL);
-		hostPrefs.setShowHidden(showHidden);
+		_currentHost.setPassword(password);
+		_currentHost.setPort(port);
+		_currentHost.setSSL(isSSL);
+		_currentHost.setShowHidden(showHidden);
 
 		if(StringUtils.isEmpty(webappRoot))
 		{
@@ -128,10 +132,10 @@ public class HostPreferenceActivity extends Activity
 			return false;
 		}
 		
-		hostPrefs.setWebappRoot(webappRoot);
+		_currentHost.setWebappRoot(webappRoot);
 
 		CMISPreferencesManager prefsMgr = CMISPreferencesManager.getInstance();
-		prefsMgr.setPreferences(this, hostPrefs);
+		prefsMgr.setPreferences(this, _currentHost);
 		
 		return true;
 	}

@@ -194,20 +194,15 @@ public class HostsActivity extends ListActivity
 			{
 				boolean ok = msg.getData().getBoolean(OK_KEY);
 
-				adapter.toggleProgress(container, false);
+				adapter.toggleProgress(container, false);					
 
-				if(ok)
+				if(!ok)
 				{
-					Intent browseIntent = new Intent(ctx, NodeBrowseActivity.class);
-					startActivityForResult(browseIntent, NODE_BROWSE_REQ);
-					adapter.toggleError(container, false);
-				}			
-				else
-				{
-					app.handleNetworkStatus();
 					adapter.toggleError(container, true);
-				}
-
+				} 
+				
+				Intent browseIntent = new Intent(ctx, NodeBrowseActivity.class);
+				startActivityForResult(browseIntent, NODE_BROWSE_REQ);
 			}
 		}, 
 		new Downloadable()

@@ -21,6 +21,7 @@ import com.zia.freshdocs.Constants;
 import com.zia.freshdocs.R;
 import com.zia.freshdocs.app.CMISApplication;
 import com.zia.freshdocs.cmis.CMIS;
+import com.zia.freshdocs.cmis.CMIS.NetworkStatus;
 import com.zia.freshdocs.model.NodeRef;
 import com.zia.freshdocs.preference.CMISHost;
 import com.zia.freshdocs.preference.CMISPreferencesManager;
@@ -36,10 +37,8 @@ public class NodeBrowseActivity extends ListActivity
 	public void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.nodes);
+		initializeListView();
 		registerForContextMenu(getListView());
-		initializeListAdapter();
-		
 	}
 	
 	@Override
@@ -47,7 +46,7 @@ public class NodeBrowseActivity extends ListActivity
 	{
 		super.onResume();
 		
-		if(!_adapterInitialized)
+		if(!_adapterInitialized && _adapter != null)
 		{
 			_adapterInitialized = true;
 			_adapter.home();
@@ -149,14 +148,24 @@ public class NodeBrowseActivity extends ListActivity
 		return false;
 	}
 
-	protected void initializeListAdapter()
+	protected void initializeListView()
 	{
 		CMISApplication app = (CMISApplication) getApplication();
-		_adapter = new CMISAdapter(this, R.layout.node_ref_item, R.id.node_ref_label);
 		CMIS cmis = app.getCMIS();
+
+		if(cmis.getNetworkStatus() == NetworkStatus.OK)
+		{
+			setContentView(R.layout.nodes);			
+		}
+		else
+		{
+			setContentView(R.layout.nodes_offline);						
+		}
+
+		_adapter = new CMISAdapter(this, R.layout.node_ref_item, R.id.node_ref_label);
 		_adapter.setCmis(app.getCMIS());
 		setListAdapter(_adapter);
-		
+
 		Resources res = getResources();
 		StringBuilder title = new StringBuilder(res.getString(R.string.app_name)).append(" - ").
 			append(cmis.getHostname());
