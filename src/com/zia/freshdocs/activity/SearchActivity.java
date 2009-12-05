@@ -11,6 +11,8 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.zia.freshdocs.R;
+import com.zia.freshdocs.cmis.CMIS;
+import com.zia.freshdocs.cmis.CMIS.NetworkStatus;
 
 public class SearchActivity extends NodeBrowseActivity
 {
@@ -59,10 +61,13 @@ public class SearchActivity extends NodeBrowseActivity
 		
 		if (Intent.ACTION_SEARCH.equals(queryAction) && _isDirty) 
 		{
-			if(_adapter.getCmis() == null)
+			CMIS cmis = _adapter.getCmis();
+			if(cmis == null || cmis.getNetworkStatus() != NetworkStatus.OK)
 			{
 				int duration = Toast.LENGTH_SHORT;
-				Toast toast = Toast.makeText(this, R.string.search_ambiguaous, duration);
+				int error_id = cmis == null ? R.string.search_ambiguaous : 
+					R.string.offline_search_error;
+				Toast toast = Toast.makeText(this, error_id, duration);
 				toast.show();
 				finish();
 			}

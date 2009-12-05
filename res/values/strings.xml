@@ -44,5 +44,6 @@
 	<string name="zia_www">http://www.ziaconsulting.com</string>	
 	<string name="no_favorites">No Favorites</string>	
 	<string name="no_search_results">Empty Search Result</string>	
-	<string name="offline">Offline</string>	
+	<string name="offline">Offline Mode</string>	
+	<string name="offline_search_error">Search is unavailable while offline</string>	
 </resources>
