@@ -18,7 +18,9 @@ import org.apache.commons.io.IOUtils;
 import android.app.ProgressDialog;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.DialogInterface.OnCancelListener;
 import android.content.res.Resources;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
@@ -147,12 +149,12 @@ public class CMISAdapter extends ArrayAdapter<NodeRef>
 				{
 					public void handleMessage(Message msg) 
 					{
+						dismissProgressDlg();
+						
 						boolean done = msg.getData().getBoolean("done");
-						if(done && _progressDlg != null)
+						if(done )
 						{	
-							_progressDlg.dismiss();
 							File file = (File) _dlThread.getResult();
-
 							if(file != null)
 							{
 								viewContent(file, ref);
@@ -171,12 +173,13 @@ public class CMISAdapter extends ArrayAdapter<NodeRef>
 		{
 			public void handleMessage(Message msg) 
 			{
+				dismissProgressDlg();
+				
 				Context context = getContext();
 				boolean done = msg.getData().getBoolean("done");
 				
-				if(done && _progressDlg != null)
+				if(done)
 				{	
-					_progressDlg.dismiss();
 					File file = (File) _dlThread.getResult();
 					
 					if(file != null)
@@ -232,11 +235,11 @@ public class CMISAdapter extends ArrayAdapter<NodeRef>
 			{
 				public void handleMessage(Message msg) 
 				{
+					dismissProgressDlg();
+					
 					boolean done = msg.getData().getBoolean("done");
-
-					if(done && _progressDlg != null)
+					if(done)
 					{	
-						_progressDlg.dismiss();
 						File file = (File) _dlThread.getResult();
 
 						if(file != null)
@@ -244,7 +247,7 @@ public class CMISAdapter extends ArrayAdapter<NodeRef>
 							prefs.addFavorite(ref);
 							prefsMgr.setPreferences(context, prefs);
 						}
-					}			
+					}
 				}
 			});
 		}
@@ -275,7 +278,23 @@ public class CMISAdapter extends ArrayAdapter<NodeRef>
 						URL url = new URL(builder.build().toString());
 						URLConnection conn = url.openConnection();
 						FileOutputStream fos = new FileOutputStream(f);
-						IOUtils.copy(conn.getInputStream(), fos);
+						InputStream is = conn.getInputStream();
+						
+						byte[] buffer = new byte[4096];
+						int len = is.read(buffer);
+						
+						while (len != -1) 
+						{
+						    fos.write(buffer, 0, len);
+						    len = is.read(buffer);
+						    if (Thread.interrupted()) 
+						    {
+						    	fos.close();
+						    	f = null;
+						        throw new InterruptedException();
+						    }
+						}
+						
 						fos.flush();
 						fos.close();
 					}
@@ -289,6 +308,14 @@ public class CMISAdapter extends ArrayAdapter<NodeRef>
 			}
 		});
 		_dlThread.start();		
+	}
+	
+	public void interrupt()
+	{
+		if(_dlThread != null && _dlThread.isAlive())
+		{
+			_dlThread.interrupt();
+		}
 	}
 	
 	protected void viewContent(File file, NodeRef ref)
@@ -340,7 +367,22 @@ public class CMISAdapter extends ArrayAdapter<NodeRef>
 		Context context = getContext();
 		Resources res = context.getResources();
 		_progressDlg = ProgressDialog.show(context, "", res.getString(R.string.loading), 
-				true, true);		
+				true, true);	
+		_progressDlg.setOnCancelListener(new OnCancelListener()
+		{
+			public void onCancel(DialogInterface dialog)
+			{
+				interrupt();
+			}
+		});
+	}
+
+	protected void dismissProgressDlg()
+	{
+		if(_progressDlg != null && _progressDlg.isShowing())
+		{
+			_progressDlg.dismiss();
+		}
 	}
 	
 	public void query(final String term)
@@ -486,12 +528,13 @@ public class CMISAdapter extends ArrayAdapter<NodeRef>
 
 		public void run() 
 		{
-			_result = _delegate.execute();
+			_result = _delegate.execute();				
 
 			Message msg = _handler.obtainMessage();
 			Bundle b = new Bundle();
 			b.putBoolean("done", true);
 			msg.setData(b);
+			
 			_handler.sendMessage(msg);
 		}
 		

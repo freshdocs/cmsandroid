@@ -176,7 +176,7 @@ public class NodeBrowseActivity extends ListActivity
 	public boolean onKeyDown(int keyCode, KeyEvent event)
 	{
 		if(keyCode == KeyEvent.KEYCODE_BACK && _adapter != null && _adapter.hasPrevious())
-		{			
+		{
 			_adapter.previous();
 			return true;
 		} 
