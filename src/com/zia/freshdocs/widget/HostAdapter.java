@@ -35,7 +35,7 @@ public class HostAdapter extends ArrayAdapter<String>
 		Resources res = context.getResources();
 		ViewGroup container = (ViewGroup) super.getView(position, convertView, parent);
 		
-		if(position == getCount() -1)
+		if(position == getCount() - 1)
 		{
 			TextView child = (TextView) container.getChildAt(0);
 			SpannableStringBuilder sb = new SpannableStringBuilder(child.getText());
