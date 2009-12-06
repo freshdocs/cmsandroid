@@ -1,12 +1,20 @@
 package com.zia.freshdocs.widget;
 
+import android.R;
 import android.content.Context;
+import android.content.res.Resources;
+import android.graphics.Rect;
+import android.graphics.drawable.Drawable;
+import android.text.Spannable;
+import android.text.SpannableStringBuilder;
+import android.text.style.StyleSpan;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.RelativeLayout.LayoutParams;
 
 public class HostAdapter extends ArrayAdapter<String>
@@ -14,16 +22,6 @@ public class HostAdapter extends ArrayAdapter<String>
 	private ImageView _errorImage = null;
 	private ProgressBar _hostProgressBar = null;
 	
-	public HostAdapter(Context context, int textViewResourceId, String[] objects)
-	{
-		super(context, textViewResourceId, objects);
-	}
-
-	public HostAdapter(Context context, int textViewResourceId)
-	{
-		super(context, textViewResourceId);
-	}
-
 	public HostAdapter(Context context, int resource, int textViewResourceId,
 			String[] objects)
 	{
@@ -33,7 +31,23 @@ public class HostAdapter extends ArrayAdapter<String>
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent)
 	{
-		final ViewGroup container = (ViewGroup) super.getView(position, convertView, parent);
+		Context context = getContext();
+		Resources res = context.getResources();
+		ViewGroup container = (ViewGroup) super.getView(position, convertView, parent);
+		
+		if(position == getCount() -1)
+		{
+			TextView child = (TextView) container.getChildAt(0);
+			SpannableStringBuilder sb = new SpannableStringBuilder(child.getText());
+			sb.setSpan(new StyleSpan(android.graphics.Typeface.ITALIC), 0, sb.length(), 
+					Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+			child.setText(sb);
+			child.setTextAppearance(context, R.style.TextAppearance_Medium);
+			Drawable icon = res.getDrawable(R.drawable.ic_menu_add);
+			icon.setBounds(new Rect(0, 0, 25, 25));
+			child.setCompoundDrawables(icon, null, null, null);
+		}
+		
 		return container; 
 	}
 	

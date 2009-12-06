@@ -1,5 +1,6 @@
 package com.zia.freshdocs.activity;
 
+import java.util.HashSet;
 import java.util.Set;
 
 import android.app.ListActivity;
@@ -65,7 +66,9 @@ public class HostsActivity extends ListActivity
 	protected void initializeHostList()
 	{
 		CMISPreferencesManager prefsMgr = CMISPreferencesManager.getInstance();
-		Set<String> keys = prefsMgr.getHostnames(this);
+		Set<String> keys = new HashSet<String>(prefsMgr.getHostnames(this));
+		// Always append add server item
+		keys.add(getResources().getString(R.string.add_server));
 		HostAdapter serverAdapter = new HostAdapter(this, 
 				R.layout.host_list_item, R.id.host_textview,
 				keys.toArray(new String[]{}));
@@ -86,8 +89,7 @@ public class HostsActivity extends ListActivity
 		switch (item.getItemId())
 		{
 		case R.id.menu_add_server:
-			Intent newHostIntent = new Intent(this, HostPreferenceActivity.class);
-			startActivityForResult(newHostIntent, NEW_HOST_REQ);
+			addServer();
 			return true;
 		case R.id.menu_item_about:
 			Intent aboutIntent = new Intent(this, AboutActivity.class);
@@ -101,6 +103,12 @@ public class HostsActivity extends ListActivity
 		}
 	}
 
+	protected void addServer()
+	{
+		Intent newHostIntent = new Intent(this, HostPreferenceActivity.class);
+		startActivityForResult(newHostIntent, NEW_HOST_REQ);
+	}
+	
 	/**
 	 * Handles rotation by doing nothing (instead of onCreate being called)
 	 */
@@ -181,7 +189,13 @@ public class HostsActivity extends ListActivity
 		final Context ctx = this;
 		final HostAdapter adapter = (HostAdapter) getListAdapter();
 		final View container = v;
-	
+
+		if(position == adapter.getCount() - 1)
+		{
+			addServer();
+			return;
+		}
+		
 		TextView hostTextView = (TextView) v.findViewById(R.id.host_textview);
 		final String hostname = hostTextView.getText().toString();
 
