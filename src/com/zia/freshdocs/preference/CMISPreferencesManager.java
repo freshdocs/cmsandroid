@@ -14,13 +14,17 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.commons.codec.binary.Base64;
 
+import com.zia.freshdocs.R;
+
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
+import android.content.res.Resources;
 import android.preference.PreferenceManager;
 
 public class CMISPreferencesManager
 {
+	private static final String FIRST_RUN = "first_run";
 	private static final String SERVERS_KEY = "servers";
 	
 	// Private constructor prevents instantiation from other classes
@@ -148,8 +152,36 @@ public class CMISPreferencesManager
 		}
 	}
 	
+	protected boolean isFirstTime(Context ctx)
+	{
+		SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(ctx);
+		return !sharedPrefs.contains(FIRST_RUN) || sharedPrefs.getBoolean(FIRST_RUN, false);
+	}
+	
+	protected CMISHost createDemoServer(Context ctx)
+	{
+		Resources res = ctx.getResources();
+		
+		CMISHost host = new CMISHost();
+		host.setHostname(res.getString(R.string.demo_servername));
+		host.setUsername(res.getString(R.string.demo_username));
+		host.setPassword(res.getString(R.string.demo_password));
+		
+		return host;
+	}
+	
 	public Set<String> getHostnames(Context ctx)
 	{
+		if(isFirstTime(ctx))
+		{
+			CMISHost host = createDemoServer(ctx);
+			setPreferences(ctx, host);
+			SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(ctx);
+			Editor editor = sharedPrefs.edit();
+			editor.putBoolean(FIRST_RUN, false);
+			editor.commit();
+		}
+		
 		Map<String, CMISHost> prefs = readPreferences(ctx);
 
 		if(prefs != null)

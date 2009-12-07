@@ -46,4 +46,7 @@
 	<string name="no_search_results">Empty Search Result</string>	
 	<string name="offline">Offline Mode</string>	
 	<string name="offline_search_error">Search is unavailable while offline</string>	
+	<string name="demo.servername">demo.ziaconsulting.com</string>	
+	<string name="demo.username">iphone</string>	
+	<string name="demo.password">c4ntgu3ssm3</string>	
 </resources>
