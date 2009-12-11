@@ -1,6 +1,6 @@
 package com.zia.freshdocs.activity;
 
-import java.util.ArrayList;
+import java.util.Collection;
 
 import android.app.ListActivity;
 import android.content.Context;
@@ -22,6 +22,7 @@ import android.widget.AdapterView.AdapterContextMenuInfo;
 import com.zia.freshdocs.Constants;
 import com.zia.freshdocs.R;
 import com.zia.freshdocs.app.CMISApplication;
+import com.zia.freshdocs.preference.CMISHost;
 import com.zia.freshdocs.preference.CMISPreferencesManager;
 import com.zia.freshdocs.util.Downloadable;
 import com.zia.freshdocs.widget.HostAdapter;
@@ -65,12 +66,14 @@ public class HostsActivity extends ListActivity
 	protected void initializeHostList()
 	{
 		CMISPreferencesManager prefsMgr = CMISPreferencesManager.getInstance();
-		ArrayList<String> keys = new ArrayList<String>(prefsMgr.getHostnames(this));
+		Collection<CMISHost> prefs = prefsMgr.getAllPreferences(this);
+
 		// Always append add server item
-		keys.add(getResources().getString(R.string.add_server));
+//		prefs.add(getResources().getString(R.string.add_server));
+		
 		HostAdapter serverAdapter = new HostAdapter(this, 
 				R.layout.host_list_item, R.id.host_textview,
-				keys.toArray(new String[]{}));
+				prefs.toArray(new CMISHost[]{}));
 		setListAdapter(serverAdapter);
 	}
 	
@@ -189,11 +192,11 @@ public class HostsActivity extends ListActivity
 		final HostAdapter adapter = (HostAdapter) getListAdapter();
 		final View container = v;
 
-		if(position == adapter.getCount() - 1)
-		{
-			addServer();
-			return;
-		}
+//		if(position == adapter.getCount() - 1)
+//		{
+//			addServer();
+//			return;
+//		}
 		
 		TextView hostTextView = (TextView) v.findViewById(R.id.host_textview);
 		final String hostname = hostTextView.getText().toString();

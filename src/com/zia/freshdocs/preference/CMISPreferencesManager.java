@@ -5,6 +5,8 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -14,13 +16,13 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.commons.codec.binary.Base64;
 
-import com.zia.freshdocs.R;
-
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.content.res.Resources;
 import android.preference.PreferenceManager;
+
+import com.zia.freshdocs.R;
 
 public class CMISPreferencesManager
 {
@@ -190,5 +192,27 @@ public class CMISPreferencesManager
 		}		
 		
 		return new HashSet<String>();
+	}
+	
+	public Collection<CMISHost> getAllPreferences(Context ctx)
+	{
+		if(isFirstTime(ctx))
+		{
+			CMISHost host = createDemoServer(ctx);
+			setPreferences(ctx, host);
+			SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(ctx);
+			Editor editor = sharedPrefs.edit();
+			editor.putBoolean(FIRST_RUN, false);
+			editor.commit();
+		}
+		
+		Map<String, CMISHost> prefs = readPreferences(ctx);
+
+		if(prefs != null)
+		{
+			return prefs.values();
+		}		
+		
+		return new ArrayList<CMISHost>();
 	}
 }

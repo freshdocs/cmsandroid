@@ -90,23 +90,41 @@ public class CMISAdapter extends ArrayAdapter<NodeRef>
 	
 	public void home()
 	{
-		NodeRef companyHome = _cmis.getCompanyHome();
+		startProgressDlg();
 		
-		// Save reference to current entry
-		_stack.clear();		
-		
-		if(companyHome != null)
+		_dlThread = new ChildDownloadThread(new Handler() 
 		{
-			// Get Company Home children
-			String uuid = companyHome.getContent();
-			_currentState = new Pair<String, NodeRef[]>(uuid, null);
-			getChildren(uuid);
-		}
-		else
+			public void handleMessage(Message msg) 
+			{
+//				dismissProgressDlg();
+				
+				// Save reference to current entry
+				_stack.clear();		
+				
+				NodeRef companyHome = (NodeRef) _dlThread.getResult();
+
+				if(companyHome != null)
+				{
+					// Get Company Home children
+					String uuid = companyHome.getContent();
+					_currentState = new Pair<String, NodeRef[]>(uuid, null);
+					getChildren(uuid);
+				}
+				else
+				{
+					CMISApplication app = (CMISApplication) getContext().getApplicationContext();
+					app.handleNetworkStatus();
+				}
+			}			
+		}, 
+		new Downloadable()
 		{
-			CMISApplication app = (CMISApplication) getContext().getApplicationContext();
-			app.handleNetworkStatus();
-		}
+			public Object execute()
+			{
+				return _cmis.getCompanyHome();
+			}
+		});
+		_dlThread.start();		
 	}
 
 	
@@ -366,15 +384,19 @@ public class CMISAdapter extends ArrayAdapter<NodeRef>
 	{
 		Context context = getContext();
 		Resources res = context.getResources();
-		_progressDlg = ProgressDialog.show(context, "", res.getString(R.string.loading), 
-				true, true);	
-		_progressDlg.setOnCancelListener(new OnCancelListener()
+		
+		if(_progressDlg == null || !_progressDlg.isShowing())
 		{
-			public void onCancel(DialogInterface dialog)
+			_progressDlg = ProgressDialog.show(context, "", res.getString(R.string.loading), 
+					true, true);	
+			_progressDlg.setOnCancelListener(new OnCancelListener()
 			{
-				interrupt();
-			}
-		});
+				public void onCancel(DialogInterface dialog)
+				{
+					interrupt();
+				}
+			});
+		}
 	}
 
 	protected void dismissProgressDlg()
@@ -503,10 +525,11 @@ public class CMISAdapter extends ArrayAdapter<NodeRef>
 	{
 		public void handleMessage(Message msg) 
 		{
+			dismissProgressDlg();
+			
 			boolean done = msg.getData().getBoolean("done");
-			if(done && _progressDlg != null)
+			if(done)
 			{	
-				_progressDlg.cancel();
 				NodeRef[] nodes = (NodeRef[]) _dlThread.getResult();
 				_currentState = new Pair<String, NodeRef[]>(_currentState.getFirst(), nodes);
 				populateList(nodes);

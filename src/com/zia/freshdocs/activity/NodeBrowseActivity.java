@@ -153,7 +153,7 @@ public class NodeBrowseActivity extends ListActivity
 		CMISApplication app = (CMISApplication) getApplication();
 		CMIS cmis = app.getCMIS();
 
-		if(cmis.getNetworkStatus() == NetworkStatus.OK)
+		if(cmis != null && cmis.getNetworkStatus() == NetworkStatus.OK)
 		{
 			setContentView(R.layout.nodes);			
 		}
