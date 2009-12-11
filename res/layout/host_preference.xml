@@ -14,7 +14,9 @@
 			<TextView android:text="@string/hostname"
 				android:paddingRight="10px"/>
 			<EditText android:id="@+id/hostname_edittext" 
-				android:hint="@string/hostname"/>
+				android:hint="@string/hostname"
+				android:scrollHorizontally="true"
+				android:singleLine="true"/>
 	
 		</TableRow>
 	
@@ -22,7 +24,9 @@
 	
 			<TextView android:text="@string/username"/>
 			<EditText android:id="@+id/username_edittext"
-				android:hint="@string/username"/>
+				android:hint="@string/username"
+				android:scrollHorizontally="true"
+				android:singleLine="true"/>
 	
 		</TableRow>
 	
@@ -32,8 +36,10 @@
 				android:layout_width="wrap_content"/>
 			<EditText android:id="@+id/password_edittext"
 				android:hint="@string/password" 
-				android:password="true"/>
-	
+				android:password="true"
+				android:scrollHorizontally="true"
+				android:singleLine="true"/>
+					
 		</TableRow>
 
 		<TableRow>
@@ -65,8 +71,10 @@
 			<EditText android:id="@+id/port_edittext"
 				android:hint="@string/port"
 				android:text="80"
-				android:numeric="integer"/>
-	
+				android:numeric="integer"
+				android:scrollHorizontally="true"
+				android:singleLine="true"/>
+				
 		</TableRow>
 	
 		<TableRow>
@@ -75,8 +83,10 @@
 				android:layout_width="wrap_content"/>
 			<EditText android:id="@+id/webapp_root"
 				android:hint="@string/port"
-				android:text="/alfresco"/>
-	
+				android:text="/alfresco"
+				android:scrollHorizontally="true"
+				android:singleLine="true"/>
+			
 		</TableRow>
 	
 	</TableLayout>
