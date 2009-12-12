@@ -7,10 +7,8 @@ import android.view.View;
 import android.widget.ListView;
 
 import com.zia.freshdocs.R;
-import com.zia.freshdocs.cmis.CMIS;
 import com.zia.freshdocs.model.NodeRef;
 import com.zia.freshdocs.preference.CMISHost;
-import com.zia.freshdocs.preference.CMISPreferencesManager;
 
 public class FavoritesActivity extends NodeBrowseActivity
 {
@@ -39,9 +37,7 @@ public class FavoritesActivity extends NodeBrowseActivity
 	{
 		_adapter.clear();
 		
-		CMIS cmis = _adapter.getCmis();
-		CMISPreferencesManager prefsMgr = CMISPreferencesManager.getInstance();
-		CMISHost prefs = prefsMgr.getPreferences(this, cmis.getHostname());
+		CMISHost prefs = _adapter.getCmis().getPrefs();
 		
 		if(prefs != null)
 		{

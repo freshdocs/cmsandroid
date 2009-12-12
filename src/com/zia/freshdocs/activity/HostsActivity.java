@@ -16,7 +16,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 
 import com.zia.freshdocs.Constants;
@@ -132,28 +131,29 @@ public class HostsActivity extends ListActivity
 	public boolean onContextItemSelected(MenuItem item)
 	{
 		AdapterContextMenuInfo info = (AdapterContextMenuInfo) item.getMenuInfo();
-		String hostname = (String) getListAdapter().getItem(info.position);
+		CMISHost prefs = (CMISHost) getListAdapter().getItem(info.position);
+		String id = prefs.getId();
 
 		switch (item.getItemId())
 		{
 		case R.id.menu_edit_server:
 			Intent newHostIntent = new Intent(this, HostPreferenceActivity.class);
-			newHostIntent.putExtra(HostPreferenceActivity.EXTRA_EDIT_SERVER, hostname);
+			newHostIntent.putExtra(HostPreferenceActivity.EXTRA_EDIT_SERVER, id);
 			startActivityForResult(newHostIntent, EDIT_HOST_REQ);
 			
 			return true;
 		case R.id.menu_delete_server:
-			deleteServer(hostname);
+			deleteServer(id);
 			break;
 		}
 		
 		return false;
 	}
 
-	protected void deleteServer(String hostname)
+	protected void deleteServer(String id)
 	{
 		CMISPreferencesManager prefsMgr = CMISPreferencesManager.getInstance();
-		prefsMgr.deletePreferences(this, hostname);
+		prefsMgr.deletePreferences(this, id);
 		initializeHostList();
 	}
 	
@@ -198,8 +198,8 @@ public class HostsActivity extends ListActivity
 //			return;
 //		}
 		
-		TextView hostTextView = (TextView) v.findViewById(R.id.host_textview);
-		final String hostname = hostTextView.getText().toString();
+		CMISHost prefs = adapter.getItem(position);
+		final String hostId = prefs.getId();
 
 		adapter.toggleError(container, false);
 		adapter.toggleProgress(container, true);
@@ -225,7 +225,7 @@ public class HostsActivity extends ListActivity
 		{
 			public Object execute()
 			{
-				return app.initCMIS(hostname);
+				return app.initCMIS(hostId);
 			}
 		});
 		

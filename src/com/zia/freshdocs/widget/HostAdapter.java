@@ -1,15 +1,6 @@
 package com.zia.freshdocs.widget;
 
-import com.zia.freshdocs.preference.CMISHost;
-
-import android.R;
 import android.content.Context;
-import android.content.res.Resources;
-import android.graphics.Rect;
-import android.graphics.drawable.Drawable;
-import android.text.Spannable;
-import android.text.SpannableStringBuilder;
-import android.text.style.StyleSpan;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -18,6 +9,8 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.RelativeLayout.LayoutParams;
+
+import com.zia.freshdocs.preference.CMISHost;
 
 public class HostAdapter extends ArrayAdapter<CMISHost>
 {
@@ -33,8 +26,8 @@ public class HostAdapter extends ArrayAdapter<CMISHost>
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent)
 	{
-		Context context = getContext();
-		Resources res = context.getResources();
+//		Context context = getContext();
+//		Resources res = context.getResources();
 		ViewGroup container = (ViewGroup) super.getView(position, convertView, parent);
 		CMISHost host = getItem(position);
 		TextView child = (TextView) container.getChildAt(0);

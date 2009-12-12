@@ -23,5 +23,7 @@ public class Constants
 		Constants.mimeMap.put(null, R.drawable.document);
 	}
 
+	public static final String NEW_HOST_ID = "-1";
+	
 	public static final String QUIT = "quit";
 }

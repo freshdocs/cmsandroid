@@ -8,10 +8,7 @@ import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
-import java.util.TreeSet;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.commons.codec.binary.Base64;
@@ -22,6 +19,7 @@ import android.content.SharedPreferences.Editor;
 import android.content.res.Resources;
 import android.preference.PreferenceManager;
 
+import com.zia.freshdocs.Constants;
 import com.zia.freshdocs.R;
 
 public class CMISPreferencesManager
@@ -108,13 +106,13 @@ public class CMISPreferencesManager
 		}
 	}
 	
-	public CMISHost getPreferences(Context ctx, String hostname)
+	public CMISHost getPreferences(Context ctx, String id)
 	{
 		Map<String, CMISHost> prefs = readPreferences(ctx);
 		
-		if(prefs.containsKey(hostname))
+		if(prefs.containsKey(id))
 		{
-			return prefs.get(hostname);
+			return prefs.get(id);
 		}
 		
 		return null;
@@ -134,22 +132,22 @@ public class CMISPreferencesManager
 			prefs = new HashMap<String, CMISHost>();
 		}
 		
-		prefs.put(hostPrefs.getHostname(), hostPrefs);
+		prefs.put(hostPrefs.getId(), hostPrefs);
 		storePreferences(ctx, prefs);
 	}
 	
-	public void deletePreferences(Context ctx, String hostname)
+	public void deletePreferences(Context ctx, String id)
 	{
 		Map<String, CMISHost> prefs = readPreferences(ctx);
 
-		if(hostname == null || prefs == null)
+		if(id == null || prefs == null)
 		{
 			return;
 		}
 		
-		if(prefs.containsKey(hostname))
+		if(prefs.containsKey(id))
 		{
-			prefs.remove(hostname);
+			prefs.remove(id);
 			storePreferences(ctx, prefs);		
 		}
 	}
@@ -165,33 +163,12 @@ public class CMISPreferencesManager
 		Resources res = ctx.getResources();
 		
 		CMISHost host = new CMISHost();
+		host.setId(Constants.NEW_HOST_ID);
 		host.setHostname(res.getString(R.string.demo_servername));
 		host.setUsername(res.getString(R.string.demo_username));
 		host.setPassword(res.getString(R.string.demo_password));
 		
 		return host;
-	}
-	
-	public Set<String> getHostnames(Context ctx)
-	{
-		if(isFirstTime(ctx))
-		{
-			CMISHost host = createDemoServer(ctx);
-			setPreferences(ctx, host);
-			SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(ctx);
-			Editor editor = sharedPrefs.edit();
-			editor.putBoolean(FIRST_RUN, false);
-			editor.commit();
-		}
-		
-		Map<String, CMISHost> prefs = readPreferences(ctx);
-
-		if(prefs != null)
-		{
-			return new TreeSet<String>(prefs.keySet());
-		}		
-		
-		return new HashSet<String>();
 	}
 	
 	public Collection<CMISHost> getAllPreferences(Context ctx)

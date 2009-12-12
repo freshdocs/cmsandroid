@@ -4,10 +4,13 @@ import java.io.File;
 import java.io.FileFilter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
+
+import org.apache.commons.io.FileUtils;
 
 import android.app.Application;
 import android.content.res.Resources;
@@ -42,17 +45,16 @@ public class CMISApplication extends Application
 		return _reason;
 	}
 
-	public boolean initCMIS(String hostname)
+	public boolean initCMIS(String id)
 	{
 		boolean status = false;
 
 		CMISPreferencesManager prefMgr = CMISPreferencesManager.getInstance();
-		CMISHost prefs = prefMgr.getPreferences(this, hostname);
+		CMISHost prefs = prefMgr.getPreferences(this, id);
 		
 		if(prefs != null)
 		{
-			_cmis = new CMIS(prefs.getHostname(), prefs.getUsername(), 
-					prefs.getPassword(), prefs.getPort(), prefs.isSSL(), prefs.getWebappRoot());
+			_cmis = new CMIS(prefs);
 
 			if (_cmis != null)
 			{
@@ -107,7 +109,8 @@ public class CMISApplication extends Application
 		if(sdCard.canWrite() && targetPath.length() > 0  && _cmis != null)
 		{
 			// Each host has it's own file store
-			targetPath.append(File.separator).append(_cmis.getHostname());
+			CMISHost prefs = _cmis.getPrefs();
+			targetPath.append(File.separator).append(prefs.getId());
 			File appStorage = new File(targetPath.toString());
 			
 			if(!appStorage.exists())
@@ -150,25 +153,28 @@ public class CMISApplication extends Application
 		return null;
 	}
 	
+	//@TODO this logic is all wrong.  Instead of pruning based on stored servers
+	// cleanup should iterate over the directories/files and determine if the server or
+	// file is valid
 	public void cleanupCache()
 	{
 		StringBuilder appStoragePath = getAppStoragePath();
 		CMISPreferencesManager prefsMgr = CMISPreferencesManager.getInstance();
-		Set<String> hosts = prefsMgr.getHostnames(this);
+		Collection<CMISHost> hosts = prefsMgr.getAllPreferences(this);
 		File storage = null;
 		StringBuilder hostPath = null;
-		CMISHost hostPref = null;
 		Set<NodeRef> favorites = null;
+		String id = null; 
 		
 		// This next section needs some optimization
-		for(String hostname : hosts)
+		for(CMISHost hostPref : hosts)
 		{
-			hostPref = prefsMgr.getPreferences(this, hostname);
+			id = hostPref.getId();
 			favorites = hostPref.getFavorites();
 			final List<NodeRef> favList = new ArrayList<NodeRef>();
 			
 			hostPath = new StringBuilder(appStoragePath);
-			hostPath.append(File.separator).append(hostname);
+			hostPath.append(File.separator).append(id);
 			storage = new File(hostPath.toString());
 			
 			if(favorites != null)
@@ -205,6 +211,22 @@ public class CMISApplication extends Application
 					file.delete();
 				}
 			}
+		}
+	}
+	
+	public void cleanupHostCache(String id)
+	{
+		StringBuilder appStoragePath = getAppStoragePath();
+		appStoragePath.append(File.separator).append(id);
+		File cacheDir = new File(appStoragePath.toString());
+
+		try
+		{
+			FileUtils.deleteDirectory(cacheDir);
+		}
+		catch (IOException e)
+		{
+			Log.e("ERROR", "Failed in cleanupHostCache", e);
 		}
 	}
 }

@@ -34,10 +34,10 @@ public class HostPreferenceActivity extends Activity
 		}
 	}
 
-	protected void editServer(String servername)
+	protected void editServer(String id)
 	{
 		CMISPreferencesManager prefsMgr = CMISPreferencesManager.getInstance();
-		_currentHost = prefsMgr.getPreferences(this, servername);
+		_currentHost = prefsMgr.getPreferences(this, id);
 
 		if(_currentHost != null)
 		{

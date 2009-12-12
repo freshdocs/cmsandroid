@@ -3,6 +3,7 @@ package com.zia.freshdocs.preference;
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.UUID;
 
 import com.zia.freshdocs.model.NodeRef;
 
@@ -10,6 +11,7 @@ public class CMISHost implements Serializable
 {
 	private static final long serialVersionUID = -7004962852122155333L;
 
+	private String _id;
 	private String _hostname;
 	private String _username;
 	private String _password;
@@ -21,6 +23,7 @@ public class CMISHost implements Serializable
 
 	public CMISHost()
 	{
+		_id = UUID.randomUUID().toString();
 		_favorites = new HashSet<NodeRef>();		
 	}
 	
@@ -100,5 +103,44 @@ public class CMISHost implements Serializable
 	public void addFavorite(NodeRef ref)
 	{
 		_favorites.add(ref);
+	}
+	
+	public void setId(String id)
+	{
+		this._id = id;
+	}
+
+	public String getId()
+	{
+		return _id;
+	}
+
+	@Override
+	public int hashCode()
+	{
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((_id == null) ? 0 : _id.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj)
+	{
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		CMISHost other = (CMISHost) obj;
+		if (_id == null)
+		{
+			if (other._id != null)
+				return false;
+		}
+		else if (!_id.equals(other._id))
+			return false;
+		return true;
 	}
 }

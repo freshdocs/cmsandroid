@@ -232,10 +232,9 @@ public class CMISAdapter extends ArrayAdapter<NodeRef>
 
 	public void toggleFavorite(int position)
 	{
-		String hostname = _cmis.getHostname();
 		final Context context = getContext();
 		final CMISPreferencesManager prefsMgr = CMISPreferencesManager.getInstance();						
-		final CMISHost prefs = prefsMgr.getPreferences(context, hostname);
+		final CMISHost prefs = _cmis.getPrefs();
 		final NodeRef ref = getItem(position);
 		
 		Set<NodeRef> favorites = prefs.getFavorites();

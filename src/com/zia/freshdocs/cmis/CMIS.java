@@ -28,6 +28,7 @@ import org.w3c.dom.NodeList;
 import android.util.Log;
 
 import com.zia.freshdocs.model.NodeRef;
+import com.zia.freshdocs.preference.CMISHost;
 
 public class CMIS
 {
@@ -47,32 +48,22 @@ public class CMIS
 	public static final String SCRIPT_INFO_URI = ALF_SERVICE_URI + "/cmis?alf_ticket=%s";
 	public static final String QUERY_URI = ALF_SERVICE_URI + "/query?alf_ticket=%s";
 
-	private String _hostname;
-	private String _username;
-	private String _password;
+	private CMISHost _prefs;
 	private String _ticket;
 	private String _version;
-	private String _rootURI;
-	private int _port;
-	boolean _SSL;
 	private NetworkStatus _networkStatus;
 
-	public CMIS(String hostname, String username, String password, int port, 
-			boolean ssl, String rootURI)
+	public CMIS(CMISHost prefs)
 	{
 		super();
-		_hostname = hostname;
-		_username = username;
-		_password = password;
-		_port = port;
-		_SSL = ssl;
-		_rootURI = rootURI;
+		_prefs = prefs;
 		_networkStatus = NetworkStatus.OK;
 	}
 
 	public String authenticate()
 	{
-		String res = makeHttpRequest(String.format(LOGIN_URI, _username, _password));
+		String res = makeHttpRequest(String.format(LOGIN_URI, _prefs.getUsername(), 
+				_prefs.getPassword()));
 
 		if (res != null)
 		{
@@ -117,10 +108,11 @@ public class CMIS
 					StringBuilder buf = new StringBuilder(new URL(rootUrl).getPath());
 					buf.append("?alf_ticket=").append(_ticket);
 					String path = buf.toString();
+					String rootURI = _prefs.getWebappRoot();
 					
-					if(buf.toString().startsWith(_rootURI))
+					if(buf.toString().startsWith(rootURI))
 					{
-						path = buf.substring(_rootURI.length());
+						path = buf.substring(rootURI.length());
 					}
 					
 					return parseChildren(makeHttpRequest(path))[0];
@@ -287,14 +279,15 @@ public class CMIS
 	protected String buildRelativeURI(String path)
 	{
 		StringBuilder uri = new StringBuilder();
+		String rootURI = _prefs.getWebappRoot();
 		
-		if(_rootURI.endsWith("/"))
+		if(rootURI.endsWith("/"))
 		{
-			uri.append(_rootURI.subSequence(0, _rootURI.length() - 2));
+			uri.append(rootURI.subSequence(0, rootURI.length() - 2));
 		}
 		else
 		{
-			uri.append(_rootURI);
+			uri.append(rootURI);
 		}
 
 		uri.append(path);
@@ -313,7 +306,8 @@ public class CMIS
 		try
 		{	
 			String url = new URL(
-					_SSL ? "https" : "http", _hostname, buildRelativeURI(path)).toString();
+					_prefs.isSSL() ? "https" : "http", _prefs.getHostname(), 
+							buildRelativeURI(path)).toString();
 			HttpClient client = new DefaultHttpClient();
 			client.getParams().setParameter("http.connection.timeout", new Integer(TIMEOUT));
 			_networkStatus = NetworkStatus.OK;
@@ -368,45 +362,6 @@ public class CMIS
 		return null;
 	}
 	
-	public String getHostname()
-	{
-		return _hostname;
-	}
-
-	public void setHostname(String hostname)
-	{
-		this._hostname = hostname;
-	}
-
-	public String getUsername()
-	{
-		return _username;
-	}
-
-	public void setUsername(String username)
-	{
-		this._username = username;
-	}
-
-	public String getPassword()
-	{
-		return _password;
-	}
-
-	public void setPassword(String password)
-	{
-		this._password = password;
-	}
-
-	public int getPort()
-	{
-		return _port;
-	}
-
-	public void setPort(int port)
-	{
-		this._port = port;
-	}
 
 	public String getTicket()
 	{
@@ -428,23 +383,13 @@ public class CMIS
 		return _networkStatus;
 	}
 
-	public String getRootURI()
+	public CMISHost getPrefs()
 	{
-		return _rootURI;
+		return _prefs;
 	}
 
-	public void setRootURI(String rootURI)
+	public void setPrefs(CMISHost prefs)
 	{
-		this._rootURI = rootURI;
-	}
-
-	public boolean isSSL()
-	{
-		return _SSL;
-	}
-
-	public void setSSL(boolean sSL)
-	{
-		_SSL = sSL;
+		this._prefs = prefs;
 	}
 }
