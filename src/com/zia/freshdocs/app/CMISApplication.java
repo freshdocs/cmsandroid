@@ -4,10 +4,8 @@ import java.io.File;
 import java.io.FileFilter;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.List;
 import java.util.Set;
 
 import org.apache.commons.io.FileUtils;
@@ -108,9 +106,6 @@ public class CMISApplication extends Application
 		
 		if(sdCard.canWrite() && targetPath.length() > 0  && _cmis != null)
 		{
-			// Each host has it's own file store
-			CMISHost prefs = _cmis.getPrefs();
-			targetPath.append(File.separator).append(prefs.getId());
 			File appStorage = new File(targetPath.toString());
 			
 			if(!appStorage.exists())
@@ -153,35 +148,15 @@ public class CMISApplication extends Application
 		return null;
 	}
 	
-	//@TODO this logic is all wrong.  Instead of pruning based on stored servers
-	// cleanup should iterate over the directories/files and determine if the server or
-	// file is valid
 	public void cleanupCache()
 	{
 		StringBuilder appStoragePath = getAppStoragePath();
 		CMISPreferencesManager prefsMgr = CMISPreferencesManager.getInstance();
-		Collection<CMISHost> hosts = prefsMgr.getAllPreferences(this);
-		File storage = null;
-		StringBuilder hostPath = null;
-		Set<NodeRef> favorites = null;
-		String id = null; 
-		
-		// This next section needs some optimization
-		for(CMISHost hostPref : hosts)
+		final Set<NodeRef> favorites = prefsMgr.getFavorites(this);
+		File storage = new File(appStoragePath.toString());
+					
+		if(favorites != null)
 		{
-			id = hostPref.getId();
-			favorites = hostPref.getFavorites();
-			final List<NodeRef> favList = new ArrayList<NodeRef>();
-			
-			hostPath = new StringBuilder(appStoragePath);
-			hostPath.append(File.separator).append(id);
-			storage = new File(hostPath.toString());
-			
-			if(favorites != null)
-			{
-				favList.addAll(favorites);
-			}
-			
 			if(storage.exists() && storage.isDirectory())
 			{
 				File[] files = storage.listFiles(new FileFilter()
@@ -191,7 +166,8 @@ public class CMISApplication extends Application
 						NodeRef ref = new NodeRef();
 						ref.setName(pathname.getName());
 						
-						int index = Collections.binarySearch(favList, ref, new Comparator<NodeRef>()
+						int index = Collections.binarySearch(new ArrayList<NodeRef>(favorites), 
+								ref, new Comparator<NodeRef>()
 						{
 							public int compare(NodeRef object1, NodeRef object2)
 							{

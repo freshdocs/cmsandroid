@@ -1,17 +1,16 @@
 package com.zia.freshdocs.preference;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.lang.SerializationUtils;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -21,12 +20,14 @@ import android.preference.PreferenceManager;
 
 import com.zia.freshdocs.Constants;
 import com.zia.freshdocs.R;
+import com.zia.freshdocs.model.NodeRef;
 
 public class CMISPreferencesManager
 {
+	private static final String FAVORITES_KEY = "favorites";
 	private static final String FIRST_RUN = "first_run";
 	private static final String SERVERS_KEY = "servers";
-	
+
 	// Private constructor prevents instantiation from other classes
 	private CMISPreferencesManager()
 	{
@@ -52,33 +53,22 @@ public class CMISPreferencesManager
 	{
 		ConcurrentHashMap<String, CMISHost> prefs = new ConcurrentHashMap<String, CMISHost>();
 		SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(ctx);
+		String encPrefs = null;
 
-		try
+		if(sharedPrefs.contains(SERVERS_KEY))
 		{
-			String encPrefs = null;
+			encPrefs = sharedPrefs.getString(SERVERS_KEY, null);
 
-			if(sharedPrefs.contains(SERVERS_KEY))
+			if(encPrefs != null)
 			{
-				encPrefs = sharedPrefs.getString(SERVERS_KEY, null);
-				
-				if(encPrefs != null)
-				{
-					byte[] repr = Base64.decodeBase64(encPrefs.getBytes());
-					ByteArrayInputStream bais = new ByteArrayInputStream(repr);
-					ObjectInputStream ois = new ObjectInputStream(bais);
-					Object obj = ois.readObject();
+				byte[] repr = Base64.decodeBase64(encPrefs.getBytes());
+				Object obj = SerializationUtils.deserialize(repr);
 
-					if (obj != null)
-					{
-						prefs = (ConcurrentHashMap<String, CMISHost>) obj;
-					}					
-				}
+				if (obj != null)
+				{
+					prefs = (ConcurrentHashMap<String, CMISHost>) obj;
+				}					
 			}
-		}
-		catch (Exception e)
-		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
 		}
 
 		return prefs;
@@ -86,24 +76,11 @@ public class CMISPreferencesManager
 
 	protected void storePreferences(Context ctx, Map<String, CMISHost> map)
 	{
-		SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(ctx);
-		ByteArrayOutputStream baos = new ByteArrayOutputStream();
-		
-		try
-		{
-			ObjectOutputStream oos = new ObjectOutputStream(baos);
-			oos.writeObject(map);
-			byte[] encPrefs = Base64.encodeBase64(baos.toByteArray());
-			oos.close();
-			
-			Editor prefsEditor = sharedPrefs.edit();
-			prefsEditor.putString(SERVERS_KEY, new String(encPrefs));
-			prefsEditor.commit();
-		}
-		catch (IOException e)
-		{
-			e.printStackTrace();
-		}
+		SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(ctx);		
+		byte[] encPrefs = Base64.encodeBase64(SerializationUtils.serialize((Serializable) map));
+		Editor prefsEditor = sharedPrefs.edit();
+		prefsEditor.putString(SERVERS_KEY, new String(encPrefs));
+		prefsEditor.commit();
 	}
 	
 	public CMISHost getPreferences(Context ctx, String id)
@@ -191,5 +168,41 @@ public class CMISPreferencesManager
 		}		
 		
 		return new ArrayList<CMISHost>();
+	}
+	
+	@SuppressWarnings("unchecked")
+	public Set<NodeRef> getFavorites(Context ctx)
+	{
+		Set<NodeRef> favorites = new HashSet<NodeRef>();
+		SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(ctx);
+		String enc = null;
+
+		if(sharedPrefs.contains(FAVORITES_KEY))
+		{
+			enc = sharedPrefs.getString(FAVORITES_KEY, null);
+
+			if(enc != null)
+			{
+				byte[] repr = Base64.decodeBase64(enc.getBytes());
+				Object obj = SerializationUtils.deserialize(repr);
+
+				if (obj != null)
+				{
+					favorites = (Set<NodeRef>) obj;
+				}					
+			}
+		}
+		
+		return favorites;
+	}
+	
+	public void storeFavorites(Context ctx, Set<NodeRef> favorites)
+	{
+		SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(ctx);		
+		byte[] enc = Base64.encodeBase64(
+				SerializationUtils.serialize((Serializable) favorites));
+		Editor prefsEditor = sharedPrefs.edit();
+		prefsEditor.putString(FAVORITES_KEY, new String(enc));
+		prefsEditor.commit();
 	}
 }

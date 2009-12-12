@@ -23,7 +23,7 @@ import com.zia.freshdocs.app.CMISApplication;
 import com.zia.freshdocs.cmis.CMIS;
 import com.zia.freshdocs.cmis.CMIS.NetworkStatus;
 import com.zia.freshdocs.model.NodeRef;
-import com.zia.freshdocs.preference.CMISHost;
+import com.zia.freshdocs.preference.CMISPreferencesManager;
 import com.zia.freshdocs.widget.CMISAdapter;
 
 public class NodeBrowseActivity extends ListActivity
@@ -116,9 +116,9 @@ public class NodeBrowseActivity extends ListActivity
 			inflater.inflate(R.menu.node_context_menu, menu);
 			MenuItem item = menu.findItem(R.id.menu_item_favorite);
 			
-			CMISHost prefs = _adapter.getCmis().getPrefs();
 			NodeRef ref = _adapter.getItem(position);
-			Set<NodeRef> favorites = prefs.getFavorites();
+			CMISPreferencesManager prefsMgr = CMISPreferencesManager.getInstance();
+			Set<NodeRef> favorites = prefsMgr.getFavorites(this);
 
 			if(favorites.contains(ref))
 			{
@@ -164,10 +164,13 @@ public class NodeBrowseActivity extends ListActivity
 		_adapter.setCmis(app.getCMIS());
 		setListAdapter(_adapter);
 
-		Resources res = getResources();
-		StringBuilder title = new StringBuilder(res.getString(R.string.app_name)).append(" - ").
+		if(cmis != null)
+		{
+			Resources res = getResources();
+			StringBuilder title = new StringBuilder(res.getString(R.string.app_name)).append(" - ").
 			append(cmis.getPrefs().getHostname());
-		setTitle(title.toString());
+			setTitle(title.toString());
+		}
 	}	
 
 	@Override

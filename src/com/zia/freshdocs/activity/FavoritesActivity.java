@@ -1,5 +1,8 @@
 package com.zia.freshdocs.activity;
 
+import java.util.Set;
+
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -8,11 +11,10 @@ import android.widget.ListView;
 
 import com.zia.freshdocs.R;
 import com.zia.freshdocs.model.NodeRef;
-import com.zia.freshdocs.preference.CMISHost;
+import com.zia.freshdocs.preference.CMISPreferencesManager;
 
 public class FavoritesActivity extends NodeBrowseActivity
 {
-
 	@Override
 	public void onCreate(Bundle savedInstanceState)
 	{
@@ -20,8 +22,10 @@ public class FavoritesActivity extends NodeBrowseActivity
 		setContentView(R.layout.favorites);
 		registerForContextMenu(getListView());
 		_adapterInitialized = true;
+		_adapter.setFavoritesView(true);
 		
-		StringBuilder title = new StringBuilder(getTitle());
+		Resources res = getResources();
+		StringBuilder title = new StringBuilder(res.getString(R.string.app_name));
 		title.append(" - ").append(getResources().getString(R.string.favorites));		
 		setTitle(title.toString());
 	}
@@ -37,14 +41,12 @@ public class FavoritesActivity extends NodeBrowseActivity
 	{
 		_adapter.clear();
 		
-		CMISHost prefs = _adapter.getCmis().getPrefs();
-		
-		if(prefs != null)
+		CMISPreferencesManager prefsMgr = CMISPreferencesManager.getInstance();
+		Set<NodeRef> favorites = prefsMgr.getFavorites(this);
+
+		for(NodeRef ref : favorites)
 		{
-			for(NodeRef ref : prefs.getFavorites())
-			{
-				_adapter.add(ref);
-			}
+			_adapter.add(ref);
 		}
 	}
 
@@ -61,4 +63,6 @@ public class FavoritesActivity extends NodeBrowseActivity
 	    inflater.inflate(R.menu.favorites, menu);    
 		return true;
 	}
+	
+	
 }

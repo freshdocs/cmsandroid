@@ -44,7 +44,6 @@ import com.zia.freshdocs.R;
 import com.zia.freshdocs.app.CMISApplication;
 import com.zia.freshdocs.cmis.CMIS;
 import com.zia.freshdocs.model.NodeRef;
-import com.zia.freshdocs.preference.CMISHost;
 import com.zia.freshdocs.preference.CMISPreferencesManager;
 import com.zia.freshdocs.util.Downloadable;
 import com.zia.freshdocs.util.URLUtils;
@@ -56,7 +55,8 @@ public class CMISAdapter extends ArrayAdapter<NodeRef>
 	private CMIS _cmis;
 	private ProgressDialog _progressDlg = null;
 	private ChildDownloadThread _dlThread = null;
-
+	private boolean _favoritesView = false;
+	
 	public CMISAdapter(Context context, int textViewResourceId, NodeRef[] objects)
 	{
 		super(context, textViewResourceId, objects);
@@ -83,6 +83,14 @@ public class CMISAdapter extends ArrayAdapter<NodeRef>
 		this._cmis = cmis;
 	}
 
+	public boolean isFavoritesView() {
+		return _favoritesView;
+	}
+
+	public void setFavoritesView(boolean favoritesView) {
+		this._favoritesView = favoritesView;
+	}
+
 	public void refresh()
 	{
 		getChildren(_currentState.getFirst());
@@ -96,8 +104,6 @@ public class CMISAdapter extends ArrayAdapter<NodeRef>
 		{
 			public void handleMessage(Message msg) 
 			{
-//				dismissProgressDlg();
-				
 				// Save reference to current entry
 				_stack.clear();		
 				
@@ -234,17 +240,19 @@ public class CMISAdapter extends ArrayAdapter<NodeRef>
 	{
 		final Context context = getContext();
 		final CMISPreferencesManager prefsMgr = CMISPreferencesManager.getInstance();						
-		final CMISHost prefs = _cmis.getPrefs();
 		final NodeRef ref = getItem(position);
-		
-		Set<NodeRef> favorites = prefs.getFavorites();
+		final Set<NodeRef> favorites = prefsMgr.getFavorites(context);
 		
 		if(favorites.contains(ref))
 		{
-			remove(ref);
 			favorites.remove(ref);
-			prefsMgr.setPreferences(context, prefs);
-			notifyDataSetChanged();
+			prefsMgr.storeFavorites(context, favorites);
+			
+			if(_favoritesView)
+			{
+				remove(ref);
+				notifyDataSetChanged();
+			}
 		} 
 		else
 		{		
@@ -261,8 +269,8 @@ public class CMISAdapter extends ArrayAdapter<NodeRef>
 
 						if(file != null)
 						{
-							prefs.addFavorite(ref);
-							prefsMgr.setPreferences(context, prefs);
+							favorites.add(ref);
+							prefsMgr.storeFavorites(context, favorites);
 						}
 					}
 				}

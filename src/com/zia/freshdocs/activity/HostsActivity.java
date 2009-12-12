@@ -92,6 +92,10 @@ public class HostsActivity extends ListActivity
 		case R.id.menu_add_server:
 			addServer();
 			return true;
+		case R.id.menu_item_favorites:
+			Intent favoritesIntent = new Intent(this, FavoritesActivity.class);
+			startActivityForResult(favoritesIntent, 0);
+			return true;
 		case R.id.menu_item_about:
 			Intent aboutIntent = new Intent(this, AboutActivity.class);
 			startActivity(aboutIntent);
@@ -215,10 +219,13 @@ public class HostsActivity extends ListActivity
 				if(!ok)
 				{
 					adapter.toggleError(container, true);
+					app.handleNetworkStatus();
 				} 
-				
-				Intent browseIntent = new Intent(ctx, NodeBrowseActivity.class);
-				startActivityForResult(browseIntent, NODE_BROWSE_REQ);
+				else
+				{
+					Intent browseIntent = new Intent(ctx, NodeBrowseActivity.class);
+					startActivityForResult(browseIntent, NODE_BROWSE_REQ);
+				}
 			}
 		}, 
 		new Downloadable()
