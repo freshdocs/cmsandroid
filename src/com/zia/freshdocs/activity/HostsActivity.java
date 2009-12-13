@@ -67,9 +67,6 @@ public class HostsActivity extends ListActivity
 		CMISPreferencesManager prefsMgr = CMISPreferencesManager.getInstance();
 		Collection<CMISHost> prefs = prefsMgr.getAllPreferences(this);
 
-		// Always append add server item
-//		prefs.add(getResources().getString(R.string.add_server));
-		
 		HostAdapter serverAdapter = new HostAdapter(this, 
 				R.layout.host_list_item, R.id.host_textview,
 				prefs.toArray(new CMISHost[]{}));
@@ -127,8 +124,14 @@ public class HostsActivity extends ListActivity
 	public void onCreateContextMenu(ContextMenu menu, View v,
 			ContextMenuInfo menuInfo)
 	{
-		MenuInflater inflater = getMenuInflater();
-		inflater.inflate(R.menu.host_context_menu, menu);
+		HostAdapter adapter = (HostAdapter) getListAdapter();
+		CMISHost host = adapter.getItem(((AdapterContextMenuInfo) menuInfo).position);
+		
+		if(!host.getId().equals(Constants.NEW_HOST_ID))
+		{
+			MenuInflater inflater = getMenuInflater();
+			inflater.inflate(R.menu.host_context_menu, menu);
+		}
 	}
 
 	@Override
@@ -195,12 +198,13 @@ public class HostsActivity extends ListActivity
 		final Context ctx = this;
 		final HostAdapter adapter = (HostAdapter) getListAdapter();
 		final View container = v;
-
-//		if(position == adapter.getCount() - 1)
-//		{
-//			addServer();
-//			return;
-//		}
+		CMISHost pref = adapter.getItem(position);
+		
+		if(pref.getId().equals(Constants.NEW_HOST_ID))
+		{
+			addServer();
+			return;
+		}
 		
 		CMISHost prefs = adapter.getItem(position);
 		final String hostId = prefs.getId();

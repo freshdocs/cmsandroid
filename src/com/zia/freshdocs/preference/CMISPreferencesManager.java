@@ -140,7 +140,6 @@ public class CMISPreferencesManager
 		Resources res = ctx.getResources();
 		
 		CMISHost host = new CMISHost();
-		host.setId(Constants.NEW_HOST_ID);
 		host.setHostname(res.getString(R.string.demo_servername));
 		host.setUsername(res.getString(R.string.demo_username));
 		host.setPassword(res.getString(R.string.demo_password));
@@ -148,8 +147,18 @@ public class CMISPreferencesManager
 		return host;
 	}
 	
+	protected CMISHost createAddServer(Context ctx)
+	{
+		CMISHost host = new CMISHost();
+		host.setId(Constants.NEW_HOST_ID);
+		
+		return host;
+	}
+	
 	public Collection<CMISHost> getAllPreferences(Context ctx)
 	{
+		ArrayList<CMISHost> results = new ArrayList<CMISHost>();
+		
 		if(isFirstTime(ctx))
 		{
 			CMISHost host = createDemoServer(ctx);
@@ -164,10 +173,11 @@ public class CMISPreferencesManager
 
 		if(prefs != null)
 		{
-			return prefs.values();
+			results.addAll(prefs.values());
+			results.add(createAddServer(ctx));
 		}		
 		
-		return new ArrayList<CMISHost>();
+		return results;
 	}
 	
 	@SuppressWarnings("unchecked")

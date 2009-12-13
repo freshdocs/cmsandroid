@@ -1,6 +1,13 @@
 package com.zia.freshdocs.widget;
 
+import android.R;
 import android.content.Context;
+import android.content.res.Resources;
+import android.graphics.Rect;
+import android.graphics.drawable.Drawable;
+import android.text.Spannable;
+import android.text.SpannableStringBuilder;
+import android.text.style.StyleSpan;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -10,6 +17,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.RelativeLayout.LayoutParams;
 
+import com.zia.freshdocs.Constants;
 import com.zia.freshdocs.preference.CMISHost;
 
 public class HostAdapter extends ArrayAdapter<CMISHost>
@@ -26,26 +34,25 @@ public class HostAdapter extends ArrayAdapter<CMISHost>
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent)
 	{
-//		Context context = getContext();
-//		Resources res = context.getResources();
+		Context context = getContext();
+		Resources res = context.getResources();
 		ViewGroup container = (ViewGroup) super.getView(position, convertView, parent);
-		CMISHost host = getItem(position);
 		TextView child = (TextView) container.getChildAt(0);
+		CMISHost host = getItem(position);
 		child.setText(host.getHostname());
 		
-//		if(position == getCount() - 1)
-//		{
-//			TextView child = (TextView) container.getChildAt(0);
-//			child.setText(host.getHostname());
-//			SpannableStringBuilder sb = new SpannableStringBuilder(child.getText());
-//			sb.setSpan(new StyleSpan(android.graphics.Typeface.ITALIC), 0, sb.length(), 
-//					Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-//			child.setText(sb);
-//			child.setTextAppearance(context, R.style.TextAppearance_Medium);
-//			Drawable icon = res.getDrawable(R.drawable.ic_menu_add);
-//			icon.setBounds(new Rect(0, 0, 25, 25));
-//			child.setCompoundDrawables(icon, null, null, null);
-//		}
+		if(host.getId().equals(Constants.NEW_HOST_ID))
+		{
+			SpannableStringBuilder sb = new SpannableStringBuilder(
+					res.getString(com.zia.freshdocs.R.string.add_server));
+			sb.setSpan(new StyleSpan(android.graphics.Typeface.ITALIC), 0, sb.length(), 
+					Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+			child.setText(sb);
+			child.setTextAppearance(context, R.style.TextAppearance_Medium);
+			Drawable icon = res.getDrawable(R.drawable.ic_menu_add);
+			icon.setBounds(new Rect(0, 0, 25, 25));
+			child.setCompoundDrawables(icon, null, null, null);
+		}
 		
 		return container; 
 	}
