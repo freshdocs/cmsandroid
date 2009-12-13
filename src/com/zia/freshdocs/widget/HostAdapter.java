@@ -53,6 +53,11 @@ public class HostAdapter extends ArrayAdapter<CMISHost>
 			icon.setBounds(new Rect(0, 0, 25, 25));
 			child.setCompoundDrawables(icon, null, null, null);
 		}
+		else
+		{
+			child.setTextAppearance(context, R.style.TextAppearance_Large);
+			child.setCompoundDrawables(null, null, null, null);
+		}
 		
 		return container; 
 	}
