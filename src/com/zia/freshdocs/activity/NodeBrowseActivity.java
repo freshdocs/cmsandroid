@@ -38,18 +38,25 @@ public class NodeBrowseActivity extends ListActivity
 		super.onCreate(savedInstanceState);
 		initializeListView();
 		registerForContextMenu(getListView());
-	}
-	
-	@Override
-	protected void onResume()
-	{
-		super.onResume();
 		
 		if(!_adapterInitialized && _adapter != null)
 		{
 			_adapterInitialized = true;
 			_adapter.home();
 		}
+	}
+	
+	@Override
+	protected void onResume()
+	{
+		super.onResume();
+	}
+	
+	@Override
+	protected void onPause()
+	{
+		// TODO Auto-generated method stub
+		super.onPause();
 	}
 
 	/**

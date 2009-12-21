@@ -18,10 +18,11 @@ public class FavoritesActivity extends NodeBrowseActivity
 	@Override
 	public void onCreate(Bundle savedInstanceState)
 	{
+		// Prevent call to home() in parent
+		_adapterInitialized = true;
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.favorites);
 		registerForContextMenu(getListView());
-		_adapterInitialized = true;
 		_adapter.setFavoritesView(true);
 		
 		Resources res = getResources();
@@ -53,7 +54,7 @@ public class FavoritesActivity extends NodeBrowseActivity
 	@Override
 	protected void onListItemClick(ListView l, View v, int position, long id)
 	{
-		_adapter.getChildren(position);
+		_adapter.viewFavorite(position);
 	}
 	
 	@Override

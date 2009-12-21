@@ -104,7 +104,7 @@ public class CMISApplication extends Application
 		File sdCard = Environment.getExternalStorageDirectory();
 		StringBuilder targetPath = getAppStoragePath();
 		
-		if(sdCard.canWrite() && targetPath.length() > 0  && _cmis != null)
+		if(sdCard.canWrite() && targetPath.length() > 0)
 		{
 			File appStorage = new File(targetPath.toString());
 			
@@ -123,7 +123,7 @@ public class CMISApplication extends Application
 			{
 				if(target.exists())
 				{
-					 if(target.length() != filesize)
+					 if(target.length() != filesize && filesize != -1)
 					 {
 						 target.delete();
 					 }

@@ -253,6 +253,25 @@ public class CMISAdapter extends ArrayAdapter<NodeRef>
 		});
 	}
 
+	public void viewFavorite(int position)
+	{
+		Context context = getContext();
+		CMISPreferencesManager prefsMgr = CMISPreferencesManager.getInstance();						
+		NodeRef ref = getItem(position);
+		Set<NodeRef> favorites = prefsMgr.getFavorites(context);
+		
+		if(favorites.contains(ref))
+		{
+			CMISApplication app = (CMISApplication) getContext().getApplicationContext();
+			File f = app.getFile(ref.getName(), -1);
+			
+			if(f != null)
+			{
+				viewContent(f, ref);
+			}			
+		}
+	}
+	
 	public void toggleFavorite(int position)
 	{
 		final Context context = getContext();

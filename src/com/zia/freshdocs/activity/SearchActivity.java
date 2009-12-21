@@ -21,10 +21,10 @@ public class SearchActivity extends NodeBrowseActivity
 	@Override
 	public void onCreate(Bundle savedInstanceState)
 	{
+		_adapterInitialized = true;
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.search);
 		registerForContextMenu(getListView());		
-		_adapterInitialized = true;
 		
 		StringBuilder title = new StringBuilder(getTitle());
 		title.append(" - ").append(getResources().getString(R.string.search));
