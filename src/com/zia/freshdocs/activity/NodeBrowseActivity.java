@@ -28,6 +28,8 @@ import com.zia.freshdocs.widget.CMISAdapter;
 
 public class NodeBrowseActivity extends ListActivity
 {
+	private static final String HOST_ID_KEY = "id";
+	
 	protected CMISAdapter _adapter;
 	protected boolean _adapterInitialized = false;
 
@@ -36,28 +38,42 @@ public class NodeBrowseActivity extends ListActivity
 	public void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
+		
+		restoreCMIS(savedInstanceState);
+		
 		initializeListView();
 		registerForContextMenu(getListView());
 		
-		if(!_adapterInitialized && _adapter != null)
+		if(!_adapterInitialized && _adapter != null && _adapter.getCmis() != null)
 		{
 			_adapterInitialized = true;
 			_adapter.home();
 		}
 	}
 	
-	@Override
-	protected void onResume()
+	protected void restoreCMIS(Bundle savedInstanceState)
 	{
-		super.onResume();
+		if(savedInstanceState != null && savedInstanceState.containsKey(HOST_ID_KEY))
+		{
+			String id = savedInstanceState.getString(HOST_ID_KEY);
+			CMISApplication app = (CMISApplication) getApplication();
+			app.initCMIS(id);
+		}
 	}
 	
 	@Override
-	protected void onPause()
+	protected void onSaveInstanceState(Bundle outState)
 	{
-		// TODO Auto-generated method stub
-		super.onPause();
-	}
+		super.onSaveInstanceState(outState);
+		
+		CMISApplication app = (CMISApplication) getApplication();
+		CMIS cmis = app.getCMIS();
+		
+		if(cmis != null)
+		{
+			outState.putString(HOST_ID_KEY, cmis.getPrefs().getId());
+		}
+	}	
 
 	/**
 	 * Handles rotation by doing nothing (instead of onCreate being called)
@@ -168,7 +184,7 @@ public class NodeBrowseActivity extends ListActivity
 		}
 
 		_adapter = new CMISAdapter(this, R.layout.node_ref_item, R.id.node_ref_label);
-		_adapter.setCmis(app.getCMIS());
+		_adapter.setCmis(cmis);
 		setListAdapter(_adapter);
 
 		if(cmis != null)

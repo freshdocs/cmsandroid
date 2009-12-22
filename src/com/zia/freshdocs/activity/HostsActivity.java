@@ -28,6 +28,8 @@ import com.zia.freshdocs.widget.HostAdapter;
 
 public class HostsActivity extends ListActivity
 {
+	private static final String INITIALIZED_KEY = "initialized";
+	
 	private static final int NEW_HOST_REQ = 0;
 	private static final int EDIT_HOST_REQ = 1;
 	private static final int SPLASH_REQUEST_REQ = 2;
@@ -43,17 +45,15 @@ public class HostsActivity extends ListActivity
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.hosts);
 		registerForContextMenu(getListView());
-		startActivityForResult(new Intent(this, SplashActivity.class), SPLASH_REQUEST_REQ);		
+		
+		if(savedInstanceState == null || !savedInstanceState.getBoolean(INITIALIZED_KEY))
+		{
+			startActivityForResult(new Intent(this, SplashActivity.class), SPLASH_REQUEST_REQ);
+		}
+		
 		initializeHostList();
 	}
 
-	@Override
-	protected void onResume()
-	{
-		super.onResume();
-	}
-	
-	
 	@Override
 	protected void onDestroy()
 	{
@@ -61,6 +61,13 @@ public class HostsActivity extends ListActivity
 		CMISApplication app = (CMISApplication) getApplication();
 		app.cleanupCache();
 	}
+
+	@Override
+	protected void onSaveInstanceState(Bundle outState)
+	{
+		super.onSaveInstanceState(outState);
+		outState.putBoolean(INITIALIZED_KEY, true);
+	}	
 
 	protected void initializeHostList()
 	{
@@ -263,5 +270,5 @@ public class HostsActivity extends ListActivity
 			msg.setData(b);
 			_handler.sendMessage(msg);
 		}		
-	}	
+	}
 }
