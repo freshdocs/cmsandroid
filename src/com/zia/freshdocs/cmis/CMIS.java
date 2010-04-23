@@ -1,13 +1,34 @@
+/*******************************************************************************
+ * The MIT License
+ * 
+ * Copyright (c) 2010 Zia Consulting, Inc
+ * 
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ * 
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ ******************************************************************************/
 package com.zia.freshdocs.cmis;
 
 import java.io.ByteArrayInputStream;
+import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.FactoryConfigurationError;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -21,34 +42,25 @@ import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.util.EntityUtils;
 import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
 
 import android.util.Log;
 
+import com.zia.freshdocs.Constants.NetworkStatus;
 import com.zia.freshdocs.model.NodeRef;
 import com.zia.freshdocs.preference.CMISHost;
 
 public class CMIS
 {
-	public enum NetworkStatus
-	{
-		OK,
-		CREDENTIALS_ERROR,
-		CONNECTION_ERROR,
-		UNKNOWN_ERROR
-	}
-
-	public static final int TIMEOUT = 12500;
+	protected static final int TIMEOUT = 12500;
 	
-	public static final String ALF_SERVICE_URI = "/service/api";
-	public static final String CHILDREN_URI = ALF_SERVICE_URI + "/node/workspace/SpacesStore/%s/children?alf_ticket=%s";
-	public static final String LOGIN_URI = ALF_SERVICE_URI + "/login?u=%s&pw=%s";
-	public static final String SCRIPT_INFO_URI = ALF_SERVICE_URI + "/cmis?alf_ticket=%s";
-	public static final String QUERY_URI = ALF_SERVICE_URI + "/query?alf_ticket=%s";
+	protected static final String ALF_SERVICE_URI = "/service/api";
+	protected static final String CHILDREN_URI = ALF_SERVICE_URI + "/node/workspace/SpacesStore/%s/children?alf_ticket=%s";
+	protected static final String CMIS_INFO_URI = ALF_SERVICE_URI + "/cmis?alf_ticket=%s";
+	protected static final String LOGIN_URI = ALF_SERVICE_URI + "/login?u=%s&pw=%s";
+	protected static final String QUERY_URI = ALF_SERVICE_URI + "/query?alf_ticket=%s";
 
 	private CMISHost _prefs;
+	private CMISParser _parser;
 	private String _ticket;
 	private String _version;
 	private NetworkStatus _networkStatus;
@@ -83,47 +95,50 @@ public class CMIS
 		return _ticket;
 	}
 
-	public NodeRef getCompanyHome()
+	public NodeRef[] getCompanyHome()
 	{
-		String res = makeHttpRequest(String.format(SCRIPT_INFO_URI, _ticket));
+		String res = makeHttpRequest(String.format(CMIS_INFO_URI, _ticket));
 		if (res != null)
 		{
-			DocumentBuilder docBuilder = null;
+			CMISParser parser = new CMISParserBase();
+			CMISInfo cmisInfo = parser.getCMISInfo(res);
+			_version = cmisInfo.getVersion();
+			
+			// This should probably be a factory method
+			if(_version.equals("1.0"))
+			{
+				_parser = new CMISParser10();
+			}
+			else
+			{
+				_parser = new CMISParser06();
+			}
+			
 			try
 			{
-				docBuilder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
-				Document doc = docBuilder.parse(new ByteArrayInputStream(res.getBytes()));
-				
-				NodeList nodes = doc.getElementsByTagName("cmis:productVersion");
-				String rawVersion = nodes.item(0).getFirstChild().getNodeValue();
-				_version = rawVersion.split("\\s")[0];
+				String rootUrl = cmisInfo.getRootURI();
+				StringBuilder buf = new StringBuilder(new URL(rootUrl).getPath());
+				buf.append("?alf_ticket=").append(_ticket);
+				String path = buf.toString();
+				String rootURI = _prefs.getWebappRoot();
 
-				nodes = doc.getElementsByTagName("cmis:rootFolderId");
-				int n = nodes.getLength();
-				
-				if(n > 0)
+				if(buf.toString().startsWith(rootURI))
 				{
-					Node node = nodes.item(0); 
-					String rootUrl = node.getFirstChild().getNodeValue(); 
-					StringBuilder buf = new StringBuilder(new URL(rootUrl).getPath());
-					buf.append("?alf_ticket=").append(_ticket);
-					String path = buf.toString();
-					String rootURI = _prefs.getWebappRoot();
-					
-					if(buf.toString().startsWith(rootURI))
-					{
-						path = buf.substring(rootURI.length());
-					}
-					
-					return parseChildren(makeHttpRequest(path))[0];
+					path = buf.substring(rootURI.length());
+				}
+
+				res = makeHttpRequest(path);
+				if(res != null)
+				{
+					return _parser.parseChildren(res);
 				}
 			}
-			catch (Exception e)
+			catch (MalformedURLException e)
 			{
-				Log.e(CMIS.class.getSimpleName(), "Error getting root folder id", e);
+				Log.e(CMIS.class.getSimpleName(), "Error parsing root uri", e);				
 			}
 		}
-
+		
 		return null;
 	}
 	
@@ -132,7 +147,7 @@ public class CMIS
 		String res = makeHttpRequest(String.format(CHILDREN_URI, uuid, _ticket));
 		if (res != null)
 		{
-			return parseChildren(res);
+			return _parser.parseChildren(res);
 		}
 
 		return null;
@@ -144,138 +159,12 @@ public class CMIS
 				"application/cmisquery+xml");
 		if (res != null)
 		{
-			return parseChildren(res);
+			return _parser.parseChildren(res);
 		}
 
 		return null;
 	}
 
-	private NodeRef[] parseChildren(String res) throws FactoryConfigurationError
-	{
-		NodeRef[] refs = new NodeRef[0];
-		DocumentBuilder docBuilder = null;
-		
-		try
-		{
-			Pattern pattern = Pattern.compile("&(?![a-zA-Z0-9]+;)");
-			Matcher matcher = pattern.matcher(res);
-			String sanitized = matcher.replaceAll("&amp;");
-			
-			docBuilder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
-			Document doc = docBuilder.parse(new ByteArrayInputStream(sanitized.getBytes()));
-			
-			// Iterate over all the entry nodes and build NodeRefs
-			NodeList nodes = doc.getElementsByTagName("entry");
-			NodeList children = null;
-			Element node = null;
-			NodeRef nodeRef = null;
-			int n = nodes.getLength();
-			
-			for(int i=0; i<n; i++)
-			{
-				if(refs.length == 0)
-				{
-					refs = new NodeRef[n];
-				}
-				
-				node = (Element) nodes.item(i);
-				children = node.getElementsByTagName("content");
-				
-				if(children.getLength() > 0)
-				{
-					Element contentNode = (Element) children.item(0);
-					String content = null;
-					nodeRef = new NodeRef();
-					
-					if(contentNode.hasAttribute("type"))
-					{
-						nodeRef.setContentType(contentNode.getAttribute("type"));
-						content = contentNode.getAttribute("src");
-					} 
-					else
-					{
-						content = contentNode.getFirstChild().getNodeValue();
-					}
-					
-					nodeRef.setContent(content);
-					
-					children = node.getElementsByTagName("title");
-					if(children.getLength() > 0)
-					{
-						nodeRef.setName(children.item(0).getFirstChild().getNodeValue());
-					}
-
-					children = node.getElementsByTagName("updated");
-					if(children.getLength() > 0)
-					{
-						nodeRef.setLastModificationDate(
-								children.item(0).getFirstChild().getNodeValue()); 
-					}
-
-					children = node.getElementsByTagName("cmis:propertyString");
-					int nChildren = children.getLength();
-					
-					if(nChildren > 0)
-					{
-						for(int j = 0; j < nChildren; j++)
-						{
-							Element child = (Element) children.item(j);
-							
-							if(child.getAttribute("cmis:name").equals("BaseType"))
-							{
-								NodeList valueNode = child.getElementsByTagName("cmis:value");
-								String baseType = valueNode.item(0).getFirstChild().getNodeValue(); 
-								nodeRef.setFolder(baseType.equals("folder"));
-							} 
-							else if(child.getAttribute("cmis:name").equals("LastModifiedBy"))
-							{
-								NodeList valueNode = child.getElementsByTagName("cmis:value");
-								nodeRef.setLastModifiedBy(
-										valueNode.item(0).getFirstChild().getNodeValue()); 
-							}
-							else if(child.getAttribute("cmis:name").equals("VersionLabel"))
-							{
-								NodeList valueNode = child.getElementsByTagName("cmis:value");
-								if(valueNode.getLength() > 0)
-								{
-									nodeRef.setVersion(
-											valueNode.item(0).getFirstChild().getNodeValue());
-								}
-							}
-						}
-					}
-					
-					children = node.getElementsByTagName("cmis:propertyInteger");
-					nChildren = children.getLength();
-
-					if(nChildren > 0)
-					{
-						for(int j = 0; j < nChildren; j++)
-						{
-							Element child = (Element) children.item(j);
-							
-							if(child.getAttribute("cmis:name").equals("ContentStreamLength"))
-							{
-								NodeList valueNode = child.getElementsByTagName("cmis:value");
-								nodeRef.setContentLength(
-										Long.valueOf(valueNode.item(0).getFirstChild().getNodeValue()));
-								break;
-							}
-						}
-					}
-					
-					refs[i] = nodeRef;
-				}
-			}
-		}
-		catch (Exception e)
-		{
-			Log.e(CMIS.class.getSimpleName(), "Error getting children", e);
-		}
-		
-		return refs;
-	}
-	
 	protected String buildRelativeURI(String path)
 	{
 		StringBuilder uri = new StringBuilder();
@@ -391,5 +280,5 @@ public class CMIS
 	public void setPrefs(CMISHost prefs)
 	{
 		this._prefs = prefs;
-	}
+	}	
 }

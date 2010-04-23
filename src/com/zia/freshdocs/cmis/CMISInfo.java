@@ -21,34 +21,31 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  ******************************************************************************/
-package com.zia.freshdocs.util;
+package com.zia.freshdocs.cmis;
 
-import java.net.URL;
-
-import android.net.Uri;
-import android.net.Uri.Builder;
-import android.util.Log;
-
-public class URLUtils
+public class CMISInfo
 {
-	public static Builder toUriBuilder(String sUrl)
-	{
-		try
-		{
-			URL url = new URL(sUrl);
-			Uri.Builder builder = new Uri.Builder();
-			builder.scheme(url.getProtocol());
-			builder.encodedAuthority(url.getAuthority());
-			String path = url.getPath();
-			builder.appendEncodedPath(path.charAt(0) == '/' ? path.substring(1) : path);
-			builder.encodedQuery(url.getQuery());
-			return builder;
-		}
-		catch (Exception e)
-		{
-			Log.e(URLUtils.class.getSimpleName(), "Error initiating view intent", e);
-		}
+	private String _version;
+	private String _rootURI;
 
-		return null;
+	public String getVersion()
+	{
+		return _version;
 	}
+
+	public void setVersion(String version)
+	{
+		this._version = version;
+	}
+
+	public String getRootURI()
+	{
+		return _rootURI;
+	}
+
+	public void setRootURI(String rootURI)
+	{
+		this._rootURI = rootURI;
+	}
+
 }

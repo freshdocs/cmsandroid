@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?> 
+<service xmlns="http://www.w3.org/2007/app" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:cmisra="http://docs.oasis-open.org/ns/cmis/restatom/200908/" xmlns:cmis="http://docs.oasis-open.org/ns/cmis/core/200908/" xmlns:alf="http://www.alfresco.org">
+  <workspace>
+    <atom:title>Main Repository</atom:title>
+
+    <collection href="http://cm.ziaconsulting.com:80/alfresco/service/cmis/s/workspace:SpacesStore/i/c5f14a86-2d6d-49f8-aa68-d62b9076a292/children"> 
+      <atom:title>root collection</atom:title> 
+      <cmisra:collectionType>root</cmisra:collectionType>
+    </collection> 
+    <collection href="http://cm.ziaconsulting.com:80/alfresco/service/cmis/types"> 
+      <atom:title>type collection</atom:title> 
+      <cmisra:collectionType>types</cmisra:collectionType>
+    </collection>
+    <collection href="http://cm.ziaconsulting.com:80/alfresco/service/cmis/checkedout"> 
+      <atom:title>checkedout collection</atom:title> 
+      <accept>application/atom+xml;type=entry</accept>
+      <cmisra:collectionType>checkedout</cmisra:collectionType>
+    </collection> 
+    <collection href="http://cm.ziaconsulting.com:80/alfresco/service/cmis/unfiled"> 
+      <atom:title>unfiled collection</atom:title> 
+      <accept>application/atom+xml;type=entry</accept>
+      <cmisra:collectionType>unfiled</cmisra:collectionType>
+    </collection>
+    <collection href="http://cm.ziaconsulting.com:80/alfresco/service/cmis/queries"> 
+      <atom:title>query collection</atom:title> 
+      <accept>application/cmisquery+xml</accept>
+      <cmisra:collectionType>query</cmisra:collectionType>
+    </collection>
+
+    <atom:link title="root folder tree" type="application/cmistree+xml" rel="http://docs.oasis-open.org/ns/cmis/link/200908/foldertree" href="http://cm.ziaconsulting.com:80/alfresco/service/cmis/s/workspace:SpacesStore/i/c5f14a86-2d6d-49f8-aa68-d62b9076a292/tree"/>
+    <atom:link title="root descendants" type="application/cmistree+xml" rel="http://docs.oasis-open.org/ns/cmis/link/200908/rootdescendants" href="http://cm.ziaconsulting.com:80/alfresco/service/cmis/s/workspace:SpacesStore/i/c5f14a86-2d6d-49f8-aa68-d62b9076a292/descendants"/>
+    <atom:link title="type descendants" type="application/cmistree+xml" rel="http://docs.oasis-open.org/ns/cmis/link/200908/typesdescendants" href="http://cm.ziaconsulting.com:80/alfresco/service/cmis/types/descendants"/>
+
+    <cmisra:repositoryInfo>
+      <cmis:repositoryId>c4a5c7e9-395f-457a-a70f-b77ee39034b5</cmis:repositoryId>
+      <cmis:repositoryName>Main Repository</cmis:repositoryName>
+      <cmis:repositoryDescription></cmis:repositoryDescription>   
+      <cmis:vendorName>Alfresco</cmis:vendorName> 
+      <cmis:productName>Alfresco Repository (Community)</cmis:productName>
+      <cmis:productVersion>3.2.0 (r2 2440)</cmis:productVersion>
+      <cmis:rootFolderId>workspace://SpacesStore/c5f14a86-2d6d-49f8-aa68-d62b9076a292</cmis:rootFolderId>
+      <cmis:capabilities>
+        <cmis:capabilityACL>none</cmis:capabilityACL>
+        <cmis:capabilityAllVersionsSearchable>false</cmis:capabilityAllVersionsSearchable>
+        <cmis:capabilityChanges>none</cmis:capabilityChanges>
+        <cmis:capabilityContentStreamUpdatability>anytime</cmis:capabilityContentStreamUpdatability>
+        <cmis:capabilityGetDescendants>true</cmis:capabilityGetDescendants>
+        <cmis:capabilityGetFolderTree>true</cmis:capabilityGetFolderTree>
+        <cmis:capabilityMultifiling>true</cmis:capabilityMultifiling>
+        <cmis:capabilityPWCSearchable>true</cmis:capabilityPWCSearchable>
+        <cmis:capabilityPWCUpdatable>true</cmis:capabilityPWCUpdatable>
+        <cmis:capabilityQuery>bothcombined</cmis:capabilityQuery>
+        <cmis:capabilityRenditions>none</cmis:capabilityRenditions>
+        <cmis:capabilityUnfiling>false</cmis:capabilityUnfiling>
+        <cmis:capabilityVersionSpecificFiling>false</cmis:capabilityVersionSpecificFiling>
+        <cmis:capabilityJoin>none</cmis:capabilityJoin>
+      </cmis:capabilities> 
+      <cmis:cmisVersionSupported>1.0</cmis:cmisVersionSupported>
+      <alf:cmisSpecificationTitle>Version 1.0 Committee Draft 04</alf:cmisSpecificationTitle>
+    </cmisra:repositoryInfo>
+
+    <cmisra:uritemplate>
+        <cmisra:template>http://cm.ziaconsulting.com:80/alfresco/service/cmis/arg/n?noderef={id}&amp;filter={filter}&amp;includeAllowableActions={includeAllowableActions}&amp;includePolicyIds={includePolicyIds}&amp;includeRelationships={includeRelationships}&amp;includeACL={includeACL}&amp;renditionFilter={renditionFilter}</cmisra:template>
+        <cmisra:type>objectbyid</cmisra:type>
+        <cmisra:mediatype>application/atom+xml;type=entry</cmisra:mediatype>
+    </cmisra:uritemplate>
+    <cmisra:uritemplate>
+        <cmisra:template>http://cm.ziaconsulting.com:80/alfresco/service/cmis/s/workspace:SpacesStore/arg/p?path={path}&amp;filter={filter}&amp;includeAllowableActions={includeAllowableActions}&amp;includePolicyIds={includePolicyIds}&amp;includeRelationships={includeRelationships}&amp;includeACL={includeACL}&amp;renditionFilter={renditionFilter}</cmisra:template>
+        <cmisra:type>objectbypath</cmisra:type>
+        <cmisra:mediatype>application/atom+xml;type=entry</cmisra:mediatype>
+    </cmisra:uritemplate>
+    <cmisra:uritemplate>
+        <cmisra:template>http://cm.ziaconsulting.com:80/alfresco/service/cmis/type/{id}</cmisra:template>
+        <cmisra:type>typebyid</cmisra:type>
+        <cmisra:mediatype>application/atom+xml;type=entry</cmisra:mediatype>
+    </cmisra:uritemplate>
+    <cmisra:uritemplate>
+        <cmisra:template>http://cm.ziaconsulting.com:80/alfresco/service/cmis/query?q={q}&amp;searchAllVersions={searchAllVersions}&amp;maxItems={maxItems}&amp;skipCount={skipCount}&amp;includeAllowableActions={includeAllowableActions}&amp;includeRelationships={includeRelationships}</cmisra:template>
+        <cmisra:type>query</cmisra:type>
+        <cmisra:mediatype>application/atom+xml;type=feed</cmisra:mediatype>
+    </cmisra:uritemplate>
+
+  </workspace> 
+</service> 

@@ -1,0 +1,498 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xmlns:app="http://www.w3.org/2007/app"
+	xmlns:cmisra="http://docs.oasis-open.org/ns/cmis/restatom/200908/"
+	xmlns:cmis="http://docs.oasis-open.org/ns/cmis/core/200908/" xmlns:alf="http://www.alfresco.org"
+	xmlns:opensearch="http://a9.com/-/spec/opensearch/1.1/">
+	<author>
+		<name>System</name>
+	</author>
+	<generator version="3.2.0 (r2 2440)">Alfresco (Community)</generator>
+	<icon>http://cm.ziaconsulting.com:80/alfresco/images/logo/AlfrescoLogo16.ico
+	</icon>
+	<id>urn:uuid:c5f14a86-2d6d-49f8-aa68-d62b9076a292-children</id>
+	<link rel="service" href="http://cm.ziaconsulting.com:80/alfresco/service/cmis" />
+	<link rel="self"
+		href="http://cm.ziaconsulting.com:80/alfresco/service/cmis/s/workspace:SpacesStore/i/c5f14a86-2d6d-49f8-aa68-d62b9076a292/children" />
+	<link rel="via"
+		href="http://cm.ziaconsulting.com:80/alfresco/service/cmis/s/workspace:SpacesStore/i/c5f14a86-2d6d-49f8-aa68-d62b9076a292" />
+	<link rel="down"
+		href="http://cm.ziaconsulting.com:80/alfresco/service/cmis/s/workspace:SpacesStore/i/c5f14a86-2d6d-49f8-aa68-d62b9076a292/descendants"
+		type="application/cmistree+xml" />
+	<link rel="http://docs.oasis-open.org/ns/cmis/link/200908/foldertree"
+		href="http://cm.ziaconsulting.com:80/alfresco/service/cmis/s/workspace:SpacesStore/i/c5f14a86-2d6d-49f8-aa68-d62b9076a292/tree"
+		type="application/cmistree+xml" />
+	<link rel="first"
+		href="http://cm.ziaconsulting.com:80/alfresco/service/cmis/s/workspace:SpacesStore/i/c5f14a86-2d6d-49f8-aa68-d62b9076a292/children?pageNo=1&amp;pageSize=-1&amp;guest=&amp;format=atomfeed"
+		type="application/atom+xml;type=feed" />
+	<link rel="last"
+		href="http://cm.ziaconsulting.com:80/alfresco/service/cmis/s/workspace:SpacesStore/i/c5f14a86-2d6d-49f8-aa68-d62b9076a292/children?pageNo=1&amp;pageSize=-1&amp;guest=&amp;format=atomfeed"
+		type="application/atom+xml;type=feed" />
+	<title>Company Home Children</title>
+	<updated>2009-05-26T05:52:25.492Z</updated>
+	<opensearch:totalResults>6</opensearch:totalResults>
+	<opensearch:startIndex>0</opensearch:startIndex>
+	<opensearch:itemsPerPage>-1</opensearch:itemsPerPage>
+	<cmisra:numItems>6</cmisra:numItems>
+	<entry>
+		<author>
+			<name>System</name>
+		</author>
+		<content>1e70ed8f-94a9-456a-aade-48752375e3c6</content>
+		<id>urn:uuid:1e70ed8f-94a9-456a-aade-48752375e3c6</id>
+		<link rel="self"
+			href="http://cm.ziaconsulting.com:80/alfresco/service/cmis/s/workspace:SpacesStore/i/1e70ed8f-94a9-456a-aade-48752375e3c6" />
+		<link rel="edit"
+			href="http://cm.ziaconsulting.com:80/alfresco/service/cmis/s/workspace:SpacesStore/i/1e70ed8f-94a9-456a-aade-48752375e3c6" />
+		<link
+			rel="http://docs.oasis-open.org/ns/cmis/link/200908/allowableactions"
+			href="http://cm.ziaconsulting.com:80/alfresco/service/cmis/s/workspace:SpacesStore/i/1e70ed8f-94a9-456a-aade-48752375e3c6/allowableactions" />
+		<link rel="http://docs.oasis-open.org/ns/cmis/link/200908/relationships"
+			href="http://cm.ziaconsulting.com:80/alfresco/service/cmis/s/workspace:SpacesStore/i/1e70ed8f-94a9-456a-aade-48752375e3c6/rels" />
+		<link rel="up"
+			href="http://cm.ziaconsulting.com:80/alfresco/service/cmis/s/workspace:SpacesStore/i/c5f14a86-2d6d-49f8-aa68-d62b9076a292"
+			type="application/atom+xml;type=entry" />
+		<link rel="down"
+			href="http://cm.ziaconsulting.com:80/alfresco/service/cmis/s/workspace:SpacesStore/i/1e70ed8f-94a9-456a-aade-48752375e3c6/children"
+			type="application/atom+xml;type=feed" />
+		<link rel="down"
+			href="http://cm.ziaconsulting.com:80/alfresco/service/cmis/s/workspace:SpacesStore/i/1e70ed8f-94a9-456a-aade-48752375e3c6/descendants"
+			type="application/cmistree+xml" />
+		<link rel="http://docs.oasis-open.org/ns/cmis/link/200908/foldertree"
+			href="http://cm.ziaconsulting.com:80/alfresco/service/cmis/s/workspace:SpacesStore/i/1e70ed8f-94a9-456a-aade-48752375e3c6/tree"
+			type="application/cmistree+xml" />
+		<link rel="describedby"
+			href="http://cm.ziaconsulting.com:80/alfresco/service/cmis/type/F:st:sites" />
+		<link rel="service" href="http://cm.ziaconsulting.com:80/alfresco/service/cmis" />
+		<published>2009-05-26T05:52:53.888Z</published>
+		<summary>Site Collaboration Spaces</summary>
+		<title>Sites</title>
+		<updated>2009-05-26T05:52:54.169Z</updated>
+		<app:edited>2009-05-26T05:52:54.169Z</app:edited>
+		<alf:icon>http://cm.ziaconsulting.com:80/alfresco/images/icons/space-icon-default-16.gif
+		</alf:icon>
+		<cmisra:object>
+			<cmis:properties>
+				<cmis:propertyId propertyDefinitionId="cmis:allowedChildObjectTypeIds" />
+				<cmis:propertyId propertyDefinitionId="cmis:objectTypeId">
+					<cmis:value>F:st:sites</cmis:value>
+				</cmis:propertyId>
+				<cmis:propertyString propertyDefinitionId="cmis:lastModifiedBy">
+					<cmis:value>System</cmis:value>
+				</cmis:propertyString>
+				<cmis:propertyString propertyDefinitionId="cmis:path">
+					<cmis:value>/Sites</cmis:value>
+				</cmis:propertyString>
+				<cmis:propertyString propertyDefinitionId="cmis:name">
+					<cmis:value>Sites</cmis:value>
+				</cmis:propertyString>
+				<cmis:propertyString propertyDefinitionId="cmis:createdBy">
+					<cmis:value>System</cmis:value>
+				</cmis:propertyString>
+				<cmis:propertyId propertyDefinitionId="cmis:objectId">
+					<cmis:value>workspace://SpacesStore/1e70ed8f-94a9-456a-aade-48752375e3c6
+					</cmis:value>
+				</cmis:propertyId>
+				<cmis:propertyDateTime propertyDefinitionId="cmis:creationDate">
+					<cmis:value>2009-05-26T05:52:53.888Z</cmis:value>
+				</cmis:propertyDateTime>
+				<cmis:propertyString propertyDefinitionId="cmis:changeToken" />
+				<cmis:propertyId propertyDefinitionId="cmis:baseTypeId">
+					<cmis:value>cmis:folder</cmis:value>
+				</cmis:propertyId>
+				<cmis:propertyDateTime propertyDefinitionId="cmis:lastModificationDate">
+					<cmis:value>2009-05-26T05:52:54.169Z</cmis:value>
+				</cmis:propertyDateTime>
+				<cmis:propertyId propertyDefinitionId="cmis:parentId">
+					<cmis:value>workspace://SpacesStore/c5f14a86-2d6d-49f8-aa68-d62b9076a292
+					</cmis:value>
+				</cmis:propertyId>
+			</cmis:properties>
+		</cmisra:object>
+		<cmisra:pathSegment>Sites</cmisra:pathSegment>
+	</entry>
+	<entry>
+		<author>
+			<name>System</name>
+		</author>
+		<content>7d963f84-4792-4717-92df-fcd31576592d</content>
+		<id>urn:uuid:7d963f84-4792-4717-92df-fcd31576592d</id>
+		<link rel="self"
+			href="http://cm.ziaconsulting.com:80/alfresco/service/cmis/s/workspace:SpacesStore/i/7d963f84-4792-4717-92df-fcd31576592d" />
+		<link rel="edit"
+			href="http://cm.ziaconsulting.com:80/alfresco/service/cmis/s/workspace:SpacesStore/i/7d963f84-4792-4717-92df-fcd31576592d" />
+		<link
+			rel="http://docs.oasis-open.org/ns/cmis/link/200908/allowableactions"
+			href="http://cm.ziaconsulting.com:80/alfresco/service/cmis/s/workspace:SpacesStore/i/7d963f84-4792-4717-92df-fcd31576592d/allowableactions" />
+		<link rel="http://docs.oasis-open.org/ns/cmis/link/200908/relationships"
+			href="http://cm.ziaconsulting.com:80/alfresco/service/cmis/s/workspace:SpacesStore/i/7d963f84-4792-4717-92df-fcd31576592d/rels" />
+		<link rel="up"
+			href="http://cm.ziaconsulting.com:80/alfresco/service/cmis/s/workspace:SpacesStore/i/c5f14a86-2d6d-49f8-aa68-d62b9076a292"
+			type="application/atom+xml;type=entry" />
+		<link rel="down"
+			href="http://cm.ziaconsulting.com:80/alfresco/service/cmis/s/workspace:SpacesStore/i/7d963f84-4792-4717-92df-fcd31576592d/children"
+			type="application/atom+xml;type=feed" />
+		<link rel="down"
+			href="http://cm.ziaconsulting.com:80/alfresco/service/cmis/s/workspace:SpacesStore/i/7d963f84-4792-4717-92df-fcd31576592d/descendants"
+			type="application/cmistree+xml" />
+		<link rel="http://docs.oasis-open.org/ns/cmis/link/200908/foldertree"
+			href="http://cm.ziaconsulting.com:80/alfresco/service/cmis/s/workspace:SpacesStore/i/7d963f84-4792-4717-92df-fcd31576592d/tree"
+			type="application/cmistree+xml" />
+		<link rel="describedby"
+			href="http://cm.ziaconsulting.com:80/alfresco/service/cmis/type/cmis:folder" />
+		<link rel="service" href="http://cm.ziaconsulting.com:80/alfresco/service/cmis" />
+		<published>2009-05-26T05:52:25.496Z</published>
+		<summary>User managed definitions</summary>
+		<title>Data Dictionary</title>
+		<updated>2009-05-26T05:52:25.763Z</updated>
+		<app:edited>2009-05-26T05:52:25.763Z</app:edited>
+		<alf:icon>http://cm.ziaconsulting.com:80/alfresco/images/icons/space-icon-default-16.gif
+		</alf:icon>
+		<cmisra:object>
+			<cmis:properties>
+				<cmis:propertyId propertyDefinitionId="cmis:allowedChildObjectTypeIds" />
+				<cmis:propertyString propertyDefinitionId="cmis:path">
+					<cmis:value>/Data Dictionary</cmis:value>
+				</cmis:propertyString>
+				<cmis:propertyString propertyDefinitionId="cmis:lastModifiedBy">
+					<cmis:value>System</cmis:value>
+				</cmis:propertyString>
+				<cmis:propertyId propertyDefinitionId="cmis:objectTypeId">
+					<cmis:value>cmis:folder</cmis:value>
+				</cmis:propertyId>
+				<cmis:propertyString propertyDefinitionId="cmis:createdBy">
+					<cmis:value>System</cmis:value>
+				</cmis:propertyString>
+				<cmis:propertyString propertyDefinitionId="cmis:name">
+					<cmis:value>Data Dictionary</cmis:value>
+				</cmis:propertyString>
+				<cmis:propertyId propertyDefinitionId="cmis:objectId">
+					<cmis:value>workspace://SpacesStore/7d963f84-4792-4717-92df-fcd31576592d
+					</cmis:value>
+				</cmis:propertyId>
+				<cmis:propertyDateTime propertyDefinitionId="cmis:creationDate">
+					<cmis:value>2009-05-26T05:52:25.496Z</cmis:value>
+				</cmis:propertyDateTime>
+				<cmis:propertyString propertyDefinitionId="cmis:changeToken" />
+				<cmis:propertyId propertyDefinitionId="cmis:baseTypeId">
+					<cmis:value>cmis:folder</cmis:value>
+				</cmis:propertyId>
+				<cmis:propertyId propertyDefinitionId="cmis:parentId">
+					<cmis:value>workspace://SpacesStore/c5f14a86-2d6d-49f8-aa68-d62b9076a292
+					</cmis:value>
+				</cmis:propertyId>
+				<cmis:propertyDateTime propertyDefinitionId="cmis:lastModificationDate">
+					<cmis:value>2009-05-26T05:52:25.763Z</cmis:value>
+				</cmis:propertyDateTime>
+			</cmis:properties>
+		</cmisra:object>
+		<cmisra:pathSegment>Data Dictionary</cmisra:pathSegment>
+	</entry>
+	<entry>
+		<author>
+			<name>System</name>
+		</author>
+		<content>20b22a69-4f1a-4abc-ae10-276d634807af</content>
+		<id>urn:uuid:20b22a69-4f1a-4abc-ae10-276d634807af</id>
+		<link rel="self"
+			href="http://cm.ziaconsulting.com:80/alfresco/service/cmis/s/workspace:SpacesStore/i/20b22a69-4f1a-4abc-ae10-276d634807af" />
+		<link rel="edit"
+			href="http://cm.ziaconsulting.com:80/alfresco/service/cmis/s/workspace:SpacesStore/i/20b22a69-4f1a-4abc-ae10-276d634807af" />
+		<link
+			rel="http://docs.oasis-open.org/ns/cmis/link/200908/allowableactions"
+			href="http://cm.ziaconsulting.com:80/alfresco/service/cmis/s/workspace:SpacesStore/i/20b22a69-4f1a-4abc-ae10-276d634807af/allowableactions" />
+		<link rel="http://docs.oasis-open.org/ns/cmis/link/200908/relationships"
+			href="http://cm.ziaconsulting.com:80/alfresco/service/cmis/s/workspace:SpacesStore/i/20b22a69-4f1a-4abc-ae10-276d634807af/rels" />
+		<link rel="up"
+			href="http://cm.ziaconsulting.com:80/alfresco/service/cmis/s/workspace:SpacesStore/i/c5f14a86-2d6d-49f8-aa68-d62b9076a292"
+			type="application/atom+xml;type=entry" />
+		<link rel="down"
+			href="http://cm.ziaconsulting.com:80/alfresco/service/cmis/s/workspace:SpacesStore/i/20b22a69-4f1a-4abc-ae10-276d634807af/children"
+			type="application/atom+xml;type=feed" />
+		<link rel="down"
+			href="http://cm.ziaconsulting.com:80/alfresco/service/cmis/s/workspace:SpacesStore/i/20b22a69-4f1a-4abc-ae10-276d634807af/descendants"
+			type="application/cmistree+xml" />
+		<link rel="http://docs.oasis-open.org/ns/cmis/link/200908/foldertree"
+			href="http://cm.ziaconsulting.com:80/alfresco/service/cmis/s/workspace:SpacesStore/i/20b22a69-4f1a-4abc-ae10-276d634807af/tree"
+			type="application/cmistree+xml" />
+		<link rel="describedby"
+			href="http://cm.ziaconsulting.com:80/alfresco/service/cmis/type/cmis:folder" />
+		<link rel="service" href="http://cm.ziaconsulting.com:80/alfresco/service/cmis" />
+		<published>2009-05-26T05:52:27.120Z</published>
+		<summary>The guest root space</summary>
+		<title>Guest Home</title>
+		<updated>2009-05-26T05:52:27.454Z</updated>
+		<app:edited>2009-05-26T05:52:27.454Z</app:edited>
+		<alf:icon>http://cm.ziaconsulting.com:80/alfresco/images/icons/space-icon-default-16.gif
+		</alf:icon>
+		<cmisra:object>
+			<cmis:properties>
+				<cmis:propertyId propertyDefinitionId="cmis:allowedChildObjectTypeIds" />
+				<cmis:propertyString propertyDefinitionId="cmis:path">
+					<cmis:value>/Guest Home</cmis:value>
+				</cmis:propertyString>
+				<cmis:propertyString propertyDefinitionId="cmis:lastModifiedBy">
+					<cmis:value>System</cmis:value>
+				</cmis:propertyString>
+				<cmis:propertyId propertyDefinitionId="cmis:objectTypeId">
+					<cmis:value>cmis:folder</cmis:value>
+				</cmis:propertyId>
+				<cmis:propertyString propertyDefinitionId="cmis:createdBy">
+					<cmis:value>System</cmis:value>
+				</cmis:propertyString>
+				<cmis:propertyString propertyDefinitionId="cmis:name">
+					<cmis:value>Guest Home</cmis:value>
+				</cmis:propertyString>
+				<cmis:propertyId propertyDefinitionId="cmis:objectId">
+					<cmis:value>workspace://SpacesStore/20b22a69-4f1a-4abc-ae10-276d634807af
+					</cmis:value>
+				</cmis:propertyId>
+				<cmis:propertyDateTime propertyDefinitionId="cmis:creationDate">
+					<cmis:value>2009-05-26T05:52:27.120Z</cmis:value>
+				</cmis:propertyDateTime>
+				<cmis:propertyString propertyDefinitionId="cmis:changeToken" />
+				<cmis:propertyId propertyDefinitionId="cmis:baseTypeId">
+					<cmis:value>cmis:folder</cmis:value>
+				</cmis:propertyId>
+				<cmis:propertyId propertyDefinitionId="cmis:parentId">
+					<cmis:value>workspace://SpacesStore/c5f14a86-2d6d-49f8-aa68-d62b9076a292
+					</cmis:value>
+				</cmis:propertyId>
+				<cmis:propertyDateTime propertyDefinitionId="cmis:lastModificationDate">
+					<cmis:value>2009-05-26T05:52:27.454Z</cmis:value>
+				</cmis:propertyDateTime>
+			</cmis:properties>
+		</cmisra:object>
+		<cmisra:pathSegment>Guest Home</cmisra:pathSegment>
+	</entry>
+	<entry>
+		<author>
+			<name>System</name>
+		</author>
+		<content>ff2b2363-82a6-44fe-9df7-e180b67c351b</content>
+		<id>urn:uuid:ff2b2363-82a6-44fe-9df7-e180b67c351b</id>
+		<link rel="self"
+			href="http://cm.ziaconsulting.com:80/alfresco/service/cmis/s/workspace:SpacesStore/i/ff2b2363-82a6-44fe-9df7-e180b67c351b" />
+		<link rel="edit"
+			href="http://cm.ziaconsulting.com:80/alfresco/service/cmis/s/workspace:SpacesStore/i/ff2b2363-82a6-44fe-9df7-e180b67c351b" />
+		<link
+			rel="http://docs.oasis-open.org/ns/cmis/link/200908/allowableactions"
+			href="http://cm.ziaconsulting.com:80/alfresco/service/cmis/s/workspace:SpacesStore/i/ff2b2363-82a6-44fe-9df7-e180b67c351b/allowableactions" />
+		<link rel="http://docs.oasis-open.org/ns/cmis/link/200908/relationships"
+			href="http://cm.ziaconsulting.com:80/alfresco/service/cmis/s/workspace:SpacesStore/i/ff2b2363-82a6-44fe-9df7-e180b67c351b/rels" />
+		<link rel="up"
+			href="http://cm.ziaconsulting.com:80/alfresco/service/cmis/s/workspace:SpacesStore/i/c5f14a86-2d6d-49f8-aa68-d62b9076a292"
+			type="application/atom+xml;type=entry" />
+		<link rel="down"
+			href="http://cm.ziaconsulting.com:80/alfresco/service/cmis/s/workspace:SpacesStore/i/ff2b2363-82a6-44fe-9df7-e180b67c351b/children"
+			type="application/atom+xml;type=feed" />
+		<link rel="down"
+			href="http://cm.ziaconsulting.com:80/alfresco/service/cmis/s/workspace:SpacesStore/i/ff2b2363-82a6-44fe-9df7-e180b67c351b/descendants"
+			type="application/cmistree+xml" />
+		<link rel="http://docs.oasis-open.org/ns/cmis/link/200908/foldertree"
+			href="http://cm.ziaconsulting.com:80/alfresco/service/cmis/s/workspace:SpacesStore/i/ff2b2363-82a6-44fe-9df7-e180b67c351b/tree"
+			type="application/cmistree+xml" />
+		<link rel="describedby"
+			href="http://cm.ziaconsulting.com:80/alfresco/service/cmis/type/cmis:folder" />
+		<link rel="service" href="http://cm.ziaconsulting.com:80/alfresco/service/cmis" />
+		<published>2009-05-26T05:53:21.373Z</published>
+		<summary>Web Content Management Spaces</summary>
+		<title>Web Projects</title>
+		<updated>2009-05-26T05:53:21.438Z</updated>
+		<app:edited>2009-05-26T05:53:21.438Z</app:edited>
+		<alf:icon>http://cm.ziaconsulting.com:80/alfresco/images/icons/space-icon-default-16.gif
+		</alf:icon>
+		<cmisra:object>
+			<cmis:properties>
+				<cmis:propertyId propertyDefinitionId="cmis:allowedChildObjectTypeIds" />
+				<cmis:propertyString propertyDefinitionId="cmis:path">
+					<cmis:value>/Web Projects</cmis:value>
+				</cmis:propertyString>
+				<cmis:propertyString propertyDefinitionId="cmis:lastModifiedBy">
+					<cmis:value>System</cmis:value>
+				</cmis:propertyString>
+				<cmis:propertyId propertyDefinitionId="cmis:objectTypeId">
+					<cmis:value>cmis:folder</cmis:value>
+				</cmis:propertyId>
+				<cmis:propertyString propertyDefinitionId="cmis:createdBy">
+					<cmis:value>System</cmis:value>
+				</cmis:propertyString>
+				<cmis:propertyString propertyDefinitionId="cmis:name">
+					<cmis:value>Web Projects</cmis:value>
+				</cmis:propertyString>
+				<cmis:propertyId propertyDefinitionId="cmis:objectId">
+					<cmis:value>workspace://SpacesStore/ff2b2363-82a6-44fe-9df7-e180b67c351b
+					</cmis:value>
+				</cmis:propertyId>
+				<cmis:propertyDateTime propertyDefinitionId="cmis:creationDate">
+					<cmis:value>2009-05-26T05:53:21.373Z</cmis:value>
+				</cmis:propertyDateTime>
+				<cmis:propertyString propertyDefinitionId="cmis:changeToken" />
+				<cmis:propertyId propertyDefinitionId="cmis:baseTypeId">
+					<cmis:value>cmis:folder</cmis:value>
+				</cmis:propertyId>
+				<cmis:propertyId propertyDefinitionId="cmis:parentId">
+					<cmis:value>workspace://SpacesStore/c5f14a86-2d6d-49f8-aa68-d62b9076a292
+					</cmis:value>
+				</cmis:propertyId>
+				<cmis:propertyDateTime propertyDefinitionId="cmis:lastModificationDate">
+					<cmis:value>2009-05-26T05:53:21.438Z</cmis:value>
+				</cmis:propertyDateTime>
+			</cmis:properties>
+		</cmisra:object>
+		<cmisra:pathSegment>Web Projects</cmisra:pathSegment>
+	</entry>
+	<entry>
+		<author>
+			<name>System</name>
+		</author>
+		<content>bdf1ff86-ef75-475c-ba2c-a44d1f8c8099</content>
+		<id>urn:uuid:bdf1ff86-ef75-475c-ba2c-a44d1f8c8099</id>
+		<link rel="self"
+			href="http://cm.ziaconsulting.com:80/alfresco/service/cmis/s/workspace:SpacesStore/i/bdf1ff86-ef75-475c-ba2c-a44d1f8c8099" />
+		<link rel="edit"
+			href="http://cm.ziaconsulting.com:80/alfresco/service/cmis/s/workspace:SpacesStore/i/bdf1ff86-ef75-475c-ba2c-a44d1f8c8099" />
+		<link
+			rel="http://docs.oasis-open.org/ns/cmis/link/200908/allowableactions"
+			href="http://cm.ziaconsulting.com:80/alfresco/service/cmis/s/workspace:SpacesStore/i/bdf1ff86-ef75-475c-ba2c-a44d1f8c8099/allowableactions" />
+		<link rel="http://docs.oasis-open.org/ns/cmis/link/200908/relationships"
+			href="http://cm.ziaconsulting.com:80/alfresco/service/cmis/s/workspace:SpacesStore/i/bdf1ff86-ef75-475c-ba2c-a44d1f8c8099/rels" />
+		<link rel="up"
+			href="http://cm.ziaconsulting.com:80/alfresco/service/cmis/s/workspace:SpacesStore/i/c5f14a86-2d6d-49f8-aa68-d62b9076a292"
+			type="application/atom+xml;type=entry" />
+		<link rel="down"
+			href="http://cm.ziaconsulting.com:80/alfresco/service/cmis/s/workspace:SpacesStore/i/bdf1ff86-ef75-475c-ba2c-a44d1f8c8099/children"
+			type="application/atom+xml;type=feed" />
+		<link rel="down"
+			href="http://cm.ziaconsulting.com:80/alfresco/service/cmis/s/workspace:SpacesStore/i/bdf1ff86-ef75-475c-ba2c-a44d1f8c8099/descendants"
+			type="application/cmistree+xml" />
+		<link rel="http://docs.oasis-open.org/ns/cmis/link/200908/foldertree"
+			href="http://cm.ziaconsulting.com:80/alfresco/service/cmis/s/workspace:SpacesStore/i/bdf1ff86-ef75-475c-ba2c-a44d1f8c8099/tree"
+			type="application/cmistree+xml" />
+		<link rel="describedby"
+			href="http://cm.ziaconsulting.com:80/alfresco/service/cmis/type/cmis:folder" />
+		<link rel="service" href="http://cm.ziaconsulting.com:80/alfresco/service/cmis" />
+		<published>2009-05-26T05:52:27.457Z</published>
+		<summary>User Homes</summary>
+		<title>User Homes</title>
+		<updated>2009-06-30T22:22:26.584Z</updated>
+		<app:edited>2009-06-30T22:22:26.584Z</app:edited>
+		<alf:icon>http://cm.ziaconsulting.com:80/alfresco/images/icons/space-icon-default-16.gif
+		</alf:icon>
+		<cmisra:object>
+			<cmis:properties>
+				<cmis:propertyId propertyDefinitionId="cmis:allowedChildObjectTypeIds" />
+				<cmis:propertyString propertyDefinitionId="cmis:path">
+					<cmis:value>/User Homes</cmis:value>
+				</cmis:propertyString>
+				<cmis:propertyString propertyDefinitionId="cmis:lastModifiedBy">
+					<cmis:value>admin</cmis:value>
+				</cmis:propertyString>
+				<cmis:propertyId propertyDefinitionId="cmis:objectTypeId">
+					<cmis:value>cmis:folder</cmis:value>
+				</cmis:propertyId>
+				<cmis:propertyString propertyDefinitionId="cmis:createdBy">
+					<cmis:value>System</cmis:value>
+				</cmis:propertyString>
+				<cmis:propertyString propertyDefinitionId="cmis:name">
+					<cmis:value>User Homes</cmis:value>
+				</cmis:propertyString>
+				<cmis:propertyId propertyDefinitionId="cmis:objectId">
+					<cmis:value>workspace://SpacesStore/bdf1ff86-ef75-475c-ba2c-a44d1f8c8099
+					</cmis:value>
+				</cmis:propertyId>
+				<cmis:propertyDateTime propertyDefinitionId="cmis:creationDate">
+					<cmis:value>2009-05-26T05:52:27.457Z</cmis:value>
+				</cmis:propertyDateTime>
+				<cmis:propertyString propertyDefinitionId="cmis:changeToken" />
+				<cmis:propertyId propertyDefinitionId="cmis:baseTypeId">
+					<cmis:value>cmis:folder</cmis:value>
+				</cmis:propertyId>
+				<cmis:propertyId propertyDefinitionId="cmis:parentId">
+					<cmis:value>workspace://SpacesStore/c5f14a86-2d6d-49f8-aa68-d62b9076a292
+					</cmis:value>
+				</cmis:propertyId>
+				<cmis:propertyDateTime propertyDefinitionId="cmis:lastModificationDate">
+					<cmis:value>2009-06-30T22:22:26.584Z</cmis:value>
+				</cmis:propertyDateTime>
+			</cmis:properties>
+		</cmisra:object>
+		<cmisra:pathSegment>User Homes</cmisra:pathSegment>
+	</entry>
+	<entry>
+		<author>
+			<name>admin</name>
+		</author>
+		<content>ec761c0b-a6be-4806-b770-caa473a124e3</content>
+		<id>urn:uuid:ec761c0b-a6be-4806-b770-caa473a124e3</id>
+		<link rel="self"
+			href="http://cm.ziaconsulting.com:80/alfresco/service/cmis/s/workspace:SpacesStore/i/ec761c0b-a6be-4806-b770-caa473a124e3" />
+		<link rel="edit"
+			href="http://cm.ziaconsulting.com:80/alfresco/service/cmis/s/workspace:SpacesStore/i/ec761c0b-a6be-4806-b770-caa473a124e3" />
+		<link
+			rel="http://docs.oasis-open.org/ns/cmis/link/200908/allowableactions"
+			href="http://cm.ziaconsulting.com:80/alfresco/service/cmis/s/workspace:SpacesStore/i/ec761c0b-a6be-4806-b770-caa473a124e3/allowableactions" />
+		<link rel="http://docs.oasis-open.org/ns/cmis/link/200908/relationships"
+			href="http://cm.ziaconsulting.com:80/alfresco/service/cmis/s/workspace:SpacesStore/i/ec761c0b-a6be-4806-b770-caa473a124e3/rels" />
+		<link rel="up"
+			href="http://cm.ziaconsulting.com:80/alfresco/service/cmis/s/workspace:SpacesStore/i/c5f14a86-2d6d-49f8-aa68-d62b9076a292"
+			type="application/atom+xml;type=entry" />
+		<link rel="down"
+			href="http://cm.ziaconsulting.com:80/alfresco/service/cmis/s/workspace:SpacesStore/i/ec761c0b-a6be-4806-b770-caa473a124e3/children"
+			type="application/atom+xml;type=feed" />
+		<link rel="down"
+			href="http://cm.ziaconsulting.com:80/alfresco/service/cmis/s/workspace:SpacesStore/i/ec761c0b-a6be-4806-b770-caa473a124e3/descendants"
+			type="application/cmistree+xml" />
+		<link rel="http://docs.oasis-open.org/ns/cmis/link/200908/foldertree"
+			href="http://cm.ziaconsulting.com:80/alfresco/service/cmis/s/workspace:SpacesStore/i/ec761c0b-a6be-4806-b770-caa473a124e3/tree"
+			type="application/cmistree+xml" />
+		<link rel="describedby"
+			href="http://cm.ziaconsulting.com:80/alfresco/service/cmis/type/cmis:folder" />
+		<link rel="service" href="http://cm.ziaconsulting.com:80/alfresco/service/cmis" />
+		<published>2010-03-15T16:50:38.668Z</published>
+		<summary></summary>
+		<title>Evals</title>
+		<updated>2010-03-15T16:52:03.500Z</updated>
+		<app:edited>2010-03-15T16:52:03.500Z</app:edited>
+		<alf:icon>http://cm.ziaconsulting.com:80/alfresco/images/icons/space-icon-default-16.gif
+		</alf:icon>
+		<cmisra:object>
+			<cmis:properties>
+				<cmis:propertyId propertyDefinitionId="cmis:allowedChildObjectTypeIds" />
+				<cmis:propertyString propertyDefinitionId="cmis:path">
+					<cmis:value>/Evals</cmis:value>
+				</cmis:propertyString>
+				<cmis:propertyString propertyDefinitionId="cmis:lastModifiedBy">
+					<cmis:value>admin</cmis:value>
+				</cmis:propertyString>
+				<cmis:propertyId propertyDefinitionId="cmis:objectTypeId">
+					<cmis:value>cmis:folder</cmis:value>
+				</cmis:propertyId>
+				<cmis:propertyString propertyDefinitionId="cmis:createdBy">
+					<cmis:value>admin</cmis:value>
+				</cmis:propertyString>
+				<cmis:propertyString propertyDefinitionId="cmis:name">
+					<cmis:value>Evals</cmis:value>
+				</cmis:propertyString>
+				<cmis:propertyId propertyDefinitionId="cmis:objectId">
+					<cmis:value>workspace://SpacesStore/ec761c0b-a6be-4806-b770-caa473a124e3
+					</cmis:value>
+				</cmis:propertyId>
+				<cmis:propertyDateTime propertyDefinitionId="cmis:creationDate">
+					<cmis:value>2010-03-15T16:50:38.668Z</cmis:value>
+				</cmis:propertyDateTime>
+				<cmis:propertyString propertyDefinitionId="cmis:changeToken" />
+				<cmis:propertyId propertyDefinitionId="cmis:baseTypeId">
+					<cmis:value>cmis:folder</cmis:value>
+				</cmis:propertyId>
+				<cmis:propertyId propertyDefinitionId="cmis:parentId">
+					<cmis:value>workspace://SpacesStore/c5f14a86-2d6d-49f8-aa68-d62b9076a292
+					</cmis:value>
+				</cmis:propertyId>
+				<cmis:propertyDateTime propertyDefinitionId="cmis:lastModificationDate">
+					<cmis:value>2010-03-15T16:52:03.500Z</cmis:value>
+				</cmis:propertyDateTime>
+			</cmis:properties>
+		</cmisra:object>
+		<cmisra:pathSegment>Evals</cmisra:pathSegment>
+	</entry>
+</feed>

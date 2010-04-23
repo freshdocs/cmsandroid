@@ -1,3 +1,26 @@
+/*******************************************************************************
+ * The MIT License
+ * 
+ * Copyright (c) 2010 Zia Consulting, Inc
+ * 
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ * 
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ ******************************************************************************/
 package com.zia.freshdocs.widget;
 
 import java.io.File;
@@ -109,14 +132,15 @@ public class CMISAdapter extends ArrayAdapter<NodeRef>
 				// Save reference to current entry
 				_stack.clear();		
 				
-				NodeRef companyHome = (NodeRef) _dlThread.getResult();
+				NodeRef[] companyHome = (NodeRef[]) _dlThread.getResult();
 
 				if(companyHome != null)
 				{
+					dismissProgressDlg();
+					
 					// Get Company Home children
-					String uuid = companyHome.getContent();
-					_currentState = new Pair<String, NodeRef[]>(uuid, null);
-					getChildren(uuid);
+					_currentState = new Pair<String, NodeRef[]>("", companyHome);
+					populateList(companyHome);
 				}
 				else
 				{
@@ -489,7 +513,7 @@ public class CMISAdapter extends ArrayAdapter<NodeRef>
 				Context context = getContext();
 				Resources res = context.getResources();
 				InputStream is = res.openRawResource(
-						_cmis.getVersion().contains("3.1") ? R.raw.query : R.raw.query_32);
+						_cmis.getVersion().contains("0.6") ? R.raw.query : R.raw.query_32);
 				String xml = null;
 				
 				try
