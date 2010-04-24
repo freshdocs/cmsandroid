@@ -214,8 +214,8 @@ public class CMIS
 	        
 	        // registers schemes for both http and https
 	        SchemeRegistry registry = new SchemeRegistry();
-	        registry.register(new Scheme("http", PlainSocketFactory.getSocketFactory(), 80));
-	        registry.register(new Scheme("https", new EasySSLSocketFactory(), 443));
+	        registry.register(new Scheme("http", PlainSocketFactory.getSocketFactory(), _prefs.getPort()));
+	        registry.register(new Scheme("https", new EasySSLSocketFactory(), _prefs.getPort()));
 	        ThreadSafeClientConnManager manager = new ThreadSafeClientConnManager(params, registry);
 	     
 	        String url = new URL(_prefs.isSSL() ? "https" : "http", _prefs.getHostname(), 
