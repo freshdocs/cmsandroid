@@ -33,13 +33,21 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
+import org.apache.http.HttpVersion;
 import org.apache.http.StatusLine;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpRequestBase;
+import org.apache.http.conn.scheme.PlainSocketFactory;
+import org.apache.http.conn.scheme.Scheme;
+import org.apache.http.conn.scheme.SchemeRegistry;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.impl.conn.tsccm.ThreadSafeClientConnManager;
+import org.apache.http.params.BasicHttpParams;
+import org.apache.http.params.HttpParams;
+import org.apache.http.params.HttpProtocolParams;
 import org.apache.http.util.EntityUtils;
 import org.w3c.dom.Document;
 
@@ -48,16 +56,20 @@ import android.util.Log;
 import com.zia.freshdocs.Constants.NetworkStatus;
 import com.zia.freshdocs.model.NodeRef;
 import com.zia.freshdocs.preference.CMISHost;
+import com.zia.freshdocs.util.EasySSLSocketFactory;
 
 public class CMIS
 {
+	protected static final String CMIS_QUERY_TYPE = "application/cmisquery+xml";
+
 	protected static final int TIMEOUT = 12500;
 	
-	protected static final String ALF_SERVICE_URI = "/service/api";
-	protected static final String CHILDREN_URI = ALF_SERVICE_URI + "/node/workspace/SpacesStore/%s/children?alf_ticket=%s";
-	protected static final String CMIS_INFO_URI = ALF_SERVICE_URI + "/cmis?alf_ticket=%s";
-	protected static final String LOGIN_URI = ALF_SERVICE_URI + "/login?u=%s&pw=%s";
-	protected static final String QUERY_URI = ALF_SERVICE_URI + "/query?alf_ticket=%s";
+	protected static final String ALF_SERVICE_URI = "/service";
+	protected static final String CHILDREN_URI = ALF_SERVICE_URI + "/api/node/workspace/SpacesStore/%s/children?alf_ticket=%s";
+	protected static final String CMIS_INFO_URI = ALF_SERVICE_URI + "/api/cmis?alf_ticket=%s";
+	protected static final String LOGIN_URI = ALF_SERVICE_URI + "/api/login?u=%s&pw=%s";
+	protected static final String QUERY_URI = ALF_SERVICE_URI + "/api/query?alf_ticket=%s";
+	protected static final String QUERY_URI_1_0 = ALF_SERVICE_URI + "/cmis/queries?alf_ticket=%s";
 
 	private CMISHost _prefs;
 	private CMISParser _parser;
@@ -155,8 +167,8 @@ public class CMIS
 	
 	public NodeRef[] query(String xmlQuery)
 	{
-		String res = makeHttpRequest(true, String.format(QUERY_URI, _ticket), xmlQuery, 
-				"application/cmisquery+xml");
+		String uri = String.format(_version.equals("1.0") ? QUERY_URI_1_0 : QUERY_URI, _ticket);
+		String res = makeHttpRequest(true, uri, xmlQuery, CMIS_QUERY_TYPE);
 		if (res != null)
 		{
 			return _parser.parseChildren(res);
@@ -194,11 +206,22 @@ public class CMIS
 	{
 		try
 		{	
-			String url = new URL(
-					_prefs.isSSL() ? "https" : "http", _prefs.getHostname(), 
+			HttpParams params = new BasicHttpParams();
+	        HttpProtocolParams.setVersion(params, HttpVersion.HTTP_1_1);
+	        HttpProtocolParams.setContentCharset(params, "utf-8");
+	        params.setBooleanParameter("http.protocol.expect-continue", false);
+	        params.setParameter("http.connection.timeout", new Integer(TIMEOUT));
+	        
+	        // registers schemes for both http and https
+	        SchemeRegistry registry = new SchemeRegistry();
+	        registry.register(new Scheme("http", PlainSocketFactory.getSocketFactory(), 80));
+	        registry.register(new Scheme("https", new EasySSLSocketFactory(), 443));
+	        ThreadSafeClientConnManager manager = new ThreadSafeClientConnManager(params, registry);
+	     
+	        String url = new URL(_prefs.isSSL() ? "https" : "http", _prefs.getHostname(), 
 							buildRelativeURI(path)).toString();
-			HttpClient client = new DefaultHttpClient();
-			client.getParams().setParameter("http.connection.timeout", new Integer(TIMEOUT));
+			HttpClient client = new DefaultHttpClient(manager, params);
+			client.getParams();
 			_networkStatus = NetworkStatus.OK;
 
 			HttpRequestBase request = null;
@@ -226,7 +249,7 @@ public class CMIS
 				HttpEntity entity = response.getEntity();
 				int statusCode = status.getStatusCode();
 				
-				if (statusCode == HttpStatus.SC_OK && entity != null)
+				if ((statusCode == HttpStatus.SC_OK || statusCode == HttpStatus.SC_CREATED )&& entity != null)
 				{
 					// Just return the whole chunk
 					return EntityUtils.toString(entity);

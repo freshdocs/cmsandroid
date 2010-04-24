@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  ******************************************************************************/
-package com.zia.freshdocs;
+package com.zia.freshdocs.util;
 
 public class Pair<T, S>
 {

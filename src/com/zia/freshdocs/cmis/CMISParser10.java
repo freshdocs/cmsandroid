@@ -96,6 +96,11 @@ public class CMISParser10 extends CMISParserBase
 					cmisProperty = cmisProperties.get(j);
 					String attrValue = cmisProperty.attributeValue("propertyDefinitionId");
 					
+					if(attrValue == null)
+					{
+						continue;
+					}
+					
 					if(attrValue.equals("cmis:name"))
 					{
 						nodeRef.setName(cmisProperty.elementTextTrim("value"));

@@ -1,5 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<query xmlns="http://www.cmis.org/2008/05" >
-  <statement><![CDATA[SELECT score() as Relevance, ContentStreamLength FROM Document where contains('%s') OR Name Like '%%%s%%']]></statement>
-  <pageSize>30</pageSize>
-</query>

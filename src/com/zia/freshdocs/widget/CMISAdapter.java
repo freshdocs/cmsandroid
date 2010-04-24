@@ -62,13 +62,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.zia.freshdocs.Constants;
-import com.zia.freshdocs.Pair;
 import com.zia.freshdocs.R;
 import com.zia.freshdocs.app.CMISApplication;
 import com.zia.freshdocs.cmis.CMIS;
 import com.zia.freshdocs.model.NodeRef;
 import com.zia.freshdocs.preference.CMISPreferencesManager;
 import com.zia.freshdocs.util.Downloadable;
+import com.zia.freshdocs.util.Pair;
 import com.zia.freshdocs.util.URLUtils;
 
 public class CMISAdapter extends ArrayAdapter<NodeRef>
@@ -513,7 +513,7 @@ public class CMISAdapter extends ArrayAdapter<NodeRef>
 				Context context = getContext();
 				Resources res = context.getResources();
 				InputStream is = res.openRawResource(
-						_cmis.getVersion().contains("0.6") ? R.raw.query : R.raw.query_32);
+						_cmis.getVersion().contains("0.6") ? R.raw.query_0_6 : R.raw.query_1_0);
 				String xml = null;
 				
 				try
