@@ -24,12 +24,12 @@
 package com.zia.freshdocs.preference;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeSet;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.commons.codec.binary.Base64;
@@ -38,11 +38,9 @@ import org.apache.commons.lang.SerializationUtils;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
-import android.content.res.Resources;
 import android.preference.PreferenceManager;
 
 import com.zia.freshdocs.Constants;
-import com.zia.freshdocs.R;
 import com.zia.freshdocs.model.NodeRef;
 
 public class CMISPreferencesManager
@@ -157,19 +155,7 @@ public class CMISPreferencesManager
 		SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(ctx);
 		return !sharedPrefs.contains(FIRST_RUN) || sharedPrefs.getBoolean(FIRST_RUN, false);
 	}
-	
-	protected CMISHost createDemoServer(Context ctx)
-	{
-		Resources res = ctx.getResources();
 		
-		CMISHost host = new CMISHost();
-		host.setHostname(res.getString(R.string.demo_servername));
-		host.setUsername(res.getString(R.string.demo_username));
-		host.setPassword(res.getString(R.string.demo_password));
-		
-		return host;
-	}
-	
 	protected CMISHost createAddServer(Context ctx)
 	{
 		CMISHost host = new CMISHost();
@@ -180,17 +166,7 @@ public class CMISPreferencesManager
 	
 	public Collection<CMISHost> getAllPreferences(Context ctx)
 	{
-		ArrayList<CMISHost> results = new ArrayList<CMISHost>();
-		
-		if(isFirstTime(ctx))
-		{
-			CMISHost host = createDemoServer(ctx);
-			setPreferences(ctx, host);
-			SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(ctx);
-			Editor editor = sharedPrefs.edit();
-			editor.putBoolean(FIRST_RUN, false);
-			editor.commit();
-		}
+		Collection<CMISHost> results = new TreeSet<CMISHost>();
 		
 		Map<String, CMISHost> prefs = readPreferences(ctx);
 

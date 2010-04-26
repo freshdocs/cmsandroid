@@ -26,7 +26,9 @@ package com.zia.freshdocs.preference;
 import java.io.Serializable;
 import java.util.UUID;
 
-public class CMISHost implements Serializable
+import com.zia.freshdocs.Constants;
+
+public class CMISHost implements Serializable, Comparable<CMISHost>
 {
 	private static final long serialVersionUID = -7004962852122155333L;
 
@@ -141,6 +143,28 @@ public class CMISHost implements Serializable
 		else if (!_id.equals(other._id))
 			return false;
 		return true;
+	}
+
+	@Override
+	public int compareTo(CMISHost another)
+	{
+		if(another != null)
+		{
+			if(this._id == Constants.NEW_HOST_ID)
+			{
+				return 1;
+			} 
+			else if(another.getId() == Constants.NEW_HOST_ID)
+			{
+				return -1;
+			}
+			
+			return this._hostname.compareTo(another.getHostname());
+		}
+		else
+		{
+			return 0;
+		}
 	}
 
 	@Override
