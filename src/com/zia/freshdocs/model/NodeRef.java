@@ -25,6 +25,11 @@ package com.zia.freshdocs.model;
 
 import java.io.Serializable;
 
+/**
+ * Represents a node in the repo accessed by CMIS.getChildren calls.
+ * @author jsimpson
+ *
+ */
 public class NodeRef implements Serializable
 {
 	private static final long serialVersionUID = 1203230939547509235L;

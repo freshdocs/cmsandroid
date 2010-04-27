@@ -31,8 +31,6 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Set;
 
-import org.apache.commons.io.FileUtils;
-
 import android.app.Application;
 import android.content.res.Resources;
 import android.os.Environment;
@@ -106,6 +104,10 @@ public class CMISApplication extends Application
 		toast.show();
 	}
 	
+	/**
+	 * Determines the application storage path.  For now /sdcard/com.zia.freshdocs.  
+	 * @return
+	 */
 	protected StringBuilder getAppStoragePath()
 	{
 		StringBuilder targetPath = new StringBuilder();
@@ -122,6 +124,13 @@ public class CMISApplication extends Application
 		return targetPath;
 	}
 	
+	/**
+	 * Returns a File handle based on the appropriate storage path.  The application storage
+	 * path is created if it does not already exist.
+	 * @param name
+	 * @param filesize
+	 * @return
+	 */
 	public File getFile(String name, long filesize)
 	{
 		File sdCard = Environment.getExternalStorageDirectory();
@@ -171,6 +180,9 @@ public class CMISApplication extends Application
 		return null;
 	}
 	
+	/**
+	 * Handles cleaning up files from download events which are not saved as favorites.
+	 */
 	public void cleanupCache()
 	{
 		StringBuilder appStoragePath = getAppStoragePath();
@@ -210,22 +222,6 @@ public class CMISApplication extends Application
 					file.delete();
 				}
 			}
-		}
-	}
-	
-	public void cleanupHostCache(String id)
-	{
-		StringBuilder appStoragePath = getAppStoragePath();
-		appStoragePath.append(File.separator).append(id);
-		File cacheDir = new File(appStoragePath.toString());
-
-		try
-		{
-			FileUtils.deleteDirectory(cacheDir);
-		}
-		catch (IOException e)
-		{
-			Log.e("ERROR", "Failed in cleanupHostCache", e);
 		}
 	}
 }

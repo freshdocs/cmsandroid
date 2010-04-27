@@ -71,6 +71,12 @@ import com.zia.freshdocs.util.Downloadable;
 import com.zia.freshdocs.util.Pair;
 import com.zia.freshdocs.util.URLUtils;
 
+/**
+ * Handles navigation of the repo via the CMIS api.
+ * 
+ * @author jsimpson
+ *
+ */
 public class CMISAdapter extends ArrayAdapter<NodeRef>
 {	
 	private static final int BUF_SIZE = 16384;
@@ -121,6 +127,10 @@ public class CMISAdapter extends ArrayAdapter<NodeRef>
 		getChildren(_currentState.getFirst());
 	}
 	
+	/**
+	 * Handles connecting to the host, get host info such as version and then displays
+	 * the Company Home contents.
+	 */
 	public void home()
 	{
 		startProgressDlg(true);
@@ -179,10 +189,15 @@ public class CMISAdapter extends ArrayAdapter<NodeRef>
 		}
 	}
 	
+	/**
+	 * Retrieve the children from the specified node.  
+	 * @param position n-th child position
+	 */
 	public void getChildren(int position)
 	{
 		final NodeRef ref = getItem(position);
 		
+		// For folders display the contents for the specified URI
 		if(ref.isFolder())
 		{
 			_stack.push(_currentState);
@@ -190,6 +205,7 @@ public class CMISAdapter extends ArrayAdapter<NodeRef>
 			_currentState = new Pair<String, NodeRef[]>(uuid, null);
 			getChildren(uuid);
 		}
+		// For non-folders try a download (if there is an external storage card)
 		else
 		{
 			String storageState = Environment.getExternalStorageState();
@@ -224,6 +240,10 @@ public class CMISAdapter extends ArrayAdapter<NodeRef>
 		}
 	}
 	
+	/**
+	 * Send the content using a built-in Android activity which can handle the content type.
+	 * @param position
+	 */
 	public void shareContent(int position)
 	{
 		final NodeRef ref = getItem(position);
@@ -277,6 +297,10 @@ public class CMISAdapter extends ArrayAdapter<NodeRef>
 		});
 	}
 
+	/**
+	 * Display a favorite (stored on disk)
+	 * @param position
+	 */
 	public void viewFavorite(int position)
 	{
 		Context context = getContext();
@@ -296,6 +320,10 @@ public class CMISAdapter extends ArrayAdapter<NodeRef>
 		}
 	}
 	
+	/**
+	 * Saves the content node to the favorites area of the sdcard
+	 * @param position
+	 */
 	public void toggleFavorite(int position)
 	{
 		final Context context = getContext();
@@ -346,6 +374,11 @@ public class CMISAdapter extends ArrayAdapter<NodeRef>
 		}
 	}
 	
+	/**
+	 * Download the content for the given NodeRef
+	 * @param ref
+	 * @param handler
+	 */
 	protected void downloadContent(final NodeRef ref, final Handler handler)
 	{
 		startProgressDlg(false);
@@ -425,6 +458,11 @@ public class CMISAdapter extends ArrayAdapter<NodeRef>
 		}
 	}
 	
+	/**
+	 * Send an Intent requesting for an activity to display the content.
+	 * @param file
+	 * @param ref
+	 */
 	protected void viewContent(File file, NodeRef ref)
 	{
 		Context context = getContext();
@@ -502,6 +540,10 @@ public class CMISAdapter extends ArrayAdapter<NodeRef>
 		}
 	}
 	
+	/**
+	 * Query the server using the query appropriate for the server version
+	 * @param term
+	 */
 	public void query(final String term)
 	{
 		startProgressDlg(true);
