@@ -97,17 +97,21 @@ public class HostPreferenceActivity extends Activity
 
 	protected boolean updateHost()
 	{
-		String hostname = ((EditText) findViewById(R.id.hostname_edittext)).getText().toString();
-		String username = ((EditText) findViewById(R.id.username_edittext)).getText().toString();
-		String password = ((EditText) findViewById(R.id.password_edittext)).getText().toString();
-		String webappRoot = ((EditText) findViewById(R.id.webapp_root)).getText().toString();
+		String hostname = 
+			((EditText) findViewById(R.id.hostname_edittext)).getText().toString().trim();
+		String username = 
+			((EditText) findViewById(R.id.username_edittext)).getText().toString().trim();
+		String password = 
+			((EditText) findViewById(R.id.password_edittext)).getText().toString().trim();
+		String webappRoot = 
+			((EditText) findViewById(R.id.webapp_root)).getText().toString().trim();
 		boolean isSSL = ((CheckBox) findViewById(R.id.ssl)).isChecked();
 		boolean showHidden = ((CheckBox) findViewById(R.id.hidden_files)).isChecked();
 		
 		int port = 80;
 		
 		String portVal = ((EditText) findViewById(
-				R.id.port_edittext)).getText().toString();
+				R.id.port_edittext)).getText().toString().trim();
 
 		if(StringUtils.isEmpty(portVal))
 		{

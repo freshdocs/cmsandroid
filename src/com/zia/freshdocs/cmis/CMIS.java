@@ -24,12 +24,14 @@
 package com.zia.freshdocs.cmis;
 
 import java.io.ByteArrayInputStream;
+import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
@@ -48,7 +50,6 @@ import org.apache.http.impl.conn.tsccm.ThreadSafeClientConnManager;
 import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.HttpParams;
 import org.apache.http.params.HttpProtocolParams;
-import org.apache.http.util.EntityUtils;
 import org.w3c.dom.Document;
 
 import android.util.Log;
@@ -65,11 +66,11 @@ public class CMIS
 	protected static final int TIMEOUT = 12500;
 	
 	protected static final String ALF_SERVICE_URI = "/service";
-	protected static final String CHILDREN_URI = ALF_SERVICE_URI + "/api/node/workspace/SpacesStore/%s/children?alf_ticket=%s";
-	protected static final String CMIS_INFO_URI = ALF_SERVICE_URI + "/api/cmis?alf_ticket=%s";
+	protected static final String CHILDREN_URI = ALF_SERVICE_URI + "/api/node/workspace/SpacesStore/%s/children";
+	protected static final String CMIS_INFO_URI = ALF_SERVICE_URI + "/api/cmis";
 	protected static final String LOGIN_URI = ALF_SERVICE_URI + "/api/login?u=%s&pw=%s";
-	protected static final String QUERY_URI = ALF_SERVICE_URI + "/api/query?alf_ticket=%s";
-	protected static final String QUERY_URI_1_0 = ALF_SERVICE_URI + "/cmis/queries?alf_ticket=%s";
+	protected static final String QUERY_URI = ALF_SERVICE_URI + "/api/query";
+	protected static final String QUERY_URI_1_0 = ALF_SERVICE_URI + "/cmis/queries";
 
 	private CMISHost _prefs;
 	private CMISParser _parser;
@@ -86,7 +87,7 @@ public class CMIS
 
 	public String authenticate()
 	{
-		String res = makeHttpRequest(String.format(LOGIN_URI, _prefs.getUsername(), 
+		String res = get(String.format(LOGIN_URI, _prefs.getUsername(), 
 				_prefs.getPassword()));
 
 		if (res != null)
@@ -109,7 +110,7 @@ public class CMIS
 
 	public NodeRef[] getCompanyHome()
 	{
-		String res = makeHttpRequest(String.format(CMIS_INFO_URI, _ticket));
+		String res = get(String.format(CMIS_INFO_URI));
 		if (res != null)
 		{
 			CMISParser parser = new CMISParserBase();
@@ -130,7 +131,6 @@ public class CMIS
 			{
 				String rootUrl = cmisInfo.getRootURI();
 				StringBuilder buf = new StringBuilder(new URL(rootUrl).getPath());
-				buf.append("?alf_ticket=").append(_ticket);
 				String path = buf.toString();
 				String rootURI = _prefs.getWebappRoot();
 
@@ -139,7 +139,7 @@ public class CMIS
 					path = buf.substring(rootURI.length());
 				}
 
-				res = makeHttpRequest(path);
+				res = get(path);
 				if(res != null)
 				{
 					return _parser.parseChildren(res);
@@ -156,7 +156,7 @@ public class CMIS
 	
 	public NodeRef[] getChildren(String uuid)
 	{
-		String res = makeHttpRequest(String.format(CHILDREN_URI, uuid, _ticket));
+		String res = get(String.format(CHILDREN_URI, uuid));
 		if (res != null)
 		{
 			return _parser.parseChildren(res);
@@ -167,8 +167,8 @@ public class CMIS
 	
 	public NodeRef[] query(String xmlQuery)
 	{
-		String uri = String.format(_version.equals("1.0") ? QUERY_URI_1_0 : QUERY_URI, _ticket);
-		String res = makeHttpRequest(true, uri, xmlQuery, CMIS_QUERY_TYPE);
+		String uri = String.format(_version.equals("1.0") ? QUERY_URI_1_0 : QUERY_URI);
+		String res = post(uri, xmlQuery, CMIS_QUERY_TYPE);
 		if (res != null)
 		{
 			return _parser.parseChildren(res);
@@ -182,26 +182,70 @@ public class CMIS
 		StringBuilder uri = new StringBuilder();
 		String rootURI = _prefs.getWebappRoot();
 		
-		if(rootURI.endsWith("/"))
+		if(!path.startsWith(rootURI))
 		{
-			uri.append(rootURI.subSequence(0, rootURI.length() - 2));
+			if(rootURI.endsWith("/"))
+			{
+				uri.append(rootURI.subSequence(0, rootURI.length() - 2));
+			}
+			else
+			{
+				uri.append(rootURI);
+			}
 		}
-		else
-		{
-			uri.append(rootURI);
-		}
-
+		
 		uri.append(path);
+		
+		if(_ticket != null)
+		{
+			uri.append("?alf_ticket=").append(_ticket);
+		}
 		
 		return uri.toString();
 	}
 
-	protected String makeHttpRequest(String path)
+	public String get(String path)
+	{
+		try
+		{
+			InputStream is = makeHttpRequest(path);
+			if(is != null)
+			{
+				return IOUtils.toString(is);
+			}
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+		}
+		
+		return null;
+	}
+	
+	public String post(String path, String payload, String contentType)
+	{
+		try
+		{
+			InputStream is = makeHttpRequest(true, path, payload, contentType);
+			if(is != null)
+			{
+				return IOUtils.toString(is);
+			}
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+		}
+		
+		return null;
+	}
+	
+	public InputStream makeHttpRequest(String path)
 	{
 		return makeHttpRequest(false, path, null, null);
 	}
 
-	protected String makeHttpRequest(boolean isPost, String path, 
+	public InputStream makeHttpRequest(boolean isPost, String path, 
 			String payLoad, String contentType)
 	{
 		try
@@ -252,7 +296,7 @@ public class CMIS
 				if ((statusCode == HttpStatus.SC_OK || statusCode == HttpStatus.SC_CREATED )&& entity != null)
 				{
 					// Just return the whole chunk
-					return EntityUtils.toString(entity);
+					return entity.getContent();
 				}
 				else if(statusCode == HttpStatus.SC_UNAUTHORIZED)
 				{

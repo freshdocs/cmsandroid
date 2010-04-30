@@ -27,8 +27,6 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URL;
-import java.net.URLConnection;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Comparator;
@@ -404,10 +402,9 @@ public class CMISAdapter extends ArrayAdapter<NodeRef>
 					{
 						Thread.currentThread().setPriority(Thread.MIN_PRIORITY);
 						
-						URL url = new URL(builder.build().toString());
-						URLConnection conn = url.openConnection();
 						FileOutputStream fos = new FileOutputStream(f);
-						InputStream is = conn.getInputStream();
+						InputStream is = _cmis.makeHttpRequest(false, builder.build().getPath(), 
+								null, null);
 						
 						byte[] buffer = new byte[BUF_SIZE];
 						int len = is.read(buffer);
