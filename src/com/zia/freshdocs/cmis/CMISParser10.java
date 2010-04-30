@@ -24,7 +24,7 @@
 package com.zia.freshdocs.cmis;
 
 
-import java.io.ByteArrayInputStream;
+import java.io.InputStream;
 import java.util.HashMap;
 import java.util.List;
 
@@ -40,7 +40,7 @@ public class CMISParser10 extends CMISParserBase
 {
 	@SuppressWarnings("unchecked")
 	@Override
-	public NodeRef[] parseChildren(String buf)
+	public NodeRef[] parseChildren(InputStream is)
 	{
 		NodeRef[] children = null;
 		
@@ -56,7 +56,7 @@ public class CMISParser10 extends CMISParserBase
 		
 		try
 		{
-			Document document = reader.read(new ByteArrayInputStream(buf.getBytes())); 
+			Document document = reader.read(is); 
 			List<Element> entries = (List<Element>) document.selectNodes("/atom:feed/atom:entry");			
 			int numEntries = entries.size();
 			children = new NodeRef[numEntries];

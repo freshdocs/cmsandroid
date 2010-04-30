@@ -1,4 +1,4 @@
-package com.zia.freshdocs.util;
+package com.zia.freshdocs.net;
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
@@ -34,6 +34,7 @@ import org.apache.http.conn.scheme.LayeredSocketFactory;
 import org.apache.http.conn.scheme.SocketFactory;
 import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
+
 
 /**
  * This socket factory will create ssl socket that accepts self signed

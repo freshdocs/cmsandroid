@@ -24,11 +24,13 @@
 package com.zia.freshdocs.cmis;
 
 
+import java.io.InputStream;
+
 import com.zia.freshdocs.model.NodeRef;
 
 public interface CMISParser
 {
-	public CMISInfo getCMISInfo(String buf);
+	public CMISInfo getCMISInfo(InputStream is);
 	
-	public NodeRef[] parseChildren(String buf);
+	public NodeRef[] parseChildren(InputStream is);
 }

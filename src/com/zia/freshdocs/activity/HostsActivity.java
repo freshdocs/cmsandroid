@@ -44,9 +44,9 @@ import android.widget.AdapterView.AdapterContextMenuInfo;
 import com.zia.freshdocs.Constants;
 import com.zia.freshdocs.R;
 import com.zia.freshdocs.app.CMISApplication;
+import com.zia.freshdocs.net.Downloadable;
 import com.zia.freshdocs.preference.CMISHost;
 import com.zia.freshdocs.preference.CMISPreferencesManager;
-import com.zia.freshdocs.util.Downloadable;
 import com.zia.freshdocs.widget.HostAdapter;
 
 public class HostsActivity extends ListActivity

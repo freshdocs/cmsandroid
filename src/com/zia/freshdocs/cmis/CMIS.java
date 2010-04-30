@@ -23,7 +23,6 @@
  ******************************************************************************/
 package com.zia.freshdocs.cmis;
 
-import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -31,7 +30,6 @@ import java.net.URL;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
-import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
@@ -56,8 +54,8 @@ import android.util.Log;
 
 import com.zia.freshdocs.Constants.NetworkStatus;
 import com.zia.freshdocs.model.NodeRef;
+import com.zia.freshdocs.net.EasySSLSocketFactory;
 import com.zia.freshdocs.preference.CMISHost;
-import com.zia.freshdocs.util.EasySSLSocketFactory;
 
 public class CMIS
 {
@@ -87,7 +85,7 @@ public class CMIS
 
 	public String authenticate()
 	{
-		String res = get(String.format(LOGIN_URI, _prefs.getUsername(), 
+		InputStream res = get(String.format(LOGIN_URI, _prefs.getUsername(), 
 				_prefs.getPassword()));
 
 		if (res != null)
@@ -96,7 +94,7 @@ public class CMIS
 			try
 			{
 				docBuilder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
-				Document doc = docBuilder.parse(new ByteArrayInputStream(res.getBytes()));
+				Document doc = docBuilder.parse(res);
 				_ticket = doc.getDocumentElement().getFirstChild().getNodeValue();
 			}
 			catch (Exception e)
@@ -110,7 +108,7 @@ public class CMIS
 
 	public NodeRef[] getCompanyHome()
 	{
-		String res = get(String.format(CMIS_INFO_URI));
+		InputStream res = get(String.format(CMIS_INFO_URI));
 		if (res != null)
 		{
 			CMISParser parser = new CMISParserBase();
@@ -156,7 +154,7 @@ public class CMIS
 	
 	public NodeRef[] getChildren(String uuid)
 	{
-		String res = get(String.format(CHILDREN_URI, uuid));
+		InputStream res = get(String.format(CHILDREN_URI, uuid));
 		if (res != null)
 		{
 			return _parser.parseChildren(res);
@@ -168,7 +166,7 @@ public class CMIS
 	public NodeRef[] query(String xmlQuery)
 	{
 		String uri = String.format(_version.equals("1.0") ? QUERY_URI_1_0 : QUERY_URI);
-		String res = post(uri, xmlQuery, CMIS_QUERY_TYPE);
+		InputStream res = post(uri, xmlQuery, CMIS_QUERY_TYPE);
 		if (res != null)
 		{
 			return _parser.parseChildren(res);
@@ -204,40 +202,14 @@ public class CMIS
 		return uri.toString();
 	}
 
-	public String get(String path)
+	public InputStream get(String path)
 	{
-		try
-		{
-			InputStream is = makeHttpRequest(path);
-			if(is != null)
-			{
-				return IOUtils.toString(is);
-			}
-		}
-		catch (Exception e)
-		{
-			e.printStackTrace();
-		}
-		
-		return null;
+		return makeHttpRequest(path);
 	}
 	
-	public String post(String path, String payload, String contentType)
+	public InputStream post(String path, String payload, String contentType)
 	{
-		try
-		{
-			InputStream is = makeHttpRequest(true, path, payload, contentType);
-			if(is != null)
-			{
-				return IOUtils.toString(is);
-			}
-		}
-		catch (Exception e)
-		{
-			e.printStackTrace();
-		}
-		
-		return null;
+		return makeHttpRequest(true, path, payload, contentType);
 	}
 	
 	public InputStream makeHttpRequest(String path)

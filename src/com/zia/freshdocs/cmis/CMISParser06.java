@@ -24,12 +24,14 @@
 package com.zia.freshdocs.cmis;
 
 import java.io.ByteArrayInputStream;
+import java.io.InputStream;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
+import org.apache.commons.io.IOUtils;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
@@ -42,7 +44,7 @@ public class CMISParser06 extends CMISParserBase
 {
 
 	@Override
-	public NodeRef[] parseChildren(String buf)
+	public NodeRef[] parseChildren(InputStream is)
 	{
 		NodeRef[] refs = new NodeRef[0];
 		DocumentBuilder docBuilder = null;
@@ -50,7 +52,7 @@ public class CMISParser06 extends CMISParserBase
 		try
 		{
 			Pattern pattern = Pattern.compile("&(?![a-zA-Z0-9]+;)");
-			Matcher matcher = pattern.matcher(buf);
+			Matcher matcher = pattern.matcher(IOUtils.toString(is));
 			String sanitized = matcher.replaceAll("&amp;");
 			
 			docBuilder = DocumentBuilderFactory.newInstance().newDocumentBuilder();

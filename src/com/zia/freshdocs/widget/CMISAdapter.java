@@ -27,6 +27,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Comparator;
@@ -46,7 +47,6 @@ import android.content.res.Resources;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
-import android.net.Uri.Builder;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
@@ -64,10 +64,9 @@ import com.zia.freshdocs.R;
 import com.zia.freshdocs.app.CMISApplication;
 import com.zia.freshdocs.cmis.CMIS;
 import com.zia.freshdocs.model.NodeRef;
+import com.zia.freshdocs.net.Downloadable;
 import com.zia.freshdocs.preference.CMISPreferencesManager;
-import com.zia.freshdocs.util.Downloadable;
 import com.zia.freshdocs.util.Pair;
-import com.zia.freshdocs.util.URLUtils;
 
 /**
  * Handles navigation of the repo via the CMIS api.
@@ -388,13 +387,11 @@ public class CMISAdapter extends ArrayAdapter<NodeRef>
 			{
 				File f =  null;
 				
-				Builder builder = URLUtils.toUriBuilder(ref.getContent());
-				builder.appendQueryParameter("alf_ticket", _cmis.getTicket());
-
 				try
 				{
-					String name = ref.getName();
 					CMISApplication app = (CMISApplication) getContext().getApplicationContext();
+					URL url = new URL(ref.getContent());
+					String name = ref.getName();
 					long fileSize = ref.getContentLength();
 					f = app.getFile(name, fileSize);
 					
@@ -403,8 +400,7 @@ public class CMISAdapter extends ArrayAdapter<NodeRef>
 						Thread.currentThread().setPriority(Thread.MIN_PRIORITY);
 						
 						FileOutputStream fos = new FileOutputStream(f);
-						InputStream is = _cmis.makeHttpRequest(false, builder.build().getPath(), 
-								null, null);
+						InputStream is = _cmis.get(url.getPath());
 						
 						byte[] buffer = new byte[BUF_SIZE];
 						int len = is.read(buffer);

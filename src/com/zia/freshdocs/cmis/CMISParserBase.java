@@ -24,7 +24,7 @@
 package com.zia.freshdocs.cmis;
 
 
-import java.io.ByteArrayInputStream;
+import java.io.InputStream;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -33,9 +33,9 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
-import com.zia.freshdocs.model.NodeRef;
-
 import android.util.Log;
+
+import com.zia.freshdocs.model.NodeRef;
 
 
 public class CMISParserBase implements CMISParser
@@ -45,7 +45,7 @@ public class CMISParserBase implements CMISParser
 	
 	protected static final String CMIS_COLLECTION_TYPE = "cmis:collectionType";
 	
-	public CMISInfo getCMISInfo(String buf)
+	public CMISInfo getCMISInfo(InputStream is)
 	{
 		DocumentBuilder docBuilder = null;
 		CMISInfo info = null;
@@ -53,7 +53,7 @@ public class CMISParserBase implements CMISParser
 		try
 		{
 			docBuilder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
-			Document doc = docBuilder.parse(new ByteArrayInputStream(buf.getBytes()));
+			Document doc = docBuilder.parse(is);
 
 			NodeList nodes = doc.getElementsByTagName("cmis:cmisVersionSupported");
 			String rawVersion = nodes.item(0).getFirstChild().getNodeValue();
@@ -106,7 +106,7 @@ public class CMISParserBase implements CMISParser
 	}
 
 	@Override
-	public NodeRef[] parseChildren(String buf)
+	public NodeRef[] parseChildren(InputStream is)
 	{
 		return null;
 	}
