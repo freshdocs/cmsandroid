@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xmlns:app="http://www.w3.org/2007/app"
+	xmlns:cmis="http://www.cmis.org/2008/05" xmlns:alf="http://www.alfresco.org"
+	xmlns:opensearch="http://a9.com/-/spec/opensearch/1.1/">
+	<author>
+		<name>admin</name>
+	</author>
+	<generator version="3.1.1 (@build-number@)">Alfresco (Enterprise)</generator>
+	<icon>http://192.168.0.2:80/alfresco/images/logo/AlfrescoLogo16.ico
+	</icon>
+	<id>urn:uuid:resultset</id>
+	<link rel="self"
+		href="http://192.168.0.2:80/alfresco/service/api/query?alf_ticket=TICKET_f1847eb0c84d329a3f6b2b29f5642fa9310ee079" />
+	<link rel="first"
+		href="http://192.168.0.2:80/alfresco/service/api/query?alf_ticket=TICKET_f1847eb0c84d329a3f6b2b29f5642fa9310ee079&amp;maxItems=30&amp;skipCount=0&amp;guest="
+		type="application/atom+xml;type=feed" />
+	<title>Result set for SELECT score() as Relevance, ContentStreamLength
+		FROM Document where contains('test')</title>
+	<updated>2009-11-14T20:43:11.901-07:00</updated>
+	<entry>
+		<author>
+			<name>admin</name>
+		</author>
+		<content type="text/plain"
+			src="http://192.168.0.2:80/alfresco/service/api/node/workspace/SpacesStore/fdbf2362-6842-400e-adae-cb743317b04f/content.test.txt" />
+		<id>urn:uuid:fdbf2362-6842-400e-adae-cb743317b04f</id>
+		<link rel="self"
+			href="http://192.168.0.2:80/alfresco/service/api/node/workspace/SpacesStore/fdbf2362-6842-400e-adae-cb743317b04f" />
+		<title>test.txt</title>
+		<updated>2009-11-14T06:47:58.634-07:00</updated>
+		<cmis:object>
+			<cmis:properties>
+				<cmis:propertyString cmis:name="BaseType">
+					<cmis:value>document</cmis:value>
+				</cmis:propertyString>
+				<cmis:propertyDecimal cmis:name="Relevance">
+					<cmis:value>0.1237019151449204</cmis:value>
+				</cmis:propertyDecimal>
+				<cmis:propertyInteger cmis:name="ContentStreamLength">
+					<cmis:value>15</cmis:value>
+				</cmis:propertyInteger>
+			</cmis:properties>
+		</cmis:object>
+		<cmis:terminator />
+		<alf:icon>http://192.168.0.2:80/alfresco/images/filetypes/txt.gif
+		</alf:icon>
+	</entry>
+	<entry>
+		<author>
+			<name>System</name>
+		</author>
+		<content type="application/x-javascript"
+			src="http://192.168.0.2:80/alfresco/service/api/node/workspace/SpacesStore/2bbb4eee-1df7-4bfb-bc7a-bbbdbd9401d9/content.example%20test%20script.js" />
+		<id>urn:uuid:2bbb4eee-1df7-4bfb-bc7a-bbbdbd9401d9</id>
+		<link rel="self"
+			href="http://192.168.0.2:80/alfresco/service/api/node/workspace/SpacesStore/2bbb4eee-1df7-4bfb-bc7a-bbbdbd9401d9" />
+		<title>example test script.js</title>
+		<updated>2009-11-13T22:02:17.717-07:00</updated>
+		<cmis:object>
+			<cmis:properties>
+				<cmis:propertyString cmis:name="BaseType">
+					<cmis:value>document</cmis:value>
+				</cmis:propertyString>
+				<cmis:propertyDecimal cmis:name="Relevance">
+					<cmis:value>0.0175601728260517</cmis:value>
+				</cmis:propertyDecimal>
+				<cmis:propertyInteger cmis:name="ContentStreamLength">
+					<cmis:value>2271</cmis:value>
+				</cmis:propertyInteger>
+			</cmis:properties>
+		</cmis:object>
+		<cmis:terminator />
+		<alf:icon>http://192.168.0.2:80/alfresco/images/filetypes/js.gif
+		</alf:icon>
+	</entry>
+	<cmis:hasMoreItems>false</cmis:hasMoreItems>
+	<opensearch:totalResults>2</opensearch:totalResults>
+	<opensearch:startIndex>0</opensearch:startIndex>
+	<opensearch:itemsPerPage>30</opensearch:itemsPerPage>
+</feed>

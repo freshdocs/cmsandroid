@@ -1,0 +1,13 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/menu_item_search"
+          android:title="@string/search"
+          android:icon="@android:drawable/ic_menu_search"/>
+
+    <item android:id="@+id/menu_item_about"
+          android:title="@string/about" 
+          android:icon="@drawable/zialogo_sm"/>
+
+    <item android:id="@+id/menu_item_quit"
+          android:title="@string/quit" 
+          android:icon="@android:drawable/ic_lock_power_off"/>
+</menu>

@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<query>
+  <statement><![CDATA[SELECT * FROM cmis:document where contains('%s') OR cmis:name Like '%%%s%%']]></statement>
+  <pageSize>30</pageSize>
+</query>

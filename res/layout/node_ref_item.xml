@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  android:layout_width="fill_parent"
+  android:layout_height="65dip"
+  android:paddingTop="2dip"
+  android:paddingBottom="2dip">
+  	
+  	<ImageView 
+  		android:id="@+id/node_ref_img"
+  		android:layout_width="wrap_content"
+  		android:layout_height="wrap_content"
+  		android:layout_gravity="center_vertical"/>
+  		
+  	<RelativeLayout
+  		android:layout_width="wrap_content"
+  		android:layout_height="fill_parent"
+  		android:paddingLeft="5dip"
+  		android:paddingRight="5dip"
+  		android:paddingTop="10dip"
+  		android:paddingBottom="10dip">
+  		
+  		<TextView
+  			android:id="@+id/node_ref_label"
+  			android:layout_width="fill_parent"
+  			android:layout_height="wrap_content"
+  			android:lines="1"
+  			android:ellipsize="middle"
+  			android:textAppearance="?android:attr/textAppearanceMedium"/>
+  			
+  		<TextView
+  			android:id="@+id/node_ref_modified"
+  			android:layout_width="wrap_content"
+  			android:layout_height="wrap_content"
+  			android:textSize="10sp"
+  			android:textStyle="italic"
+  			android:layout_alignParentBottom="true"/>
+  			
+  		<TextView
+  			android:id="@+id/node_ref_modified_date"
+  			android:layout_width="wrap_content"
+  			android:layout_height="wrap_content"
+  			android:textSize="10sp"
+  			android:textStyle="italic"
+  			android:layout_alignParentBottom="true"
+  			android:layout_alignParentRight="true"/>
+  			
+  	</RelativeLayout>
+  		
+</LinearLayout>

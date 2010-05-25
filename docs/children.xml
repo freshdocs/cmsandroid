@@ -1,0 +1,310 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xmlns:app="http://www.w3.org/2007/app"
+	xmlns:cmis="http://www.cmis.org/2008/05" xmlns:alf="http://www.alfresco.org"
+	xmlns:opensearch="http://a9.com/-/spec/opensearch/1.1/">
+	<author>
+		<name>System</name>
+	</author>
+	<generator version="3.1.1 (@build-number@)">Alfresco (Enterprise)</generator>
+	<icon>http://localhost:80/alfresco/images/logo/AlfrescoLogo16.ico
+	</icon>
+	<id>urn:uuid:8edd5be7-f6e6-4567-8180-9017de72bfad-children</id>
+	<link rel="self"
+		href="http://localhost:80/alfresco/service/api/path/workspace/SpacesStore/Company%20Home/children" />
+	<link rel="cmis-source"
+		href="http://localhost:80/alfresco/service/api/node/workspace/SpacesStore/8edd5be7-f6e6-4567-8180-9017de72bfad" />
+	<link rel="first"
+		href="http://localhost:80/alfresco/service/api/path/workspace/SpacesStore/Company%20Home/children?pageNo=1&amp;pageSize=0&amp;guest=&amp;format=atomfeed"
+		type="application/atom+xml;type=feed" />
+
+	<link rel="last"
+		href="http://localhost:80/alfresco/service/api/path/workspace/SpacesStore/Company%20Home/children?pageNo=1&amp;pageSize=0&amp;guest=&amp;format=atomfeed"
+		type="application/atom+xml;type=feed" />
+	<title>Company Home Children</title>
+	<updated>2009-11-05T13:07:02.788-07:00</updated>
+	<entry>
+		<author>
+			<name>System</name>
+		</author>
+		<content>24e2571b-f16f-4781-b5bb-fc2513f64df7</content>
+		<id>urn:uuid:24e2571b-f16f-4781-b5bb-fc2513f64df7</id>
+
+		<link rel="self"
+			href="http://localhost:80/alfresco/service/api/node/workspace/SpacesStore/24e2571b-f16f-4781-b5bb-fc2513f64df7" />
+		<link rel="edit"
+			href="http://localhost:80/alfresco/service/api/node/workspace/SpacesStore/24e2571b-f16f-4781-b5bb-fc2513f64df7" />
+		<link rel="cmis-allowableactions"
+			href="http://localhost:80/alfresco/service/api/node/workspace/SpacesStore/24e2571b-f16f-4781-b5bb-fc2513f64df7/permissions" />
+		<link rel="cmis-relationships"
+			href="http://localhost:80/alfresco/service/api/node/workspace/SpacesStore/24e2571b-f16f-4781-b5bb-fc2513f64df7/associations" />
+		<link rel="cmis-parent"
+			href="http://localhost:80/alfresco/service/api/node/workspace/SpacesStore/8edd5be7-f6e6-4567-8180-9017de72bfad" />
+		<link rel="cmis-folderparent"
+			href="http://localhost:80/alfresco/service/api/node/workspace/SpacesStore/24e2571b-f16f-4781-b5bb-fc2513f64df7/parent" />
+		<link rel="cmis-children"
+			href="http://localhost:80/alfresco/service/api/node/workspace/SpacesStore/24e2571b-f16f-4781-b5bb-fc2513f64df7/children" />
+		<link rel="cmis-descendants"
+			href="http://localhost:80/alfresco/service/api/node/workspace/SpacesStore/24e2571b-f16f-4781-b5bb-fc2513f64df7/descendants" />
+		<link rel="cmis-type"
+			href="http://localhost:80/alfresco/service/api/type/F/st_sites" />
+		<link rel="cmis-repository" href="http://localhost:80/alfresco/service/api/repository" />
+		<published>2009-11-05T13:07:14.160-07:00</published>
+		<summary>Site Collaboration Spaces</summary>
+		<title>Sites</title>
+		<updated>2009-11-05T13:07:14.252-07:00</updated>
+
+		<cmis:object>
+			<cmis:properties>
+				<cmis:propertyId cmis:name="ObjectId">
+					<cmis:value>workspace://SpacesStore/24e2571b-f16f-4781-b5bb-fc2513f64df7
+					</cmis:value>
+				</cmis:propertyId>
+				<cmis:propertyString cmis:name="BaseType">
+					<cmis:value>folder</cmis:value>
+				</cmis:propertyString>
+				<cmis:propertyString cmis:name="ObjectTypeId">
+					<cmis:value>F/st_sites</cmis:value>
+				</cmis:propertyString>
+				<cmis:propertyString cmis:name="CreatedBy">
+					<cmis:value>System</cmis:value>
+				</cmis:propertyString>
+
+				<cmis:propertyDateTime cmis:name="CreationDate">
+					<cmis:value>2009-11-05T13:07:14.160-07:00</cmis:value>
+				</cmis:propertyDateTime>
+				<cmis:propertyString cmis:name="LastModifiedBy">
+					<cmis:value>System</cmis:value>
+				</cmis:propertyString>
+				<cmis:propertyDateTime cmis:name="LastModificationDate">
+					<cmis:value>2009-11-05T13:07:14.252-07:00</cmis:value>
+				</cmis:propertyDateTime>
+				<cmis:propertyString cmis:name="Name">
+					<cmis:value>Sites</cmis:value>
+				</cmis:propertyString>
+				<cmis:propertyId cmis:name="ParentId">
+					<cmis:value>workspace://SpacesStore/8edd5be7-f6e6-4567-8180-9017de72bfad
+					</cmis:value>
+				</cmis:propertyId>
+
+			</cmis:properties>
+		</cmis:object>
+		<cmis:terminator />
+		<app:edited>2009-11-05T13:07:14.252-07:00</app:edited>
+		<alf:icon>http://localhost:80/alfresco/images/icons/space-icon-default-16.gif
+		</alf:icon>
+	</entry>
+	<entry>
+		<author>
+			<name>System</name>
+		</author>
+		<content>ce2530c6-fcbc-43c3-9610-b1b02dee5ca0</content>
+		<id>urn:uuid:ce2530c6-fcbc-43c3-9610-b1b02dee5ca0</id>
+
+		<link rel="self"
+			href="http://localhost:80/alfresco/service/api/node/workspace/SpacesStore/ce2530c6-fcbc-43c3-9610-b1b02dee5ca0" />
+		<link rel="edit"
+			href="http://localhost:80/alfresco/service/api/node/workspace/SpacesStore/ce2530c6-fcbc-43c3-9610-b1b02dee5ca0" />
+		<link rel="cmis-allowableactions"
+			href="http://localhost:80/alfresco/service/api/node/workspace/SpacesStore/ce2530c6-fcbc-43c3-9610-b1b02dee5ca0/permissions" />
+		<link rel="cmis-relationships"
+			href="http://localhost:80/alfresco/service/api/node/workspace/SpacesStore/ce2530c6-fcbc-43c3-9610-b1b02dee5ca0/associations" />
+		<link rel="cmis-parent"
+			href="http://localhost:80/alfresco/service/api/node/workspace/SpacesStore/8edd5be7-f6e6-4567-8180-9017de72bfad" />
+		<link rel="cmis-folderparent"
+			href="http://localhost:80/alfresco/service/api/node/workspace/SpacesStore/ce2530c6-fcbc-43c3-9610-b1b02dee5ca0/parent" />
+		<link rel="cmis-children"
+			href="http://localhost:80/alfresco/service/api/node/workspace/SpacesStore/ce2530c6-fcbc-43c3-9610-b1b02dee5ca0/children" />
+		<link rel="cmis-descendants"
+			href="http://localhost:80/alfresco/service/api/node/workspace/SpacesStore/ce2530c6-fcbc-43c3-9610-b1b02dee5ca0/descendants" />
+		<link rel="cmis-type" href="http://localhost:80/alfresco/service/api/type/folder" />
+		<link rel="cmis-repository" href="http://localhost:80/alfresco/service/api/repository" />
+		<published>2009-11-05T13:07:02.791-07:00</published>
+		<summary>User managed definitions</summary>
+		<title>Data Dictionary</title>
+		<updated>2009-11-05T13:07:02.864-07:00</updated>
+
+		<cmis:object>
+			<cmis:properties>
+				<cmis:propertyId cmis:name="ObjectId">
+					<cmis:value>workspace://SpacesStore/ce2530c6-fcbc-43c3-9610-b1b02dee5ca0
+					</cmis:value>
+				</cmis:propertyId>
+				<cmis:propertyString cmis:name="BaseType">
+					<cmis:value>folder</cmis:value>
+				</cmis:propertyString>
+				<cmis:propertyString cmis:name="ObjectTypeId">
+					<cmis:value>folder</cmis:value>
+				</cmis:propertyString>
+				<cmis:propertyString cmis:name="CreatedBy">
+					<cmis:value>System</cmis:value>
+				</cmis:propertyString>
+
+				<cmis:propertyDateTime cmis:name="CreationDate">
+					<cmis:value>2009-11-05T13:07:02.791-07:00</cmis:value>
+				</cmis:propertyDateTime>
+				<cmis:propertyString cmis:name="LastModifiedBy">
+					<cmis:value>System</cmis:value>
+				</cmis:propertyString>
+				<cmis:propertyDateTime cmis:name="LastModificationDate">
+					<cmis:value>2009-11-05T13:07:02.864-07:00</cmis:value>
+				</cmis:propertyDateTime>
+				<cmis:propertyString cmis:name="Name">
+					<cmis:value>Data Dictionary</cmis:value>
+				</cmis:propertyString>
+				<cmis:propertyId cmis:name="ParentId">
+					<cmis:value>workspace://SpacesStore/8edd5be7-f6e6-4567-8180-9017de72bfad
+					</cmis:value>
+				</cmis:propertyId>
+
+			</cmis:properties>
+		</cmis:object>
+		<cmis:terminator />
+		<app:edited>2009-11-05T13:07:02.864-07:00</app:edited>
+		<alf:icon>http://localhost:80/alfresco/images/icons/space-icon-default-16.gif
+		</alf:icon>
+	</entry>
+	<entry>
+		<author>
+			<name>System</name>
+		</author>
+		<content>49589862-2e41-49da-b0d4-0044c2630916</content>
+		<id>urn:uuid:49589862-2e41-49da-b0d4-0044c2630916</id>
+
+		<link rel="self"
+			href="http://localhost:80/alfresco/service/api/node/workspace/SpacesStore/49589862-2e41-49da-b0d4-0044c2630916" />
+		<link rel="edit"
+			href="http://localhost:80/alfresco/service/api/node/workspace/SpacesStore/49589862-2e41-49da-b0d4-0044c2630916" />
+		<link rel="cmis-allowableactions"
+			href="http://localhost:80/alfresco/service/api/node/workspace/SpacesStore/49589862-2e41-49da-b0d4-0044c2630916/permissions" />
+		<link rel="cmis-relationships"
+			href="http://localhost:80/alfresco/service/api/node/workspace/SpacesStore/49589862-2e41-49da-b0d4-0044c2630916/associations" />
+		<link rel="cmis-parent"
+			href="http://localhost:80/alfresco/service/api/node/workspace/SpacesStore/8edd5be7-f6e6-4567-8180-9017de72bfad" />
+		<link rel="cmis-folderparent"
+			href="http://localhost:80/alfresco/service/api/node/workspace/SpacesStore/49589862-2e41-49da-b0d4-0044c2630916/parent" />
+		<link rel="cmis-children"
+			href="http://localhost:80/alfresco/service/api/node/workspace/SpacesStore/49589862-2e41-49da-b0d4-0044c2630916/children" />
+		<link rel="cmis-descendants"
+			href="http://localhost:80/alfresco/service/api/node/workspace/SpacesStore/49589862-2e41-49da-b0d4-0044c2630916/descendants" />
+		<link rel="cmis-type" href="http://localhost:80/alfresco/service/api/type/folder" />
+		<link rel="cmis-repository" href="http://localhost:80/alfresco/service/api/repository" />
+		<published>2009-11-05T13:07:03.250-07:00</published>
+		<summary>The guest root space</summary>
+		<title>Guest Home</title>
+		<updated>2009-11-05T13:07:03.351-07:00</updated>
+
+		<cmis:object>
+			<cmis:properties>
+				<cmis:propertyId cmis:name="ObjectId">
+					<cmis:value>workspace://SpacesStore/49589862-2e41-49da-b0d4-0044c2630916
+					</cmis:value>
+				</cmis:propertyId>
+				<cmis:propertyString cmis:name="BaseType">
+					<cmis:value>folder</cmis:value>
+				</cmis:propertyString>
+				<cmis:propertyString cmis:name="ObjectTypeId">
+					<cmis:value>folder</cmis:value>
+				</cmis:propertyString>
+				<cmis:propertyString cmis:name="CreatedBy">
+					<cmis:value>System</cmis:value>
+				</cmis:propertyString>
+
+				<cmis:propertyDateTime cmis:name="CreationDate">
+					<cmis:value>2009-11-05T13:07:03.250-07:00</cmis:value>
+				</cmis:propertyDateTime>
+				<cmis:propertyString cmis:name="LastModifiedBy">
+					<cmis:value>System</cmis:value>
+				</cmis:propertyString>
+				<cmis:propertyDateTime cmis:name="LastModificationDate">
+					<cmis:value>2009-11-05T13:07:03.351-07:00</cmis:value>
+				</cmis:propertyDateTime>
+				<cmis:propertyString cmis:name="Name">
+					<cmis:value>Guest Home</cmis:value>
+				</cmis:propertyString>
+				<cmis:propertyId cmis:name="ParentId">
+					<cmis:value>workspace://SpacesStore/8edd5be7-f6e6-4567-8180-9017de72bfad
+					</cmis:value>
+				</cmis:propertyId>
+
+			</cmis:properties>
+		</cmis:object>
+		<cmis:terminator />
+		<app:edited>2009-11-05T13:07:03.351-07:00</app:edited>
+		<alf:icon>http://localhost:80/alfresco/images/icons/space-icon-default-16.gif
+		</alf:icon>
+	</entry>
+	<entry>
+		<author>
+			<name>System</name>
+		</author>
+		<content>6ff5be39-58b8-41cf-8943-88d30a72eac0</content>
+		<id>urn:uuid:6ff5be39-58b8-41cf-8943-88d30a72eac0</id>
+
+		<link rel="self"
+			href="http://localhost:80/alfresco/service/api/node/workspace/SpacesStore/6ff5be39-58b8-41cf-8943-88d30a72eac0" />
+		<link rel="edit"
+			href="http://localhost:80/alfresco/service/api/node/workspace/SpacesStore/6ff5be39-58b8-41cf-8943-88d30a72eac0" />
+		<link rel="cmis-allowableactions"
+			href="http://localhost:80/alfresco/service/api/node/workspace/SpacesStore/6ff5be39-58b8-41cf-8943-88d30a72eac0/permissions" />
+		<link rel="cmis-relationships"
+			href="http://localhost:80/alfresco/service/api/node/workspace/SpacesStore/6ff5be39-58b8-41cf-8943-88d30a72eac0/associations" />
+		<link rel="cmis-parent"
+			href="http://localhost:80/alfresco/service/api/node/workspace/SpacesStore/8edd5be7-f6e6-4567-8180-9017de72bfad" />
+		<link rel="cmis-folderparent"
+			href="http://localhost:80/alfresco/service/api/node/workspace/SpacesStore/6ff5be39-58b8-41cf-8943-88d30a72eac0/parent" />
+		<link rel="cmis-children"
+			href="http://localhost:80/alfresco/service/api/node/workspace/SpacesStore/6ff5be39-58b8-41cf-8943-88d30a72eac0/children" />
+		<link rel="cmis-descendants"
+			href="http://localhost:80/alfresco/service/api/node/workspace/SpacesStore/6ff5be39-58b8-41cf-8943-88d30a72eac0/descendants" />
+		<link rel="cmis-type" href="http://localhost:80/alfresco/service/api/type/folder" />
+		<link rel="cmis-repository" href="http://localhost:80/alfresco/service/api/repository" />
+		<published>2009-11-05T13:07:03.354-07:00</published>
+		<summary>User Homes</summary>
+		<title>User Homes</title>
+		<updated>2009-11-05T13:07:03.375-07:00</updated>
+
+		<cmis:object>
+			<cmis:properties>
+				<cmis:propertyId cmis:name="ObjectId">
+					<cmis:value>workspace://SpacesStore/6ff5be39-58b8-41cf-8943-88d30a72eac0
+					</cmis:value>
+				</cmis:propertyId>
+				<cmis:propertyString cmis:name="BaseType">
+					<cmis:value>folder</cmis:value>
+				</cmis:propertyString>
+				<cmis:propertyString cmis:name="ObjectTypeId">
+					<cmis:value>folder</cmis:value>
+				</cmis:propertyString>
+				<cmis:propertyString cmis:name="CreatedBy">
+					<cmis:value>System</cmis:value>
+				</cmis:propertyString>
+
+				<cmis:propertyDateTime cmis:name="CreationDate">
+					<cmis:value>2009-11-05T13:07:03.354-07:00</cmis:value>
+				</cmis:propertyDateTime>
+				<cmis:propertyString cmis:name="LastModifiedBy">
+					<cmis:value>System</cmis:value>
+				</cmis:propertyString>
+				<cmis:propertyDateTime cmis:name="LastModificationDate">
+					<cmis:value>2009-11-05T13:07:03.375-07:00</cmis:value>
+				</cmis:propertyDateTime>
+				<cmis:propertyString cmis:name="Name">
+					<cmis:value>User Homes</cmis:value>
+				</cmis:propertyString>
+				<cmis:propertyId cmis:name="ParentId">
+					<cmis:value>workspace://SpacesStore/8edd5be7-f6e6-4567-8180-9017de72bfad
+					</cmis:value>
+				</cmis:propertyId>
+
+			</cmis:properties>
+		</cmis:object>
+		<cmis:terminator />
+		<app:edited>2009-11-05T13:07:03.375-07:00</app:edited>
+		<alf:icon>http://localhost:80/alfresco/images/icons/space-icon-default-16.gif
+		</alf:icon>
+	</entry>
+	<cmis:hasMoreItems>false</cmis:hasMoreItems>
+	<opensearch:totalResults>4</opensearch:totalResults>
+	<opensearch:startIndex>0</opensearch:startIndex>
+	<opensearch:itemsPerPage>0</opensearch:itemsPerPage>
+</feed>
