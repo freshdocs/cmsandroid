@@ -38,6 +38,8 @@ import com.zia.freshdocs.model.NodeRef;
 
 public class CMISParser10 extends CMISParserBase 
 {
+	private static final String URN_UUID = "urn:uuid:";
+
 	@SuppressWarnings("unchecked")
 	@Override
 	public NodeRef[] parseChildren(InputStream is)
@@ -73,17 +75,17 @@ public class CMISParser10 extends CMISParserBase
 				entry = entries.get(i);
 				
 				// Get either the node uuid or src uri and content type
+				Element id = entry.element("id");
+				String uuid = id.getTextTrim().replace(URN_UUID, "");
+				nodeRef.setContent(uuid);
+
 				Element content = entry.element("content");
 				String contentType = content.attributeValue("type");
-				
+
 				if(contentType != null)
 				{
 					nodeRef.setContentType(contentType);
 					nodeRef.setContent(content.attributeValue("src"));					
-				}
-				else
-				{
-					nodeRef.setContent(content.getTextTrim());
 				}
 				
 				List<Element> cmisProperties = entry.selectNodes(".//cmis:properties/*");
