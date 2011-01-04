@@ -145,7 +145,7 @@ public class CMISHost implements Serializable, Comparable<CMISHost>
 		return true;
 	}
 
-	@Override
+	// @Override
 	public int compareTo(CMISHost another)
 	{
 		if(another != null)

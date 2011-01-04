@@ -46,9 +46,18 @@ import com.zia.freshdocs.model.NodeRef;
 public class CMISPreferencesManager
 {
 	private static final String FAVORITES_KEY = "favorites";
-	private static final String FIRST_RUN = "first_run";
 	private static final String SERVERS_KEY = "servers";
-
+	private static final String PREFS_SET_KEY = "prefs_set";
+	
+	// values that define the default host
+	private static final String DEFAULT_HOSTNAME = "demo.ziaconsulting.com";
+	private static final String DEFAULT_USERNAME = "android";
+	private static final String DEFAULT_PASSWORD = "android123";
+	private static final int DEFAULT_PORT = 80;
+	private static final Boolean DEFAULT_SHOWHIDDEN = false;
+	private static final Boolean DEFAULT_SSL = false;
+	private static final String DEFAULT_WEBAPPROOT = "/alfresco";
+	
 	// Private constructor prevents instantiation from other classes
 	private CMISPreferencesManager()
 	{
@@ -101,6 +110,10 @@ public class CMISPreferencesManager
 		byte[] encPrefs = Base64.encodeBase64(SerializationUtils.serialize((Serializable) map));
 		Editor prefsEditor = sharedPrefs.edit();
 		prefsEditor.putString(SERVERS_KEY, new String(encPrefs));
+		
+		// indicate that user prefs are set
+		prefsEditor.putBoolean(PREFS_SET_KEY, true);
+		
 		prefsEditor.commit();
 	}
 	
@@ -149,12 +162,6 @@ public class CMISPreferencesManager
 			storePreferences(ctx, prefs);		
 		}
 	}
-	
-	protected boolean isFirstTime(Context ctx)
-	{
-		SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(ctx);
-		return !sharedPrefs.contains(FIRST_RUN) || sharedPrefs.getBoolean(FIRST_RUN, false);
-	}
 		
 	protected CMISHost createAddServer(Context ctx)
 	{
@@ -169,8 +176,14 @@ public class CMISPreferencesManager
 		Collection<CMISHost> results = new TreeSet<CMISHost>();
 		
 		Map<String, CMISHost> prefs = readPreferences(ctx);
-
-		if(prefs != null)
+		
+		if (prefs.size() == 0)
+		{
+			initDefaultPrefs(ctx);
+			prefs = readPreferences(ctx);
+		}
+		
+		if (prefs != null)
 		{
 			results.addAll(prefs.values());
 			results.add(createAddServer(ctx));
@@ -213,5 +226,28 @@ public class CMISPreferencesManager
 		Editor prefsEditor = sharedPrefs.edit();
 		prefsEditor.putString(FAVORITES_KEY, new String(enc));
 		prefsEditor.commit();
+	}
+	
+	protected void initDefaultPrefs(Context ctx)
+	{
+		SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(ctx);
+		
+		// if no user prefs exist, create the default host
+		if (!sharedPrefs.contains(PREFS_SET_KEY)) 
+		{
+			CMISHost defaultHost = new CMISHost();
+			
+			defaultHost.setId(DEFAULT_HOSTNAME);
+			defaultHost.setHostname(DEFAULT_HOSTNAME);
+			defaultHost.setUsername(DEFAULT_USERNAME);
+			defaultHost.setPassword(DEFAULT_PASSWORD);
+			defaultHost.setPort(DEFAULT_PORT);
+			defaultHost.setShowHidden(DEFAULT_SHOWHIDDEN);
+			defaultHost.setSSL(DEFAULT_SSL);
+			defaultHost.setWebappRoot(DEFAULT_WEBAPPROOT);
+			
+			setPreferences(ctx, defaultHost);
+		}
+		
 	}
 }
