@@ -37,88 +37,77 @@ import com.zia.freshdocs.R;
 import com.zia.freshdocs.Constants.NetworkStatus;
 import com.zia.freshdocs.cmis.CMIS;
 
-public class SearchActivity extends NodeBrowseActivity
-{
+public class SearchActivity extends NodeBrowseActivity {
 	private boolean _isDirty = true;
-	
+
 	@Override
-	public void onCreate(Bundle savedInstanceState)
-	{
+	public void onCreate(Bundle savedInstanceState) {
+		this.setTheme(R.style.Theme_HoloEverywhereLight);
 		_adapterInitialized = true;
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.search);
-		registerForContextMenu(getListView());		
-		
+		registerForContextMenu(getListView());
+
 		StringBuilder title = new StringBuilder(getTitle());
 		title.append(" - ").append(getResources().getString(R.string.search));
 		setTitle(title.toString());
 	}
 
 	@Override
-	protected void onResume()
-	{
+	protected void onResume() {
 		super.onResume();
 		handleSearchIntent();
 	}
-	
+
 	/**
 	 * Handles rotation by doing nothing (instead of onCreate being called)
 	 */
 	@Override
-	public void onConfigurationChanged(Configuration newConfig)
-	{
+	public void onConfigurationChanged(Configuration newConfig) {
 		super.onConfigurationChanged(newConfig);
 	}
 
 	@Override
-	protected void onNewIntent(Intent intent)
-	{
+	protected void onNewIntent(Intent intent) {
 		setIntent(intent);
 		_isDirty = true;
 	}
 
-	protected void handleSearchIntent()
-	{
+	protected void handleSearchIntent() {
 		Intent queryIntent = getIntent();
 		String queryAction = queryIntent.getAction();
-		
-		if (Intent.ACTION_SEARCH.equals(queryAction) && _isDirty) 
-		{
+
+		if (Intent.ACTION_SEARCH.equals(queryAction) && _isDirty) {
 			CMIS cmis = _adapter.getCmis();
-			if(cmis == null || cmis.getNetworkStatus() != NetworkStatus.OK)
-			{
+			if (cmis == null || cmis.getNetworkStatus() != NetworkStatus.OK) {
 				int duration = Toast.LENGTH_SHORT;
-				int error_id = cmis == null ? R.string.search_ambiguaous : 
-					R.string.offline_search_error;
+				int error_id = cmis == null ? R.string.search_ambiguaous
+						: R.string.offline_search_error;
 				Toast toast = Toast.makeText(this, error_id, duration);
 				toast.show();
 				finish();
-			}
-			else
-			{
-				String queryString = queryIntent.getStringExtra(SearchManager.QUERY);
+			} else {
+				String queryString = queryIntent
+						.getStringExtra(SearchManager.QUERY);
 				search(queryString);
 				_isDirty = false;
 			}
-		}				
+		}
 	}
-	
-	protected void search(String term)
-	{
+
+	protected void search(String term) {
 		_adapter.query(term);
 	}
-	
+
 	@Override
-	protected void onListItemClick(ListView l, View v, int position, long id)
-	{
+	protected void onListItemClick(ListView l, View v, int position, long id) {
 		_adapter.getChildren(position);
 	}
-	
+
 	@Override
-	public boolean onCreateOptionsMenu(Menu menu)
-	{
+	public boolean onCreateOptionsMenu(Menu menu) {
 		MenuInflater inflater = getMenuInflater();
-	    inflater.inflate(R.menu.search, menu);    
+		inflater.inflate(R.menu.search, menu);
 		return true;
-	}	
+	}
 }

@@ -12,6 +12,16 @@
 	<ListView android:id="@id/android:list" 
 		android:layout_width="fill_parent"
 		android:layout_height="fill_parent"
+		android:visibility="gone"
 		android:layout_alignParentTop="true"/>
+	
+	<ScrollView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content" >
+
+            <com.zia.freshdocs.widget.UITableView
+                android:id="@+id/tableView"
+                style="@style/UITableView" />
+        </ScrollView>
 		
 </LinearLayout>
