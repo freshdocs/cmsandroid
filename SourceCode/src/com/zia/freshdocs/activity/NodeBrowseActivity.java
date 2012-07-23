@@ -29,6 +29,7 @@ import android.app.ListActivity;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.content.res.Resources;
+import android.graphics.Rect;
 import android.os.Bundle;
 import android.view.ContextMenu;
 import android.view.KeyEvent;
@@ -37,6 +38,9 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ContextMenu.ContextMenuInfo;
+import android.view.View.OnClickListener;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ListView;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 
@@ -47,9 +51,10 @@ import com.zia.freshdocs.app.CMISApplication;
 import com.zia.freshdocs.cmis.CMIS;
 import com.zia.freshdocs.model.NodeRef;
 import com.zia.freshdocs.preference.CMISPreferencesManager;
-import com.zia.freshdocs.widget.CMISAdapter;
+import com.zia.freshdocs.widget.adapter.CMISAdapter;
+import com.zia.freshdocs.widget.quickaction.QuickActionWindow;
 
-public class NodeBrowseActivity extends ListActivity
+public class NodeBrowseActivity extends ListActivity implements OnItemLongClickListener
 {
 	private static final String HOST_ID_KEY = "id";
 	
@@ -65,7 +70,8 @@ public class NodeBrowseActivity extends ListActivity
 		restoreCMIS(savedInstanceState);
 		
 		initializeListView();
-		registerForContextMenu(getListView());
+//		registerForContextMenu(getListView());
+		getListView().setOnItemLongClickListener(this);
 		
 		if(!_adapterInitialized && _adapter != null && _adapter.getCmis() != null)
 		{
@@ -253,5 +259,57 @@ public class NodeBrowseActivity extends ListActivity
 		{
 			onQuit();
 		}
+	}
+
+	@Override
+	public boolean onItemLongClick(AdapterView<?> arg0, View view, final int position, long value) {
+		
+		if(!_adapter.isFolder(position))
+		{
+//			MenuInflater inflater = getMenuInflater();
+//			inflater.inflate(R.menu.node_context_menu, menu);
+//			MenuItem item = menu.findItem(R.id.menu_item_favorite);
+			
+			NodeRef ref = _adapter.getItem(position);
+			CMISPreferencesManager prefsMgr = CMISPreferencesManager.getInstance();
+			Set<NodeRef> favorites = prefsMgr.getFavorites(this);
+			
+			// array to hold the coordinates of the clicked view
+			int[] xy = new int[2];
+			// fills the array with the computed coordinates
+			view.getLocationInWindow(xy);
+			// rectangle holding the clicked view area
+			Rect rect = new Rect(xy[0], xy[1], xy[0] + view.getWidth(), xy[1]
+					+ view.getHeight());
+
+			// a new QuickActionWindow object
+			final QuickActionWindow quickAction = new QuickActionWindow(NodeBrowseActivity.this, view, rect);
+			
+			quickAction.addItem(getResources().getDrawable(R.drawable.excel),
+					getString(R.string.send), new OnClickListener() {
+						public void onClick(View v) {
+							quickAction.dismiss();
+							_adapter.shareContent(position);
+						}
+					});
+			String favoriteTitle = getString(R.string.add_favorite);
+			if(favorites.contains(ref))
+			{
+				favoriteTitle = getString(R.string.remove_favorite);
+			}
+			
+			quickAction.addItem(getResources().getDrawable(R.drawable.excel),
+					favoriteTitle , new OnClickListener() {
+						public void onClick(View v) {
+							quickAction.dismiss();
+							_adapter.toggleFavorite(position);
+						}
+					});
+			// shows the quick action window on the screen
+			quickAction.show();
+
+		}
+		
+		return false;
 	}
 }

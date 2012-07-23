@@ -27,6 +27,7 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.view.Window;
 
 import com.zia.freshdocs.R;
 
@@ -38,6 +39,7 @@ public class SplashActivity extends Activity
 	protected void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
+		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.splash);
 		
 		Handler handler = new Handler()

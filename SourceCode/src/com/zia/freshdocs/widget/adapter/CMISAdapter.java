@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  ******************************************************************************/
-package com.zia.freshdocs.widget;
+package com.zia.freshdocs.widget.adapter;
 
 import java.io.File;
 import java.io.FileOutputStream;

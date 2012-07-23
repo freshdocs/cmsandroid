@@ -29,27 +29,35 @@ import android.app.ListActivity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.graphics.Rect;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.view.ContextMenu;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ContextMenu.ContextMenuInfo;
+import android.view.View.OnClickListener;
+import android.view.Window;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ListView;
-import android.widget.AdapterView.AdapterContextMenuInfo;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.zia.freshdocs.Constants;
 import com.zia.freshdocs.R;
 import com.zia.freshdocs.app.CMISApplication;
+import com.zia.freshdocs.model.ViewItem;
 import com.zia.freshdocs.net.Downloadable;
 import com.zia.freshdocs.preference.CMISHost;
 import com.zia.freshdocs.preference.CMISPreferencesManager;
-import com.zia.freshdocs.widget.HostAdapter;
+import com.zia.freshdocs.widget.UITableView;
+import com.zia.freshdocs.widget.adapter.HostAdapter;
+import com.zia.freshdocs.widget.quickaction.QuickActionWindow;
 
-public class HostsActivity extends ListActivity
+public class HostsActivity extends ListActivity implements OnItemLongClickListener
 {
 	private static final String INITIALIZED_KEY = "initialized";
 	
@@ -62,12 +70,19 @@ public class HostsActivity extends ListActivity
 	
 	private ChildDownloadThread _dlThread = null;
 	
+	private UITableView tableView;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{		
 		super.onCreate(savedInstanceState);
+		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.hosts);
-		registerForContextMenu(getListView());
+//		registerForContextMenu(getListView());
+		
+		tableView = (UITableView) findViewById(R.id.tableView);
+		
+		getListView().setOnItemLongClickListener(this);
 		
 		if(savedInstanceState == null || !savedInstanceState.getBoolean(INITIALIZED_KEY))
 		{
@@ -96,11 +111,36 @@ public class HostsActivity extends ListActivity
 	{
 		CMISPreferencesManager prefsMgr = CMISPreferencesManager.getInstance();
 		Collection<CMISHost> prefs = prefsMgr.getAllPreferences(this);
-
+		
 		HostAdapter serverAdapter = new HostAdapter(this, 
 				R.layout.host_list_item, R.id.host_textview,
 				prefs.toArray(new CMISHost[]{}));
 		setListAdapter(serverAdapter);
+		
+//		populateList(prefs)
+	}
+	
+	private void populateList(Collection<CMISHost> prefs) {
+		ViewItem viewItem;
+		 CMISHost[] listHost = prefs.toArray(new CMISHost[]{});
+		for(int i = 0; i < prefs.size(); i++){
+			viewItem = createCustomUIView(this, listHost[i].getHostname());
+			tableView.addViewItem(viewItem);
+		}
+		tableView.commit();
+		
+	}
+	
+	public ViewItem createCustomUIView(Context context, String title) {
+		LayoutInflater mInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		RelativeLayout view = (RelativeLayout) mInflater.inflate(
+				R.layout.custom_view2, null);
+		TextView tvTitle = (TextView) view.findViewById(R.id.title);
+		tvTitle.setText(title);
+
+		ViewItem viewItem = new ViewItem(view);
+
+		return viewItem;
 	}
 	
 	@Override
@@ -149,7 +189,7 @@ public class HostsActivity extends ListActivity
 	{
 		super.onConfigurationChanged(newConfig);
 	}
-
+/*
 	@Override
 	public void onCreateContextMenu(ContextMenu menu, View v,
 			ContextMenuInfo menuInfo)
@@ -186,7 +226,7 @@ public class HostsActivity extends ListActivity
 		
 		return false;
 	}
-
+*/
 	protected void deleteServer(String id)
 	{
 		CMISPreferencesManager prefsMgr = CMISPreferencesManager.getInstance();
@@ -293,5 +333,52 @@ public class HostsActivity extends ListActivity
 			msg.setData(b);
 			_handler.sendMessage(msg);
 		}		
+	}
+
+	@Override
+	public boolean onItemLongClick(AdapterView<?> arg0, View view,
+			int position, long idValue) {
+
+		HostAdapter adapter = (HostAdapter) getListAdapter();
+		CMISHost host = adapter.getItem(position);
+
+		if (!host.getId().equals(Constants.NEW_HOST_ID)) {
+			CMISHost prefs = (CMISHost) getListAdapter().getItem(position);
+			final String id = prefs.getId();
+
+			// array to hold the coordinates of the clicked view
+			int[] xy = new int[2];
+			// fills the array with the computed coordinates
+			view.getLocationInWindow(xy);
+			// rectangle holding the clicked view area
+			Rect rect = new Rect(xy[0], xy[1], xy[0] + view.getWidth(), xy[1]
+					+ view.getHeight());
+
+			// a new QuickActionWindow object
+			final QuickActionWindow quickAction = new QuickActionWindow(
+					HostsActivity.this, view, rect);
+
+			quickAction.addItem(getResources().getDrawable(R.drawable.excel),
+					getString(R.string.edit_server), new OnClickListener() {
+						public void onClick(View v) {
+							quickAction.dismiss();
+							Intent newHostIntent = new Intent(HostsActivity.this,HostPreferenceActivity.class);
+							newHostIntent.putExtra(HostPreferenceActivity.EXTRA_EDIT_SERVER,id);
+							startActivityForResult(newHostIntent, EDIT_HOST_REQ);
+						}
+					});
+
+			quickAction.addItem(getResources().getDrawable(R.drawable.excel),
+					getString(R.string.delete_server), new OnClickListener() {
+						public void onClick(View v) {
+							deleteServer(id);
+							quickAction.dismiss();
+						}
+					});
+			// shows the quick action window on the screen
+			quickAction.show();
+		}
+
+		return false;
 	}
 }
