@@ -57,5 +57,7 @@ public class Constants
 	public static final String NEW_HOST_ID = "-1";
 	
 	public static final String QUIT = "quit";
+	
+	public static final String CMISHOST = "CMISHost";
 }
 

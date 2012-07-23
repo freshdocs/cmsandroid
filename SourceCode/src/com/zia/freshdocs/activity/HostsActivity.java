@@ -28,11 +28,14 @@ import java.util.Collection;
 import android.app.ListActivity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.content.res.Configuration;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -46,6 +49,7 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
 import com.zia.freshdocs.Constants;
 import com.zia.freshdocs.R;
 import com.zia.freshdocs.app.CMISApplication;
@@ -64,13 +68,13 @@ public class HostsActivity extends ListActivity implements OnItemLongClickListen
 	private static final int NEW_HOST_REQ = 0;
 	private static final int EDIT_HOST_REQ = 1;
 	private static final int SPLASH_REQUEST_REQ = 2;
-	private static final int NODE_BROWSE_REQ = 3;
+//	private static final int NODE_BROWSE_REQ = 3;
 	
-	private static final String OK_KEY = "ok";
+//	private static final String OK_KEY = "ok";
 	
-	private ChildDownloadThread _dlThread = null;
+//	private ChildDownloadThread _dlThread = null;
 	
-	private UITableView tableView;
+//	private UITableView tableView;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
@@ -81,7 +85,7 @@ public class HostsActivity extends ListActivity implements OnItemLongClickListen
 		setContentView(R.layout.hosts);
 //		registerForContextMenu(getListView());
 		
-		tableView = (UITableView) findViewById(R.id.tableView);
+//		tableView = (UITableView) findViewById(R.id.tableView);
 		
 		getListView().setOnItemLongClickListener(this);
 		
@@ -121,28 +125,28 @@ public class HostsActivity extends ListActivity implements OnItemLongClickListen
 //		populateList(prefs)
 	}
 	
-	private void populateList(Collection<CMISHost> prefs) {
-		ViewItem viewItem;
-		 CMISHost[] listHost = prefs.toArray(new CMISHost[]{});
-		for(int i = 0; i < prefs.size(); i++){
-			viewItem = createCustomUIView(this, listHost[i].getHostname());
-			tableView.addViewItem(viewItem);
-		}
-		tableView.commit();
-		
-	}
+//	private void populateList(Collection<CMISHost> prefs) {
+//		ViewItem viewItem;
+//		 CMISHost[] listHost = prefs.toArray(new CMISHost[]{});
+//		for(int i = 0; i < prefs.size(); i++){
+//			viewItem = createCustomUIView(this, listHost[i].getHostname());
+//			tableView.addViewItem(viewItem);
+//		}
+//		tableView.commit();
+//		
+//	}
 	
-	public ViewItem createCustomUIView(Context context, String title) {
-		LayoutInflater mInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-		RelativeLayout view = (RelativeLayout) mInflater.inflate(
-				R.layout.custom_view2, null);
-		TextView tvTitle = (TextView) view.findViewById(R.id.title);
-		tvTitle.setText(title);
-
-		ViewItem viewItem = new ViewItem(view);
-
-		return viewItem;
-	}
+//	public ViewItem createCustomUIView(Context context, String title) {
+//		LayoutInflater mInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+//		RelativeLayout view = (RelativeLayout) mInflater.inflate(
+//				R.layout.custom_view2, null);
+//		TextView tvTitle = (TextView) view.findViewById(R.id.title);
+//		tvTitle.setText(title);
+//
+//		ViewItem viewItem = new ViewItem(view);
+//
+//		return viewItem;
+//	}
 	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu)
@@ -247,13 +251,13 @@ public class HostsActivity extends ListActivity implements OnItemLongClickListen
 		case SPLASH_REQUEST_REQ:			
 			initializeHostList();
 			break;
-		case NODE_BROWSE_REQ:
-			if(resultCode == RESULT_OK && data != null && 
-					data.getBooleanExtra(Constants.QUIT, false))
-			{
-				finish();
-			}
-			break;
+//		case NODE_BROWSE_REQ:
+//			if(resultCode == RESULT_OK && data != null && 
+//					data.getBooleanExtra(Constants.QUIT, false))
+//			{
+//				finish();
+//			}
+//			break;
 		}
 	}
 	
@@ -265,10 +269,10 @@ public class HostsActivity extends ListActivity implements OnItemLongClickListen
 	@Override
 	protected void onListItemClick(ListView l, View v, int position, long id)
 	{
-		final CMISApplication app = (CMISApplication) getApplication();
-		final Context ctx = this;
+//		final CMISApplication app = (CMISApplication) getApplication();
+//		final Context ctx = this;
 		final HostAdapter adapter = (HostAdapter) getListAdapter();
-		final View container = v;
+//		final View container = v;
 		CMISHost pref = adapter.getItem(position);
 		
 		if(pref.getId().equals(Constants.NEW_HOST_ID))
@@ -278,63 +282,76 @@ public class HostsActivity extends ListActivity implements OnItemLongClickListen
 		}
 		
 		CMISHost prefs = adapter.getItem(position);
-		final String hostId = prefs.getId();
-
-		adapter.toggleError(container, false);
-		adapter.toggleProgress(container, true);
 		
-		_dlThread = new ChildDownloadThread(new Handler() 
-		{
-			public void handleMessage(Message msg) 
-			{
-				boolean ok = msg.getData().getBoolean(OK_KEY);
-
-				adapter.toggleProgress(container, false);					
-
-				if(!ok)
-				{
-					adapter.toggleError(container, true);
-					app.handleNetworkStatus();
-				} 
-				else
-				{
-					Intent browseIntent = new Intent(ctx, NodeBrowseActivity.class);
-					startActivityForResult(browseIntent, NODE_BROWSE_REQ);
-				}
-			}
-		}, 
-		new Downloadable()
-		{
-			public Object execute()
-			{
-				return app.initCMIS(hostId);
-			}
-		});
+		SharedPreferences appSharedPrefs = PreferenceManager
+				.getDefaultSharedPreferences(this.getApplicationContext());
 		
-		_dlThread.start();
+		Editor prefsEditor = appSharedPrefs.edit();
+		Gson gson = new Gson();
+		
+		String json = gson.toJson(prefs);
+		prefsEditor.putString(Constants.CMISHOST, json);
+		prefsEditor.commit();
+		
+		Intent intent = new Intent(HostsActivity.this, HomeActivity.class);
+		startActivity(intent);
+		
+//		final String hostId = prefs.getId();
+//
+//		adapter.toggleError(container, false);
+//		adapter.toggleProgress(container, true);
+//		
+//		_dlThread = new ChildDownloadThread(new Handler() 
+//		{
+//			public void handleMessage(Message msg) 
+//			{
+//				boolean ok = msg.getData().getBoolean(OK_KEY);
+//
+//				adapter.toggleProgress(container, false);					
+//
+//				if(!ok)
+//				{
+//					adapter.toggleError(container, true);
+//					app.handleNetworkStatus();
+//				} 
+//				else
+//				{
+//					Intent browseIntent = new Intent(ctx, NodeBrowseActivity.class);
+//					startActivityForResult(browseIntent, NODE_BROWSE_REQ);
+//				}
+//			}
+//		}, 
+//		new Downloadable()
+//		{
+//			public Object execute()
+//			{
+//				return app.initCMIS(hostId);
+//			}
+//		});
+//		
+//		_dlThread.start();
 	}
 	
-	private class ChildDownloadThread extends Thread 
-	{
-		Handler _handler;
-		Downloadable _delegate;
-
-		ChildDownloadThread(Handler h, Downloadable delegate) 
-		{
-			_handler = h;
-			_delegate = delegate;
-		}
-
-		public void run() 
-		{
-			Boolean result = (Boolean) _delegate.execute();
-			Message msg = _handler.obtainMessage();
-			Bundle b = new Bundle();
-			b.putBoolean(OK_KEY, result);
-			msg.setData(b);
-			_handler.sendMessage(msg);
-		}		
-	}
+//	private class ChildDownloadThread extends Thread {
+//		Handler _handler;
+//		Downloadable _delegate;
+//
+//		ChildDownloadThread(Handler h, Downloadable delegate) 
+//		{
+//			_handler = h;
+//			_delegate = delegate;
+//		}
+//
+//		public void run() 
+//		{
+//			Boolean result = (Boolean) _delegate.execute();
+//			Message msg = _handler.obtainMessage();
+//			Bundle b = new Bundle();
+//			b.putBoolean(OK_KEY, result);
+//			msg.setData(b);
+//			_handler.sendMessage(msg);
+//		}		
+//	}
 
 	@Override
 	public boolean onItemLongClick(AdapterView<?> arg0, View view,

@@ -1,17 +1,54 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.zia.freshdocs"
-    android:versionCode="7"
-    android:versionName="1.1" >
+    android:versionCode="8"
+    android:versionName="1.2" >
 
     <application
         android:name=".app.CMISApplication"
         android:icon="@drawable/icon"
-        android:label="@string/app_name" >
+        android:label="@string/app_name"
+        android:theme="@style/Theme.D1" >
         <meta-data
             android:name="android.app.default_searchable"
             android:value=".activity.SearchActivity" />
 
+        <activity
+            android:name=".activity.HomeActivity"
+            android:label="@string/app_name" >
+        </activity>
+        <activity
+            android:name=".activity.F1Activity"
+            android:label="@string/title_feature1"
+            android:theme="@style/Theme.D1" />
+        <activity
+            android:name=".activity.F2Activity"
+            android:label="@string/title_feature2"
+            android:theme="@style/Theme.D1" />
+        <activity
+            android:name=".activity.F3Activity"
+            android:label="@string/title_feature3"
+            android:theme="@style/Theme.D1" />
+        <activity
+            android:name=".activity.F4Activity"
+            android:label="@string/title_feature4"
+            android:theme="@style/Theme.D1" />
+        <activity
+            android:name=".activity.F5Activity"
+            android:label="@string/title_feature5"
+            android:theme="@style/Theme.D1" />
+        <activity
+            android:name=".activity.F6Activity"
+            android:label="@string/title_feature6"
+            android:theme="@style/Theme.D1" />
+        <activity
+            android:name=".activity.AboutActivity"
+            android:label="@string/title_about"
+            android:theme="@style/Theme.D1" />
+        <activity
+            android:name=".activity.SearchActivity"
+            android:label="@string/title_search"
+            android:theme="@style/Theme.D1" />
         <activity
             android:name=".activity.NodeBrowseActivity"
             android:configChanges="orientation|keyboardHidden" />
@@ -24,7 +61,6 @@
             android:configChanges="orientation|keyboardHidden" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>

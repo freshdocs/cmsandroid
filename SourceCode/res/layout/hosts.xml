@@ -1,27 +1,27 @@
-<LinearLayout 
-	xmlns:android="http://schemas.android.com/apk/res/android"
-	android:layout_width="fill_parent" 
-	android:layout_height="fill_parent">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent" >
 
-	<TextView android:id="@id/android:empty" 
-		android:text="@string/empty_servers" 
-		android:layout_width="fill_parent"
+    <TextView
+        android:id="@id/android:empty"
+        android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:gravity="center_horizontal|center_vertical"/>
+        android:gravity="center_horizontal|center_vertical"
+        android:text="@string/empty_servers" />
 
-	<ListView android:id="@id/android:list" 
-		android:layout_width="fill_parent"
-		android:layout_height="fill_parent"
-		android:visibility="gone"
-		android:layout_alignParentTop="true"/>
-	
-	<ScrollView
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content" >
+    <ListView
+        android:id="@id/android:list"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:visibility="gone" />
 
-            <com.zia.freshdocs.widget.UITableView
-                android:id="@+id/tableView"
-                style="@style/UITableView" />
-        </ScrollView>
-		
+    <ScrollView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone" >
+        <com.zia.freshdocs.widget.UITableView
+            android:id="@+id/tableView"
+            style="@style/UITableView" />
+    </ScrollView>
+
 </LinearLayout>
