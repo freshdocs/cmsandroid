@@ -74,7 +74,8 @@ public class HostsActivity extends ListActivity implements OnItemLongClickListen
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
-	{		
+	{
+		this.setTheme(R.style.Theme_HoloEverywhereLight);
 		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.hosts);

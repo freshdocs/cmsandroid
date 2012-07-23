@@ -31,30 +31,26 @@ import android.view.Window;
 
 import com.zia.freshdocs.R;
 
-public class SplashActivity extends Activity
-{
+public class SplashActivity extends Activity {
 	private static final int DELAY = 2000;
-		
+
 	@Override
-	protected void onCreate(Bundle savedInstanceState)
-	{
+	protected void onCreate(Bundle savedInstanceState) {
+		this.setTheme(R.style.Theme_HoloEverywhereLight);
 		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.splash);
-		
-		Handler handler = new Handler()
-		{
+
+		Handler handler = new Handler() {
 			@Override
-			public void handleMessage(Message msg)
-			{
+			public void handleMessage(Message msg) {
 				launchMain();
 			}
 		};
 		handler.sendMessageDelayed(new Message(), DELAY);
 	}
 
-	protected void launchMain()
-	{
+	protected void launchMain() {
 		setResult(RESULT_OK);
 		finish();
 	}

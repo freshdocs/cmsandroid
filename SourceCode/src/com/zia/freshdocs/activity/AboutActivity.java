@@ -33,6 +33,7 @@ public class AboutActivity extends Activity
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
+		this.setTheme(R.style.Theme_HoloEverywhereLight);
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.about);
 	}

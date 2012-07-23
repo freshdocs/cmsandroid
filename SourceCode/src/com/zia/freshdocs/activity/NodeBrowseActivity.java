@@ -65,6 +65,7 @@ public class NodeBrowseActivity extends ListActivity implements OnItemLongClickL
 	@Override
 	public void onCreate(Bundle savedInstanceState)
 	{
+		this.setTheme(R.style.Theme_HoloEverywhereLight);
 		super.onCreate(savedInstanceState);
 		
 		restoreCMIS(savedInstanceState);
