@@ -33,7 +33,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.zia.freshdocs.R;
-import com.zia.freshdocs.activity.AndGuru;
+import com.zia.freshdocs.activity.FileExploreActivity;
 import com.zia.freshdocs.activity.ApplicationBackupActivity;
 import com.zia.freshdocs.activity.DirectoryInfoActivity;
 import com.zia.freshdocs.activity.ProcessManagerActivity;
@@ -986,8 +986,8 @@ public class EventHandler implements OnClickListener , OnItemClickListener {
 		}
 	}
 	private void hideOpitionMenu(){
-		if (AndGuru.mMenu.isShowing()) {
-			AndGuru.mMenu.hide();
+		if (FileExploreActivity.mMenu.isShowing()) {
+			FileExploreActivity.mMenu.hide();
 		}
 	}
 }

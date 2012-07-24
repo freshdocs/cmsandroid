@@ -39,9 +39,9 @@ import com.zia.freshdocs.R;
  * <br>
  * <p>
  * The location that the backup will be placed is at 
- * <br>/sdcard/AndGuru/AppBackup/
+ * <br>/sdcard/FileExploreActivity/AppBackup/
  * <br>
- * note: that /sdcard/AndGuru/ should already exists. This is check at start
+ * note: that /sdcard/FileExploreActivity/ should already exists. This is check at start
  * up from the SettingsManager class.
  * 
  */
@@ -141,7 +141,7 @@ public class ApplicationBackupActivity extends ListActivity implements OnClickLi
 			mData =  new byte[BUFFER];
 						
 			/*create dir if needed*/
-			File d = new File("/sdcard/AndGuru/");
+			File d = new File("/sdcard/FileExploreActivity/");
 			if(!d.exists()) {
 				d.mkdir();
 				//then create this directory

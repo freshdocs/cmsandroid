@@ -40,7 +40,7 @@ import com.zia.freshdocs.widget.fileexplorer.custommenu.CustomMenu.OnMenuItemSel
 import com.zia.freshdocs.widget.fileexplorer.custommenu.CustomMenuItem;
 import com.zia.freshdocs.widget.quickaction.QuickActionWindow;
 
-public final class AndGuru extends ListActivity implements OnMenuItemSelectedListener, OnItemLongClickListener {
+public final class FileExploreActivity extends ListActivity implements OnMenuItemSelectedListener, OnItemLongClickListener {
 	private static final String PREFS_NAME = "ManagerPrefsFile"; // user
 																	// preference
 																	// file name
@@ -85,7 +85,7 @@ public final class AndGuru extends ListActivity implements OnMenuItemSelectedLis
 				requestWindowFeature(Window.FEATURE_NO_TITLE);
 			}
 
-			setContentView(R.layout.andguru);
+			setContentView(R.layout.file_explore);
 			
 			// initialize the custom menu
 			mMenu = new CustomMenu(this, this, getLayoutInflater());
@@ -107,7 +107,7 @@ public final class AndGuru extends ListActivity implements OnMenuItemSelectedLis
 			mFileManager.setShowHiddenFiles(hide);
 			mFileManager.setSortType(sort);
 
-			mHandler = new EventHandler(AndGuru.this, mFileManager);
+			mHandler = new EventHandler(FileExploreActivity.this, mFileManager);
 			mHandler.setTextColor(color);
 			mHandler.setShowThumbnails(thumb);
 			mTable = mHandler.new TableRow();
@@ -508,7 +508,7 @@ public final class AndGuru extends ListActivity implements OnMenuItemSelectedLis
 
 	@Override
 	protected Dialog onCreateDialog(int id) {
-		final Dialog dialog = new Dialog(AndGuru.this);
+		final Dialog dialog = new Dialog(FileExploreActivity.this);
 
 		switch (id) {
 		case MENU_MKDIR:
@@ -533,12 +533,12 @@ public final class AndGuru extends ListActivity implements OnMenuItemSelectedLis
 						if (mFileManager.createDir(mFileManager.getCurrentDir()
 								+ "/", input.getText().toString()) == 0)
 							Toast.makeText(
-									AndGuru.this,
+									FileExploreActivity.this,
 									"Folder " + input.getText().toString()
 											+ " created", Toast.LENGTH_LONG)
 									.show();
 						else
-							Toast.makeText(AndGuru.this,R.string.str_cant_create_folder,Toast.LENGTH_SHORT).show();
+							Toast.makeText(FileExploreActivity.this,R.string.str_cant_create_folder,Toast.LENGTH_SHORT).show();
 					}
 
 					dialog.dismiss();
@@ -575,10 +575,10 @@ public final class AndGuru extends ListActivity implements OnMenuItemSelectedLis
 						dialog.dismiss();
 
 					if (mFileManager.renameTarget(mFileManager.getCurrentDir()	+ "/" + mSelectedListItem, rename_input.getText().toString()) == 0) {
-						Toast.makeText(	AndGuru.this,mSelectedListItem + " was renamed to "	+ rename_input.getText().toString(),
+						Toast.makeText(	FileExploreActivity.this,mSelectedListItem + " was renamed to "	+ rename_input.getText().toString(),
 								Toast.LENGTH_LONG).show();
 					} else
-						Toast.makeText(AndGuru.this,mSelectedListItem + " was not renamed",	Toast.LENGTH_LONG).show();
+						Toast.makeText(FileExploreActivity.this,mSelectedListItem + " was not renamed",	Toast.LENGTH_LONG).show();
 
 					dialog.dismiss();
 					String temp = mFileManager.getCurrentDir();
@@ -653,7 +653,7 @@ public final class AndGuru extends ListActivity implements OnMenuItemSelectedLis
 		} else if (keycode == KeyEvent.KEYCODE_BACK && mUseBackKey&& !current.equals("/")) {
 			if (mHandler.isMultiSelected()) {
 				mTable.killMultiSelect(true);
-				Toast.makeText(AndGuru.this, "Multi-select is now off",Toast.LENGTH_SHORT).show();
+				Toast.makeText(FileExploreActivity.this, "Multi-select is now off",Toast.LENGTH_SHORT).show();
 			}
 
 			mHandler.updateDirectory(mFileManager.getPreviousDir());
@@ -662,7 +662,7 @@ public final class AndGuru extends ListActivity implements OnMenuItemSelectedLis
 
 		} else if (keycode == KeyEvent.KEYCODE_BACK && mUseBackKey
 				&& current.equals("/")) {
-			Toast.makeText(AndGuru.this, "Press back again to quit.",Toast.LENGTH_SHORT).show();
+			Toast.makeText(FileExploreActivity.this, "Press back again to quit.",Toast.LENGTH_SHORT).show();
 			mUseBackKey = false;
 			mPathLabel.setText("Path: " + mFileManager.getCurrentDir());
 			return false;
@@ -771,7 +771,7 @@ public final class AndGuru extends ListActivity implements OnMenuItemSelectedLis
 		Rect rect = new Rect(xy[0], xy[1], xy[0] + view.getWidth(), xy[1]+ view.getHeight());
 
 		// a new QuickActionWindow object
-		final QuickActionWindow qa = new QuickActionWindow(AndGuru.this, view,rect);
+		final QuickActionWindow qa = new QuickActionWindow(FileExploreActivity.this, view,rect);
 
 		/* is it a directory and is multi-select turned off */
 		if (mFileManager.isDirectory(mSelectedListItem)
@@ -869,7 +869,7 @@ public final class AndGuru extends ListActivity implements OnMenuItemSelectedLis
 												+ current_dir);
 									} else {
 										Toast.makeText(
-												AndGuru.this,
+												FileExploreActivity.this,
 												"You do not have permission to unzip "
 														+ name,
 												Toast.LENGTH_SHORT).show();
@@ -944,7 +944,7 @@ public final class AndGuru extends ListActivity implements OnMenuItemSelectedLis
 	}
 
 	private void delete() {
-		AlertDialog.Builder builder = new AlertDialog.Builder(AndGuru.this);
+		AlertDialog.Builder builder = new AlertDialog.Builder(FileExploreActivity.this);
 		builder.setTitle("Warning ");
 		builder.setIcon(R.drawable.warning);
 		builder.setMessage("Deleting " + mSelectedListItem

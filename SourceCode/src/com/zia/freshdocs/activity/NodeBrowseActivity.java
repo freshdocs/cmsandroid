@@ -25,28 +25,27 @@ package com.zia.freshdocs.activity;
 
 import java.util.Set;
 
-import android.app.ListActivity;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.view.ContextMenu;
+import android.view.ContextMenu.ContextMenuInfo;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ContextMenu.ContextMenuInfo;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
+import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ListView;
-import android.widget.AdapterView.AdapterContextMenuInfo;
 
 import com.zia.freshdocs.Constants;
-import com.zia.freshdocs.R;
 import com.zia.freshdocs.Constants.NetworkStatus;
+import com.zia.freshdocs.R;
 import com.zia.freshdocs.app.CMISApplication;
 import com.zia.freshdocs.cmis.CMIS;
 import com.zia.freshdocs.model.NodeRef;
@@ -63,28 +62,25 @@ public class NodeBrowseActivity extends DashboardActivity implements OnItemLongC
 
 	/** Called when the activity is first created. */
 	@Override
-	public void onCreate(Bundle savedInstanceState)
-	{
+	public void onCreate(Bundle savedInstanceState) {
 		this.setTheme(R.style.Theme_HoloEverywhereLight);
 		super.onCreate(savedInstanceState);
-		
+
 		restoreCMIS(savedInstanceState);
-		
+
 		initializeListView();
-//		registerForContextMenu(getListView());
-		getListView().setOnItemLongClickListener(this);
 		
-		if(!mAdapterInitialized && mAdapter != null && mAdapter.getCmis() != null)
-		{
+		getListView().setOnItemLongClickListener(this);
+
+		if (!mAdapterInitialized && mAdapter != null && mAdapter.getCmis() != null) {
 			mAdapterInitialized = true;
 			mAdapter.home();
 		}
 	}
 	
-	protected void restoreCMIS(Bundle savedInstanceState)
-	{
-		if(savedInstanceState != null && savedInstanceState.containsKey(HOST_ID_KEY))
-		{
+	protected void restoreCMIS(Bundle savedInstanceState){
+		if (savedInstanceState != null
+				&& savedInstanceState.containsKey(HOST_ID_KEY)) {
 			String id = savedInstanceState.getString(HOST_ID_KEY);
 			CMISApplication app = (CMISApplication) getApplication();
 			app.initCMIS(id);
@@ -92,41 +88,35 @@ public class NodeBrowseActivity extends DashboardActivity implements OnItemLongC
 	}
 	
 	@Override
-	protected void onSaveInstanceState(Bundle outState)
-	{
+	protected void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
-		
+
 		CMISApplication app = (CMISApplication) getApplication();
 		CMIS cmis = app.getCMIS();
-		
-		if(cmis != null)
-		{
+
+		if (cmis != null) {
 			outState.putString(HOST_ID_KEY, cmis.getPrefs().getId());
 		}
-	}	
+	}
 
 	/**
 	 * Handles rotation by doing nothing (instead of onCreate being called)
 	 */
 	@Override
-	public void onConfigurationChanged(Configuration newConfig)
-	{
+	public void onConfigurationChanged(Configuration newConfig) {
 		super.onConfigurationChanged(newConfig);
 	}
 
 	@Override
-	public boolean onCreateOptionsMenu(Menu menu)
-	{
+	public boolean onCreateOptionsMenu(Menu menu) {
 		MenuInflater inflater = getMenuInflater();
-	    inflater.inflate(R.menu.browser, menu);    
+		inflater.inflate(R.menu.browser, menu);
 		return true;
 	}
 
 	@Override
-	public boolean onOptionsItemSelected(MenuItem item)
-	{
-		switch (item.getItemId())
-		{
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
 		case R.id.menu_item_refresh:
 			mAdapter.refresh();
 			return true;
@@ -149,8 +139,7 @@ public class NodeBrowseActivity extends DashboardActivity implements OnItemLongC
 		}
 	}
 	
-	protected void onQuit()
-	{
+	protected void onQuit() {
 		Intent quitIntent = new Intent();
 		quitIntent.putExtra(Constants.QUIT, true);
 		setResult(RESULT_OK, quitIntent);
@@ -159,22 +148,20 @@ public class NodeBrowseActivity extends DashboardActivity implements OnItemLongC
 	
 	@Override
 	public void onCreateContextMenu(ContextMenu menu, View v,
-			ContextMenuInfo menuInfo)
-	{
+			ContextMenuInfo menuInfo) {
 		int position = ((AdapterContextMenuInfo) menuInfo).position;
-		
-		if(!mAdapter.isFolder(position))
-		{
+
+		if (!mAdapter.isFolder(position)) {
 			MenuInflater inflater = getMenuInflater();
 			inflater.inflate(R.menu.node_context_menu, menu);
 			MenuItem item = menu.findItem(R.id.menu_item_favorite);
-			
+
 			NodeRef ref = mAdapter.getItem(position);
-			CMISPreferencesManager prefsMgr = CMISPreferencesManager.getInstance();
+			CMISPreferencesManager prefsMgr = CMISPreferencesManager
+					.getInstance();
 			Set<NodeRef> favorites = prefsMgr.getFavorites(this);
 
-			if(favorites.contains(ref))
-			{
+			if (favorites.contains(ref)) {
 				item.setTitle(R.string.remove_favorite);
 			}
 
@@ -199,89 +186,79 @@ public class NodeBrowseActivity extends DashboardActivity implements OnItemLongC
 		return false;
 	}
 
-	protected void initializeListView()
-	{
+	protected void initializeListView() {
 		CMISApplication app = (CMISApplication) getApplication();
 		CMIS cmis = app.getCMIS();
 
-		if(cmis != null && cmis.getNetworkStatus() == NetworkStatus.OK)
-		{
-			setContentView(R.layout.nodes);			
-		}
-		else
-		{
-			setContentView(R.layout.nodes_offline);						
+		if (cmis != null && cmis.getNetworkStatus() == NetworkStatus.OK) {
+			setContentView(R.layout.nodes);
+		} else {
+			setContentView(R.layout.nodes_offline);
 		}
 
 		mAdapter = new CMISAdapter(this, R.layout.node_ref_item, R.id.node_ref_label);
 		mAdapter.setCmis(cmis);
 		setListAdapter(mAdapter);
 
-		if(cmis != null)
-		{
+		if (cmis != null) {
 			Resources res = getResources();
-			StringBuilder title = new StringBuilder(res.getString(R.string.app_name)).append(" - ").
-			append(cmis.getPrefs().getHostname());
+			StringBuilder title = new StringBuilder(
+					res.getString(R.string.app_name)).append(" - ").append(
+					cmis.getPrefs().getHostname());
 			setTitle(title.toString());
 		}
 	}	
 
 	@Override
-	public boolean onKeyDown(int keyCode, KeyEvent event)
-	{
-		if(keyCode == KeyEvent.KEYCODE_BACK && mAdapter != null && mAdapter.hasPrevious())
-		{
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+		if (keyCode == KeyEvent.KEYCODE_BACK && mAdapter != null
+				&& mAdapter.hasPrevious()) {
 			mAdapter.previous();
 			return true;
-		} 
-		else
-		{
+		} else {
 			return super.onKeyDown(keyCode, event);
 		}
 	}
 
 	@Override
-	protected void onListItemClick(ListView l, View v, int position, long id)
-	{
+	protected void onListItemClick(ListView l, View v, int position, long id) {
 		mAdapter.getChildren(position);
 	}
-	
-	protected void onSearch()
-	{
+
+	protected void onSearch() {
 		onSearchRequested();
 	}
 
 	@Override
-	protected void onActivityResult(int requestCode, int resultCode, Intent data)
-	{
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
-		
-		if(data != null && data.hasExtra(Constants.QUIT))
-		{
+
+		if (data != null && data.hasExtra(Constants.QUIT)) {
 			onQuit();
 		}
 	}
 
 	@Override
-	public boolean onItemLongClick(AdapterView<?> arg0, View view, final int position, long value) {
-		
-		if(!mAdapter.isFolder(position))
-		{
-			NodeRef ref = mAdapter.getItem(position);
-			CMISPreferencesManager prefsMgr = CMISPreferencesManager.getInstance();
-			Set<NodeRef> favorites = prefsMgr.getFavorites(this);
-			
-			// array to hold the coordinates of the clicked view
-			int[] xy = new int[2];
-			// fills the array with the computed coordinates
-			view.getLocationInWindow(xy);
-			// rectangle holding the clicked view area
-			Rect rect = new Rect(xy[0], xy[1], xy[0] + view.getWidth(), xy[1]
-					+ view.getHeight());
+	public boolean onItemLongClick(AdapterView<?> arg0, View view,
+			final int position, long value) {
 
-			// a new QuickActionWindow object
-			final QuickActionWindow quickAction = new QuickActionWindow(NodeBrowseActivity.this, view, rect);
-			
+		// array to hold the coordinates of the clicked view
+		int[] xy = new int[2];
+		// fills the array with the computed coordinates
+		view.getLocationInWindow(xy);
+		// rectangle holding the clicked view area
+		Rect rect = new Rect(xy[0], xy[1], xy[0] + view.getWidth(), xy[1] + view.getHeight());
+
+		// a new QuickActionWindow object
+		final QuickActionWindow quickAction = new QuickActionWindow(
+				NodeBrowseActivity.this, view, rect);
+
+		if (!mAdapter.isFolder(position)) {
+			NodeRef ref = mAdapter.getItem(position);
+			CMISPreferencesManager prefsMgr = CMISPreferencesManager
+					.getInstance();
+			Set<NodeRef> favorites = prefsMgr.getFavorites(this);
+
 			quickAction.addItem(getResources().getDrawable(R.drawable.excel),
 					getString(R.string.send), new OnClickListener() {
 						public void onClick(View v) {
@@ -289,24 +266,45 @@ public class NodeBrowseActivity extends DashboardActivity implements OnItemLongC
 							mAdapter.shareContent(position);
 						}
 					});
+
 			String favoriteTitle = getString(R.string.add_favorite);
-			if(favorites.contains(ref))
-			{
+			if (favorites.contains(ref)) {
 				favoriteTitle = getString(R.string.remove_favorite);
 			}
-			
+
 			quickAction.addItem(getResources().getDrawable(R.drawable.excel),
-					favoriteTitle , new OnClickListener() {
+					favoriteTitle, new OnClickListener() {
 						public void onClick(View v) {
 							quickAction.dismiss();
 							mAdapter.toggleFavorite(position);
 						}
 					});
-			// shows the quick action window on the screen
-			quickAction.show();
 
+			// Show file information
+
+			quickAction.addItem(getResources().getDrawable(R.drawable.excel),
+					getString(R.string.str_file_information),
+					new OnClickListener() {
+						public void onClick(View v) {
+							mAdapter.showFileInfo(NodeBrowseActivity.this, position);
+							quickAction.dismiss();
+						}
+					});
+
+		} else {
+			// Show folder information
+			quickAction.addItem(getResources().getDrawable(R.drawable.excel),
+					getString(R.string.str_file_information),
+					new OnClickListener() {
+						public void onClick(View v) {
+							mAdapter.showFileInfo(NodeBrowseActivity.this, position);	
+							quickAction.dismiss();
+						}
+					});
 		}
-		
+		// shows the quick action window on the screen
+		quickAction.show();
+
 		return false;
 	}
 }

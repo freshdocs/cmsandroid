@@ -377,7 +377,7 @@ public class FileManager {
 	 */
 	public int deleteTarget(String path) {
 		File target = new File(path);
-		Log.i("AndGuru: .......... ", path);
+		Log.i("FileExploreActivity: .......... ", path);
 		if(target.exists() && target.isFile() && target.canWrite()) {
 			target.delete();
 			return 0;

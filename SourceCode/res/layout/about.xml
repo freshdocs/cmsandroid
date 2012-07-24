@@ -28,8 +28,8 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:padding="10dip"
         android:autoLink="web"
+        android:padding="10dip"
         android:text="@string/zia_www" />
 
 </RelativeLayout>

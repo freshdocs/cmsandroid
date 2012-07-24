@@ -41,21 +41,28 @@ import android.app.ProgressDialog;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.DialogInterface.OnCancelListener;
+import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.opengl.Visibility;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.PopupWindow;
+import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -326,6 +333,93 @@ public class CMISAdapter extends ArrayAdapter<NodeRef> {
 			});
 		}
 	}
+	
+	/**
+	 * Display file information
+	 * 
+	 * @param context
+	 */
+	
+	public void showFileInfo(Context context, int position){
+		
+		final CMISPreferencesManager prefsMgr = CMISPreferencesManager
+				.getInstance();
+		final NodeRef ref = getItem(position);
+		final PopupWindow mPopUp;
+		try {
+			//We need to get the instance of the LayoutInflater, use the context of this activity
+	        LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+	        //Inflate the view from a predefined XML layout
+	        View layout = inflater.inflate(R.layout.file_info_dialog, null, false);
+	        // create a WRAP_CONTENT PopupWindow
+	        mPopUp = new PopupWindow(layout, WindowManager.LayoutParams.WRAP_CONTENT, WindowManager.LayoutParams.WRAP_CONTENT, true);
+	        // display the popup in the center
+	        mPopUp.showAtLocation(layout, Gravity.CENTER, 0, 0);
+	        
+	        TextView title = (TextView) layout.findViewById(R.id.dialog_title);
+	        title.setText(context.getString(R.string.str_file_information));
+	        
+	        Button back = (Button) layout.findViewById(R.id.btn_cancel);
+	        back.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					mPopUp.dismiss();
+				}
+			});
+	        
+	        
+	        TextView tvName = (TextView) layout.findViewById(R.id.file_name);
+	        TextView tvLastModificationDate = (TextView) layout.findViewById(R.id.last_modification_date);
+	        TextView tvLastModifiedBy = (TextView) layout.findViewById(R.id.last_modified_by);
+	        TextView tvContent = (TextView) layout.findViewById(R.id.content);
+	        TextView tvContentType = (TextView) layout.findViewById(R.id.content_type);
+	        TextView tvVersion = (TextView) layout.findViewById(R.id.version);
+	        
+	        if(ref.getName() != null){
+	        	tvName.setText(ref.getName());
+	        }
+	        
+	        if(ref.getLastModificationDate() != null){
+	        	tvLastModificationDate.setText(ref.getLastModificationDate());
+	        }
+	        
+	        if(ref.getLastModifiedBy() != null){
+	        	tvLastModifiedBy.setText(ref.getLastModifiedBy());
+	        }
+	        
+	        if(ref.getContent() != null){
+	        	tvContent.setText(ref.getContent());
+	        }
+	        
+	        if(ref.getContentType() != null){
+	        	tvContentType.setText(ref.getContentType());
+	        }else{
+	        	((TableRow)layout.findViewById(R.id.content_type_row)).setVisibility(View.GONE);
+	        }
+	        
+	        if(ref.getVersion() != null){
+	        	tvVersion.setText(ref.getVersion());
+	        }else{
+	        	((TableRow)layout.findViewById(R.id.version_row)).setVisibility(View.GONE);
+	        }
+	        
+	        	
+	        Log.d("===============", "============================================");
+			Log.d("nodeRef.getName()", ref.getName());
+			Log.d("nodeRef.getContent()", ref.getContent());
+			if (ref.getContentType() != null)
+				Log.d("nodeRef.getContentType()", ref.getContentType());
+			Log.d("nodeRef.getLastModificationDate()", ref.getLastModificationDate());
+			Log.d("nodeRef.getLastModifiedBy()", ref.getLastModifiedBy());
+			if (ref.getVersion() != null)
+				Log.d("nodeRef.getVersion()", ref.getVersion().toString());
+	        
+	        
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
 
 	/**
 	 * Download the content for the given NodeRef
@@ -532,13 +626,14 @@ public class CMISAdapter extends ArrayAdapter<NodeRef> {
 					.findViewById(R.id.node_ref_modified_date);
 			textModDateView.setText(dateStr);
 		}
+		
 
 		ImageView imgView = (ImageView) view.findViewById(R.id.node_ref_img);
 		String contentType = nodeRef.getContentType();
 		Drawable icon = getDrawableForType(contentType == null ? "cmis/folder"
 				: contentType);
 		imgView.setImageDrawable(icon);
-
+		
 		return view;
 	}
 

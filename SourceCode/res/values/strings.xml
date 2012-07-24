@@ -80,8 +80,18 @@
     <string name="str_color_green">Green</string>
     <string name="str_color_black">Black</string>
     <string name="str_change_text_color_setting">Change text color</string>
+    <string name="str_file_information">File information</string>
+    <string name="str_back">Back</string>
+    <string name="str_name">Name</string>
+    <string name="str_last_modification_date">Last Modification Date</string>
+    <string name="str_last_modified_by">Last Modified By</string>
+    <string name="str_version">Version</string>
+    <string name="str_content_type">Content Type</string>
     
-    <string name="str_sort_files_folders">Choose how to sort files and folders</string>
+    <string name="str_content">Content</string> 
+	
+
+	<string name="str_sort_files_folders">Choose how to sort files and folders</string>
     <string name="str_sorting_type">Sorting type</string>
     <string name="str_display">Display</string>
     <string name="str_change_text_color">Change the preferred text color</string>

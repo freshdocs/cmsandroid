@@ -26,17 +26,13 @@ package com.zia.freshdocs.activity;
 import java.util.Collection;
 
 import android.app.ListActivity;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.content.res.Configuration;
 import android.graphics.Rect;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.preference.PreferenceManager;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -46,18 +42,13 @@ import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ListView;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
 
 import com.google.gson.Gson;
 import com.zia.freshdocs.Constants;
 import com.zia.freshdocs.R;
 import com.zia.freshdocs.app.CMISApplication;
-import com.zia.freshdocs.model.ViewItem;
-import com.zia.freshdocs.net.Downloadable;
 import com.zia.freshdocs.preference.CMISHost;
 import com.zia.freshdocs.preference.CMISPreferencesManager;
-import com.zia.freshdocs.widget.UITableView;
 import com.zia.freshdocs.widget.adapter.HostAdapter;
 import com.zia.freshdocs.widget.quickaction.QuickActionWindow;
 

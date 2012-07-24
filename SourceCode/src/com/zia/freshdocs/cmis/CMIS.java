@@ -57,12 +57,11 @@ import com.zia.freshdocs.model.NodeRef;
 import com.zia.freshdocs.net.EasySSLSocketFactory;
 import com.zia.freshdocs.preference.CMISHost;
 
-public class CMIS
-{
+public class CMIS {
 	protected static final String CMIS_QUERY_TYPE = "application/cmisquery+xml";
 
 	protected static final int TIMEOUT = 12500;
-	
+
 	protected static final String ALF_SERVICE_URI = "/service";
 	protected static final String CHILDREN_URI = ALF_SERVICE_URI + "/api/node/workspace/SpacesStore/%s/children";
 	protected static final String CMIS_INFO_URI = ALF_SERVICE_URI + "/api/cmis";
@@ -76,248 +75,207 @@ public class CMIS
 	private String _version;
 	private NetworkStatus _networkStatus;
 
-	public CMIS(CMISHost prefs)
-	{
+	public CMIS(CMISHost prefs) {
 		super();
 		_prefs = prefs;
 		_networkStatus = NetworkStatus.OK;
 	}
 
-	public String authenticate()
-	{
-		InputStream res = get(String.format(LOGIN_URI, _prefs.getUsername(), 
+	public String authenticate() {
+		InputStream res = get(String.format(LOGIN_URI, _prefs.getUsername(),
 				_prefs.getPassword()));
 
-		if (res != null)
-		{
+		if (res != null) {
 			DocumentBuilder docBuilder = null;
-			try
-			{
-				docBuilder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+			try {
+				docBuilder = DocumentBuilderFactory.newInstance()
+						.newDocumentBuilder();
 				Document doc = docBuilder.parse(res);
-				_ticket = doc.getDocumentElement().getFirstChild().getNodeValue();
-			}
-			catch (Exception e)
-			{
-				Log.e(CMIS.class.getSimpleName(), "Error getting Alfresco ticket", e);
+				_ticket = doc.getDocumentElement().getFirstChild()
+						.getNodeValue();
+			} catch (Exception e) {
+				Log.e(CMIS.class.getSimpleName(),
+						"Error getting Alfresco ticket", e);
 			}
 		}
 
 		return _ticket;
 	}
 
-	public NodeRef[] getCompanyHome()
-	{
+	public NodeRef[] getCompanyHome() {
 		InputStream res = get(String.format(CMIS_INFO_URI));
-		if (res != null)
-		{
+		if (res != null) {
 			CMISParser parser = new CMISParserBase();
 			CMISInfo cmisInfo = parser.getCMISInfo(res);
 			_version = cmisInfo.getVersion();
-			
+
 			// This should probably be a factory method
-			if(_version.equals("1.0"))
-			{
+			if (_version.equals("1.0")) {
 				_parser = new CMISParser10();
-			}
-			else
-			{
+			} else {
 				_parser = new CMISParser06();
 			}
-			
-			try
-			{
+
+			try {
 				String rootUrl = cmisInfo.getRootURI();
-				StringBuilder buf = new StringBuilder(new URL(rootUrl).getPath());
+				StringBuilder buf = new StringBuilder(
+						new URL(rootUrl).getPath());
 				String path = buf.toString();
 				String rootURI = _prefs.getWebappRoot();
 
-				if(buf.toString().startsWith(rootURI))
-				{
+				if (buf.toString().startsWith(rootURI)) {
 					path = buf.substring(rootURI.length());
 				}
 
 				res = get(path);
-				if(res != null)
-				{
+				if (res != null) {
 					return _parser.parseChildren(res);
 				}
-			}
-			catch (MalformedURLException e)
-			{
-				Log.e(CMIS.class.getSimpleName(), "Error parsing root uri", e);				
+			} catch (MalformedURLException e) {
+				Log.e(CMIS.class.getSimpleName(), "Error parsing root uri", e);
 			}
 		}
-		
+
 		return null;
 	}
-	
-	public NodeRef[] getChildren(String uuid)
-	{
+
+	public NodeRef[] getChildren(String uuid) {
 		InputStream res = get(String.format(CHILDREN_URI, uuid));
-		if (res != null)
-		{
+		if (res != null) {
 			return _parser.parseChildren(res);
 		}
 
 		return null;
 	}
-	
-	public NodeRef[] query(String xmlQuery)
-	{
-		String uri = String.format(_version.equals("1.0") ? QUERY_URI_1_0 : QUERY_URI);
+
+	public NodeRef[] query(String xmlQuery) {
+		String uri = String.format(_version.equals("1.0") ? QUERY_URI_1_0
+				: QUERY_URI);
 		InputStream res = post(uri, xmlQuery, CMIS_QUERY_TYPE);
-		if (res != null)
-		{
+		if (res != null) {
 			return _parser.parseChildren(res);
 		}
 
 		return null;
 	}
 
-	protected String buildRelativeURI(String path)
-	{
+	protected String buildRelativeURI(String path) {
 		StringBuilder uri = new StringBuilder();
 		String rootURI = _prefs.getWebappRoot();
-		
-		if(!path.startsWith(rootURI))
-		{
-			if(rootURI.endsWith("/"))
-			{
+
+		if (!path.startsWith(rootURI)) {
+			if (rootURI.endsWith("/")) {
 				uri.append(rootURI.subSequence(0, rootURI.length() - 2));
-			}
-			else
-			{
+			} else {
 				uri.append(rootURI);
 			}
 		}
-		
+
 		uri.append(path);
-		
-		if(_ticket != null)
-		{
+
+		if (_ticket != null) {
 			uri.append("?alf_ticket=").append(_ticket);
 		}
-		
+
 		return uri.toString();
 	}
 
-	public InputStream get(String path)
-	{
+	public InputStream get(String path) {
 		return makeHttpRequest(path);
 	}
-	
-	public InputStream post(String path, String payload, String contentType)
-	{
+
+	public InputStream post(String path, String payload, String contentType) {
 		return makeHttpRequest(true, path, payload, contentType);
 	}
-	
-	public InputStream makeHttpRequest(String path)
-	{
+
+	public InputStream makeHttpRequest(String path) {
 		return makeHttpRequest(false, path, null, null);
 	}
 
-	public InputStream makeHttpRequest(boolean isPost, String path, 
-			String payLoad, String contentType)
-	{
-		try
-		{	
+	public InputStream makeHttpRequest(boolean isPost, String path,
+			String payLoad, String contentType) {
+		try {
 			HttpParams params = new BasicHttpParams();
-	        HttpProtocolParams.setVersion(params, HttpVersion.HTTP_1_1);
-	        HttpProtocolParams.setContentCharset(params, "utf-8");
-	        params.setBooleanParameter("http.protocol.expect-continue", false);
-	        params.setParameter("http.connection.timeout", new Integer(TIMEOUT));
-	        
-	        // registers schemes for both http and https
-	        SchemeRegistry registry = new SchemeRegistry();
-	        registry.register(new Scheme("http", PlainSocketFactory.getSocketFactory(), _prefs.getPort()));
-	        registry.register(new Scheme("https", new EasySSLSocketFactory(), _prefs.getPort()));
-	        ThreadSafeClientConnManager manager = new ThreadSafeClientConnManager(params, registry);
-	     
-	        String url = new URL(_prefs.isSSL() ? "https" : "http", _prefs.getHostname(), 
-							buildRelativeURI(path)).toString();
+			HttpProtocolParams.setVersion(params, HttpVersion.HTTP_1_1);
+			HttpProtocolParams.setContentCharset(params, "utf-8");
+			params.setBooleanParameter("http.protocol.expect-continue", false);
+			params.setParameter("http.connection.timeout", new Integer(TIMEOUT));
+
+			// registers schemes for both http and https
+			SchemeRegistry registry = new SchemeRegistry();
+			registry.register(new Scheme("http", PlainSocketFactory
+					.getSocketFactory(), _prefs.getPort()));
+			registry.register(new Scheme("https", new EasySSLSocketFactory(),
+					_prefs.getPort()));
+			ThreadSafeClientConnManager manager = new ThreadSafeClientConnManager(
+					params, registry);
+
+			String url = new URL(_prefs.isSSL() ? "https" : "http",
+					_prefs.getHostname(), buildRelativeURI(path)).toString();
 			HttpClient client = new DefaultHttpClient(manager, params);
 			client.getParams();
 			_networkStatus = NetworkStatus.OK;
 
 			HttpRequestBase request = null;
-			
-			if(isPost)
-			{
+
+			if (isPost) {
 				request = new HttpPost(url);
 				((HttpPost) request).setEntity(new StringEntity(payLoad));
-			}
-			else
-			{
+			} else {
 				request = new HttpGet(url);
 			}
 
-			try
-			{
-				
-				if(contentType != null)
-				{
-					request.setHeader("Content-type", contentType);					
+			try {
+
+				if (contentType != null) {
+					request.setHeader("Content-type", contentType);
 				}
-				
+
 				HttpResponse response = client.execute(request);
 				StatusLine status = response.getStatusLine();
 				HttpEntity entity = response.getEntity();
 				int statusCode = status.getStatusCode();
-				
-				if ((statusCode == HttpStatus.SC_OK || statusCode == HttpStatus.SC_CREATED )&& entity != null)
-				{
+
+				if ((statusCode == HttpStatus.SC_OK || statusCode == HttpStatus.SC_CREATED)
+						&& entity != null) {
 					// Just return the whole chunk
 					return entity.getContent();
-				}
-				else if(statusCode == HttpStatus.SC_UNAUTHORIZED)
-				{
+				} else if (statusCode == HttpStatus.SC_UNAUTHORIZED) {
 					_networkStatus = NetworkStatus.CREDENTIALS_ERROR;
 				}
-			}
-			catch (Exception ex)
-			{
+			} catch (Exception ex) {
 				Log.e(CMIS.class.getName(), "Get method error", ex);
 				_networkStatus = NetworkStatus.CONNECTION_ERROR;
 			}
-		}
-		catch (Exception ex)
-		{
+		} catch (Exception ex) {
 			Log.e(CMIS.class.getName(), "Get method error", ex);
 			_networkStatus = NetworkStatus.UNKNOWN_ERROR;
 		}
 
 		return null;
 	}
-	
 
-	public String getTicket()
-	{
+	public String getTicket() {
 		return _ticket;
 	}
 
-	public String getVersion()
-	{
+	public String getVersion() {
 		return _version;
 	}
 
-	public void setVersion(String version)
-	{
+	public void setVersion(String version) {
 		this._version = version;
 	}
 
-	public NetworkStatus getNetworkStatus()
-	{
+	public NetworkStatus getNetworkStatus() {
 		return _networkStatus;
 	}
 
-	public CMISHost getPrefs()
-	{
+	public CMISHost getPrefs() {
 		return _prefs;
 	}
 
-	public void setPrefs(CMISHost prefs)
-	{
+	public void setPrefs(CMISHost prefs) {
 		this._prefs = prefs;
-	}	
+	}
 }
