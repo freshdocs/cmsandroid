@@ -234,7 +234,7 @@ public class HomeActivity extends DashboardActivity {
 			
 			final String hostId = mHost.getId();
 			
-			ChildDownloadThread _dlThread = new ChildDownloadThread(new Handler() {
+			ChildDownloadThread requestThread = new ChildDownloadThread(new Handler() {
 						public void handleMessage(Message msg) {
 							boolean ok = msg.getData().getBoolean(OK_KEY);
 							if (!ok) {
@@ -256,12 +256,10 @@ public class HomeActivity extends DashboardActivity {
 				}
 			});
 			
-			_dlThread.start();
-
-//			startActivity(new Intent(getApplicationContext(), F1Activity.class));
+			requestThread.start();
 			break;
 		case 2:
-			startActivity(new Intent(getApplicationContext(), F2Activity.class));
+			startActivity(new Intent(getApplicationContext(), AndGuru.class));
 			break;
 		case 3:
 			startActivity(new Intent(getApplicationContext(), F3Activity.class));
@@ -281,21 +279,21 @@ public class HomeActivity extends DashboardActivity {
 	}
 
 	private class ChildDownloadThread extends Thread {
-		Handler _handler;
-		Downloadable _delegate;
+		Handler handler;
+		Downloadable delegate;
 
-		ChildDownloadThread(Handler h, Downloadable delegate) {
-			_handler = h;
-			_delegate = delegate;
+		ChildDownloadThread(Handler handler, Downloadable delegate) {
+			this.handler = handler;
+			this.delegate = delegate;
 		}
 
 		public void run() {
-			Boolean result = (Boolean) _delegate.execute();
-			Message msg = _handler.obtainMessage();
+			Boolean result = (Boolean) delegate.execute();
+			Message msg = handler.obtainMessage();
 			Bundle b = new Bundle();
 			b.putBoolean(OK_KEY, result);
 			msg.setData(b);
-			_handler.sendMessage(msg);
+			handler.sendMessage(msg);
 		}
 	}
 	@Override

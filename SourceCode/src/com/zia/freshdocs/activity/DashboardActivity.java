@@ -17,6 +17,7 @@
 package com.zia.freshdocs.activity;
 
 import android.app.Activity;
+import android.app.ListActivity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
@@ -40,8 +41,7 @@ import com.zia.freshdocs.R;
  *
  */
 
-public abstract class DashboardActivity extends Activity 
-{
+public abstract class DashboardActivity extends ListActivity {
 
 /**
  * Variable usePrettyGoodSolution determines if we use the so-called "pretty good solution" for supporting
@@ -64,8 +64,9 @@ public static final boolean usePrettyGoodSolution = false;
 
 protected void onCreate(Bundle savedInstanceState) 
 {
+	this.setTheme(R.style.Theme_HoloEverywhereLight);
     super.onCreate(savedInstanceState);
-    //setContentView(R.layout.activity_default);
+//    setContentView(R.layout.favorites);
 }
     
 /**
@@ -231,8 +232,7 @@ public void goHome(Context context)
 
    Configuration c = getResources ().getConfiguration ();
    int size = c.screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK;
-   boolean isLarge = (size == Configuration.SCREENLAYOUT_SIZE_LARGE);
-   boolean addFrame = isLarge;
+   boolean addFrame = (size == Configuration.SCREENLAYOUT_SIZE_LARGE);
 
    //if (isLarge) System.out.println ("Large screen");
 

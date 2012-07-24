@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+   	android:orientation="vertical"
+   	android:layout_width="fill_parent"
+   	android:layout_height="fill_parent"
+   	android:background="#000000"
+   	android:padding="0dip"
+   	android:focusable="true"
+    android:focusableInTouchMode="true"
+    android:clickable="true">
+    <ImageView
+       	android:layout_width="fill_parent"
+       	android:layout_height="wrap_content"
+       	android:scaleType="fitXY"
+       	android:gravity="center"
+       	android:src="@drawable/custom_menu_header"/>	
+   	<TableLayout
+        android:layout_width="fill_parent"
+        android:id="@+id/custom_menu_table"
+        android:layout_height="wrap_content"
+        android:stretchColumns="*"
+        android:focusable="true"
+        android:focusableInTouchMode="true">
+    </TableLayout>
+</LinearLayout>

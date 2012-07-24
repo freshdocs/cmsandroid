@@ -72,42 +72,37 @@ import com.zia.freshdocs.util.Pair;
  * Handles navigation of the repo via the CMIS api.
  * 
  * @author jsimpson
- *
+ * 
  */
-public class CMISAdapter extends ArrayAdapter<NodeRef>
-{	
+public class CMISAdapter extends ArrayAdapter<NodeRef> {
 	private static final int BUF_SIZE = 16384;
-	
-	private Pair<String, NodeRef[]> _currentState = new Pair<String, NodeRef[]>(null, null);
-	private Stack<Pair<String, NodeRef[]>> _stack = new Stack<Pair<String,NodeRef[]>>();
+
+	private Pair<String, NodeRef[]> _currentState = new Pair<String, NodeRef[]>(
+			null, null);
+	private Stack<Pair<String, NodeRef[]>> _stack = new Stack<Pair<String, NodeRef[]>>();
 	private CMIS _cmis;
 	private ProgressDialog _progressDlg = null;
 	private ChildDownloadThread _dlThread = null;
 	private boolean _favoritesView = false;
-	
-	public CMISAdapter(Context context, int textViewResourceId, NodeRef[] objects)
-	{
+
+	public CMISAdapter(Context context, int textViewResourceId,
+			NodeRef[] objects) {
 		super(context, textViewResourceId, objects);
 	}
 
-	public CMISAdapter(Context context, int textViewResourceId)
-	{
+	public CMISAdapter(Context context, int textViewResourceId) {
 		super(context, textViewResourceId);
 	}
-	
-	
-	public CMISAdapter(Context context, int resource, int textViewResourceId)
-	{
+
+	public CMISAdapter(Context context, int resource, int textViewResourceId) {
 		super(context, resource, textViewResourceId);
 	}
 
-	public CMIS getCmis()
-	{
+	public CMIS getCmis() {
 		return _cmis;
 	}
 
-	public void setCmis(CMIS cmis)
-	{
+	public void setCmis(CMIS cmis) {
 		this._cmis = cmis;
 	}
 
@@ -119,115 +114,92 @@ public class CMISAdapter extends ArrayAdapter<NodeRef>
 		this._favoritesView = favoritesView;
 	}
 
-	public void refresh()
-	{
+	public void refresh() {
 		getChildren(_currentState.getFirst());
 	}
-	
+
 	/**
-	 * Handles connecting to the host, get host info such as version and then displays
-	 * the Company Home contents.
+	 * Handles connecting to the host, get host info such as version and then
+	 * displays the Company Home contents.
 	 */
-	public void home()
-	{
+	public void home() {
 		startProgressDlg(true);
-		
-		_dlThread = new ChildDownloadThread(new Handler() 
-		{
-			public void handleMessage(Message msg) 
-			{
+
+		_dlThread = new ChildDownloadThread(new Handler() {
+			public void handleMessage(Message msg) {
 				// Save reference to current entry
-				_stack.clear();		
-				
+				_stack.clear();
+
 				NodeRef[] companyHome = (NodeRef[]) _dlThread.getResult();
 
-				if(companyHome != null)
-				{
+				if (companyHome != null) {
 					dismissProgressDlg();
-					
+
 					// Get Company Home children
 					_currentState = new Pair<String, NodeRef[]>("", companyHome);
 					populateList(companyHome);
-				}
-				else
-				{
-					CMISApplication app = (CMISApplication) getContext().getApplicationContext();
+				} else {
+					CMISApplication app = (CMISApplication) getContext()
+							.getApplicationContext();
 					app.handleNetworkStatus();
 				}
-			}			
-		}, 
-		new Downloadable()
-		{
-			public Object execute()
-			{
+			}
+		}, new Downloadable() {
+			public Object execute() {
 				return _cmis.getCompanyHome();
 			}
 		});
-		_dlThread.start();		
+		_dlThread.start();
 	}
 
-	
-	public boolean isFolder(int position)
-	{
+	public boolean isFolder(int position) {
 		return getItem(position).isFolder();
 	}
-	
-	public boolean hasPrevious()
-	{
+
+	public boolean hasPrevious() {
 		return _stack.size() > 0;
 	}
-	
-	public void previous()
-	{
-		if(_stack.size() > 0)
-		{
+
+	public void previous() {
+		if (_stack.size() > 0) {
 			_currentState = _stack.pop();
 			populateList(_currentState.getSecond());
 		}
 	}
-	
+
 	/**
-	 * Retrieve the children from the specified node.  
-	 * @param position n-th child position
+	 * Retrieve the children from the specified node.
+	 * 
+	 * @param position
+	 *            n-th child position
 	 */
-	public void getChildren(int position)
-	{
+	public void getChildren(int position) {
 		final NodeRef ref = getItem(position);
-		
+
 		// For folders display the contents for the specified URI
-		if(ref.isFolder())
-		{
+		if (ref.isFolder()) {
 			_stack.push(_currentState);
 			String uuid = ref.getContent();
 			_currentState = new Pair<String, NodeRef[]>(uuid, null);
 			getChildren(uuid);
 		}
 		// For non-folders try a download (if there is an external storage card)
-		else
-		{
+		else {
 			String storageState = Environment.getExternalStorageState();
-			if (Environment.MEDIA_MOUNTED.equals(storageState))
-			{
-				downloadContent(ref,  new Handler() 
-				{
-					public void handleMessage(Message msg) 
-					{
+			if (Environment.MEDIA_MOUNTED.equals(storageState)) {
+				downloadContent(ref, new Handler() {
+					public void handleMessage(Message msg) {
 						boolean done = msg.getData().getBoolean("done");
-						if(done )
-						{	
+						if (done) {
 							dismissProgressDlg();
-							
+
 							File file = (File) _dlThread.getResult();
-							if(file != null)
-							{
+							if (file != null) {
 								viewContent(file, ref);
 							}
-						}		
-						else
-						{
+						} else {
 							int value = msg.getData().getInt("progress");
-							if(value > 0)
-							{
+							if (value > 0) {
 								_progressDlg.setProgress(value);
 							}
 						}
@@ -236,57 +208,52 @@ public class CMISAdapter extends ArrayAdapter<NodeRef>
 			}
 		}
 	}
-	
+
 	/**
-	 * Send the content using a built-in Android activity which can handle the content type.
+	 * Send the content using a built-in Android activity which can handle the
+	 * content type.
+	 * 
 	 * @param position
 	 */
-	public void shareContent(int position)
-	{
+	public void shareContent(int position) {
 		final NodeRef ref = getItem(position);
-		downloadContent(ref, new Handler() 
-		{
-			public void handleMessage(Message msg) 
-			{				
+		downloadContent(ref, new Handler() {
+			public void handleMessage(Message msg) {
 				Context context = getContext();
 				boolean done = msg.getData().getBoolean("done");
-				
-				if(done)
-				{	
+
+				if (done) {
 					dismissProgressDlg();
-					
+
 					File file = (File) _dlThread.getResult();
-					
-					if(file != null)
-					{
+
+					if (file != null) {
 						Resources res = context.getResources();
 						Uri uri = Uri.fromFile(file);
 						Intent emailIntent = new Intent(Intent.ACTION_SEND);
 						emailIntent.putExtra(Intent.EXTRA_STREAM, uri);
-						emailIntent.putExtra(Intent.EXTRA_SUBJECT, ref.getName());
-						emailIntent.putExtra(Intent.EXTRA_TEXT, res.getString(R.string.email_text));
+						emailIntent.putExtra(Intent.EXTRA_SUBJECT,
+								ref.getName());
+						emailIntent.putExtra(Intent.EXTRA_TEXT,
+								res.getString(R.string.email_text));
 						emailIntent.setType(ref.getContentType());
-						
-						try
-						{
-							context.startActivity(Intent.createChooser(emailIntent, 
+
+						try {
+							context.startActivity(Intent.createChooser(
+									emailIntent,
 									res.getString(R.string.email_title)));
-						}
-						catch(ActivityNotFoundException e)
-						{
-							String text = "No suitable applications registered to send " + 
-								ref.getContentType();
+						} catch (ActivityNotFoundException e) {
+							String text = "No suitable applications registered to send "
+									+ ref.getContentType();
 							int duration = Toast.LENGTH_SHORT;
-							Toast toast = Toast.makeText(context, text, duration);
+							Toast toast = Toast.makeText(context, text,
+									duration);
 							toast.show();
 						}
 					}
-				}			
-				else
-				{
+				} else {
 					int value = msg.getData().getInt("progress");
-					if(value > 0)
-					{
+					if (value > 0) {
 						_progressDlg.setProgress(value);
 					}
 				}
@@ -296,73 +263,62 @@ public class CMISAdapter extends ArrayAdapter<NodeRef>
 
 	/**
 	 * Display a favorite (stored on disk)
+	 * 
 	 * @param position
 	 */
-	public void viewFavorite(int position)
-	{
+	public void viewFavorite(int position) {
 		Context context = getContext();
-		CMISPreferencesManager prefsMgr = CMISPreferencesManager.getInstance();						
+		CMISPreferencesManager prefsMgr = CMISPreferencesManager.getInstance();
 		NodeRef ref = getItem(position);
 		Set<NodeRef> favorites = prefsMgr.getFavorites(context);
-		
-		if(favorites.contains(ref))
-		{
-			CMISApplication app = (CMISApplication) getContext().getApplicationContext();
+
+		if (favorites.contains(ref)) {
+			CMISApplication app = (CMISApplication) getContext()
+					.getApplicationContext();
 			File f = app.getFile(ref.getName(), -1);
-			
-			if(f != null)
-			{
+
+			if (f != null) {
 				viewContent(f, ref);
-			}			
+			}
 		}
 	}
-	
+
 	/**
 	 * Saves the content node to the favorites area of the sdcard
+	 * 
 	 * @param position
 	 */
-	public void toggleFavorite(int position)
-	{
+	public void toggleFavorite(int position) {
 		final Context context = getContext();
-		final CMISPreferencesManager prefsMgr = CMISPreferencesManager.getInstance();						
+		final CMISPreferencesManager prefsMgr = CMISPreferencesManager
+				.getInstance();
 		final NodeRef ref = getItem(position);
 		final Set<NodeRef> favorites = prefsMgr.getFavorites(context);
-		
-		if(favorites.contains(ref))
-		{
+
+		if (favorites.contains(ref)) {
 			favorites.remove(ref);
 			prefsMgr.storeFavorites(context, favorites);
-			
-			if(_favoritesView)
-			{
+
+			if (_favoritesView) {
 				remove(ref);
 				notifyDataSetChanged();
 			}
-		} 
-		else
-		{		
-			downloadContent(ref, new Handler() 
-			{
-				public void handleMessage(Message msg) 
-				{
+		} else {
+			downloadContent(ref, new Handler() {
+				public void handleMessage(Message msg) {
 					boolean done = msg.getData().getBoolean("done");
-					if(done)
-					{	
+					if (done) {
 						dismissProgressDlg();
-						
+
 						File file = (File) _dlThread.getResult();
 
-						if(file != null)
-						{
+						if (file != null) {
 							favorites.add(ref);
 							prefsMgr.storeFavorites(context, favorites);
 						}
-					}
-					else
-					{
+					} else {
 						int value = msg.getData().getInt("progress");
-						if(value > 0)
-						{
+						if (value > 0) {
 							_progressDlg.setProgress(value);
 						}
 					}
@@ -370,106 +326,94 @@ public class CMISAdapter extends ArrayAdapter<NodeRef>
 			});
 		}
 	}
-	
+
 	/**
 	 * Download the content for the given NodeRef
+	 * 
 	 * @param ref
 	 * @param handler
 	 */
-	protected void downloadContent(final NodeRef ref, final Handler handler)
-	{
+	protected void downloadContent(final NodeRef ref, final Handler handler) {
 		startProgressDlg(false);
 		_progressDlg.setMax(Long.valueOf(ref.getContentLength()).intValue());
-		
-		_dlThread = new ChildDownloadThread(handler, new Downloadable()
-		{
-			public Object execute()
-			{
-				File f =  null;
-				
-				try
-				{
-					CMISApplication app = (CMISApplication) getContext().getApplicationContext();
+
+		_dlThread = new ChildDownloadThread(handler, new Downloadable() {
+			public Object execute() {
+				File f = null;
+
+				try {
+					CMISApplication app = (CMISApplication) getContext()
+							.getApplicationContext();
 					URL url = new URL(ref.getContent());
 					String name = ref.getName();
 					long fileSize = ref.getContentLength();
 					f = app.getFile(name, fileSize);
-					
-					if(f != null && f.length() != fileSize)
-					{
+
+					if (f != null && f.length() != fileSize) {
 						Thread.currentThread().setPriority(Thread.MIN_PRIORITY);
-						
+
 						FileOutputStream fos = new FileOutputStream(f);
 						InputStream is = _cmis.get(url.getPath());
-						
+
 						byte[] buffer = new byte[BUF_SIZE];
 						int len = is.read(buffer);
 						int total = len;
 						Message msg = null;
 						Bundle b = null;
-						
-						while (len != -1) 
-						{
+
+						while (len != -1) {
 							msg = handler.obtainMessage();
 							b = new Bundle();
 							b.putInt("progress", total);
 							msg.setData(b);
 							handler.sendMessage(msg);
-							
-						    fos.write(buffer, 0, len);
-						    len = is.read(buffer);
-						    total += len;
-						    
-						    if (Thread.interrupted()) 
-						    {
-						    	fos.close();
-						    	f = null;
-						        throw new InterruptedException();
-						    }
+
+							fos.write(buffer, 0, len);
+							len = is.read(buffer);
+							total += len;
+
+							if (Thread.interrupted()) {
+								fos.close();
+								f = null;
+								throw new InterruptedException();
+							}
 						}
-						
+
 						fos.flush();
 						fos.close();
 					}
-				} 
-				catch(Exception e)
-				{
+				} catch (Exception e) {
 					Log.e(CMISAdapter.class.getSimpleName(), "", e);
-				}		
-				
+				}
+
 				return f;
 			}
 		});
-		_dlThread.start();		
+		_dlThread.start();
 	}
-	
-	public void interrupt()
-	{
-		if(_dlThread != null && _dlThread.isAlive())
-		{
+
+	public void interrupt() {
+		if (_dlThread != null && _dlThread.isAlive()) {
 			_dlThread.interrupt();
 		}
 	}
-	
+
 	/**
 	 * Send an Intent requesting for an activity to display the content.
+	 * 
 	 * @param file
 	 * @param ref
 	 */
-	protected void viewContent(File file, NodeRef ref)
-	{
+	protected void viewContent(File file, NodeRef ref) {
 		Context context = getContext();
-		
+
 		// Ask for viewer
 		Uri uri = Uri.fromFile(file);
 		Intent viewIntent = new Intent(Intent.ACTION_VIEW);
 		viewIntent.setDataAndType(uri, ref.getContentType());
-		try
-		{
+		try {
 			context.startActivity(viewIntent);
-		}
-		catch(ActivityNotFoundException e)
-		{
+		} catch (ActivityNotFoundException e) {
 			deleteContent(file);
 			String text = "No viewer found for " + ref.getContentType();
 			int duration = Toast.LENGTH_SHORT;
@@ -477,47 +421,39 @@ public class CMISAdapter extends ArrayAdapter<NodeRef>
 			toast.show();
 		}
 	}
-	
-	protected void deleteContent(File file)
-	{
-		if(file.exists())
-		{
+
+	protected void deleteContent(File file) {
+		if (file.exists()) {
 			file.delete();
 		}
 	}
-	
-	protected void getChildren(final String uuid)
-	{
+
+	protected void getChildren(final String uuid) {
 		startProgressDlg(true);
-		
-		_dlThread = new ChildDownloadThread(_resultHandler, new Downloadable()
-		{
-			public Object execute()
-			{
+
+		_dlThread = new ChildDownloadThread(_resultHandler, new Downloadable() {
+			public Object execute() {
 				return _cmis.getChildren(uuid);
 			}
 		});
 		_dlThread.start();
 	}
 
-	protected void startProgressDlg(boolean indeterminate)
-	{
+	protected void startProgressDlg(boolean indeterminate) {
 		Context context = getContext();
 		Resources res = context.getResources();
-		
-		if(_progressDlg == null || !_progressDlg.isShowing())
-		{
+
+		if (_progressDlg == null || !_progressDlg.isShowing()) {
 			_progressDlg = new ProgressDialog(context);
-			_progressDlg.setProgressStyle(indeterminate ? 
-					ProgressDialog.STYLE_SPINNER : ProgressDialog.STYLE_HORIZONTAL);
+			_progressDlg
+					.setProgressStyle(indeterminate ? ProgressDialog.STYLE_SPINNER
+							: ProgressDialog.STYLE_HORIZONTAL);
 			_progressDlg.setMessage(res.getString(R.string.loading));
 			_progressDlg.setTitle("");
 			_progressDlg.setCancelable(true);
 			_progressDlg.setIndeterminate(indeterminate);
-			_progressDlg.setOnCancelListener(new OnCancelListener()
-			{
-				public void onCancel(DialogInterface dialog)
-				{
+			_progressDlg.setOnCancelListener(new OnCancelListener() {
+				public void onCancel(DialogInterface dialog) {
 					interrupt();
 				}
 			});
@@ -525,174 +461,153 @@ public class CMISAdapter extends ArrayAdapter<NodeRef>
 		}
 	}
 
-	protected void dismissProgressDlg()
-	{
-		if(_progressDlg != null && _progressDlg.isShowing())
-		{
+	protected void dismissProgressDlg() {
+		if (_progressDlg != null && _progressDlg.isShowing()) {
 			_progressDlg.dismiss();
 		}
 	}
-	
+
 	/**
 	 * Query the server using the query appropriate for the server version
+	 * 
 	 * @param term
 	 */
-	public void query(final String term)
-	{
+	public void query(final String term) {
 		startProgressDlg(true);
-		
-		_dlThread = new ChildDownloadThread(_resultHandler, new Downloadable()
-		{
-			public Object execute()
-			{
+
+		_dlThread = new ChildDownloadThread(_resultHandler, new Downloadable() {
+			public Object execute() {
 				Context context = getContext();
 				Resources res = context.getResources();
-				InputStream is = res.openRawResource(
-						_cmis.getVersion().contains("0.6") ? R.raw.query_0_6 : R.raw.query_1_0);
+				InputStream is = res.openRawResource(_cmis.getVersion()
+						.contains("0.6") ? R.raw.query_0_6 : R.raw.query_1_0);
 				String xml = null;
-				
-				try
-				{
+
+				try {
 					xml = String.format(IOUtils.toString(is), term, term);
 					return _cmis.query(xml);
-				}
-				catch (IOException e)
-				{
+				} catch (IOException e) {
 					Log.e(CMISAdapter.class.getSimpleName(), "", e);
 				}
-				
+
 				return null;
 			}
 		});
 		_dlThread.start();
 
 	}
-	
+
 	@Override
-	public View getView(int position, View convertView, ViewGroup parent)
-	{
+	public View getView(int position, View convertView, ViewGroup parent) {
 		View view = super.getView(position, convertView, parent);
-		
+
 		NodeRef nodeRef = getItem(position);
-		
+
 		TextView textView = (TextView) view.findViewById(R.id.node_ref_label);
 		textView.setText(nodeRef.getName());
 
-		TextView textModifiedView = (TextView) view.findViewById(R.id.node_ref_modified);
+		TextView textModifiedView = (TextView) view
+				.findViewById(R.id.node_ref_modified);
 		String lastModified = nodeRef.getLastModifiedBy();
 		textModifiedView.setText(lastModified);
 
 		String dateStr = nodeRef.getLastModificationDate();
-		SimpleDateFormat parseFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.S'Z'");
+		SimpleDateFormat parseFormat = new SimpleDateFormat(
+				"yyyy-MM-dd'T'HH:mm:ss.SSSZ");
 		Date date = null;
-		
-		try
-		{
+
+		try {
 			date = parseFormat.parse(dateStr);
-			SimpleDateFormat outFormat = new SimpleDateFormat("HH:mm:ss MM/dd/yyyy"); 
+			SimpleDateFormat outFormat = new SimpleDateFormat(
+					"HH:mm:ss MM/dd/yyyy");
 			dateStr = outFormat.format(date);
-		}
-		catch (Exception e)
-		{
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
-		if(lastModified == null)
-		{
+
+		if (lastModified == null) {
 			textModifiedView.setText(dateStr);
-		}
-		else
-		{
-			TextView textModDateView = (TextView) view.findViewById(R.id.node_ref_modified_date);
+		} else {
+			TextView textModDateView = (TextView) view
+					.findViewById(R.id.node_ref_modified_date);
 			textModDateView.setText(dateStr);
 		}
-		
+
 		ImageView imgView = (ImageView) view.findViewById(R.id.node_ref_img);
 		String contentType = nodeRef.getContentType();
-		Drawable icon = getDrawableForType(contentType == null ? "cmis/folder" : contentType);
+		Drawable icon = getDrawableForType(contentType == null ? "cmis/folder"
+				: contentType);
 		imgView.setImageDrawable(icon);
 
 		return view;
 	}
-	
-	protected Drawable getDrawableForType(String contentType)
-	{
+
+	protected Drawable getDrawableForType(String contentType) {
 		Context context = getContext();
 		Resources resources = context.getResources();
-		int resId = Constants.mimeMap.get(Constants.mimeMap.containsKey(contentType) ? contentType : null);
+		int resId = Constants.mimeMap.get(Constants.mimeMap
+				.containsKey(contentType) ? contentType : null);
 		Drawable icon = resources.getDrawable(resId);
 		icon.setBounds(new Rect(0, 0, 44, 44));
 		return icon;
 	}
 
-	protected void populateList(NodeRef[] nodes)
-	{
+	protected void populateList(NodeRef[] nodes) {
 		clear();
-		
-		if(nodes != null)
-		{
-			Arrays.sort(nodes, new Comparator<NodeRef>()
-			{
-				public int compare(NodeRef left, NodeRef right)
-				{
+
+		if (nodes != null) {
+			Arrays.sort(nodes, new Comparator<NodeRef>() {
+				public int compare(NodeRef left, NodeRef right) {
 					return left.getName().compareTo(right.getName());
 				}
 			});
 
 			int n = nodes.length;
-			for(int i = 0; nodes != null && i < n; i++)
-			{
+			for (int i = 0; nodes != null && i < n; i++) {
 				NodeRef ref = nodes[i];
-				if(!ref.getName().startsWith("."))
-				{
+				if (!ref.getName().startsWith(".")) {
 					add(nodes[i]);
 				}
 			}
 		}
 	}
 
-	final Handler _resultHandler = new Handler() 
-	{
-		public void handleMessage(Message msg) 
-		{
+	final Handler _resultHandler = new Handler() {
+		public void handleMessage(Message msg) {
 			dismissProgressDlg();
-			
+
 			boolean done = msg.getData().getBoolean("done");
-			if(done)
-			{	
+			if (done) {
 				NodeRef[] nodes = (NodeRef[]) _dlThread.getResult();
-				_currentState = new Pair<String, NodeRef[]>(_currentState.getFirst(), nodes);
+				_currentState = new Pair<String, NodeRef[]>(
+						_currentState.getFirst(), nodes);
 				populateList(nodes);
-			}			
+			}
 		}
 	};
 
-	private class ChildDownloadThread extends Thread 
-	{
+	private class ChildDownloadThread extends Thread {
 		Handler _handler;
 		Downloadable _delegate;
 		Object _result = null;
 
-		ChildDownloadThread(Handler h, Downloadable delegate) 
-		{
+		ChildDownloadThread(Handler h, Downloadable delegate) {
 			_handler = h;
 			_delegate = delegate;
 		}
 
-		public void run() 
-		{
-			_result = _delegate.execute();				
+		public void run() {
+			_result = _delegate.execute();
 
 			Message msg = _handler.obtainMessage();
 			Bundle b = new Bundle();
 			b.putBoolean("done", true);
 			msg.setData(b);
-			
+
 			_handler.sendMessage(msg);
 		}
-		
-		public Object getResult()
-		{
+
+		public Object getResult() {
 			return _result;
 		}
 	}

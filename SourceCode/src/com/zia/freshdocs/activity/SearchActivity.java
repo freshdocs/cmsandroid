@@ -43,7 +43,7 @@ public class SearchActivity extends NodeBrowseActivity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		this.setTheme(R.style.Theme_HoloEverywhereLight);
-		_adapterInitialized = true;
+		mAdapterInitialized = true;
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.search);
 		registerForContextMenu(getListView());
@@ -78,7 +78,7 @@ public class SearchActivity extends NodeBrowseActivity {
 		String queryAction = queryIntent.getAction();
 
 		if (Intent.ACTION_SEARCH.equals(queryAction) && _isDirty) {
-			CMIS cmis = _adapter.getCmis();
+			CMIS cmis = mAdapter.getCmis();
 			if (cmis == null || cmis.getNetworkStatus() != NetworkStatus.OK) {
 				int duration = Toast.LENGTH_SHORT;
 				int error_id = cmis == null ? R.string.search_ambiguaous
@@ -96,12 +96,12 @@ public class SearchActivity extends NodeBrowseActivity {
 	}
 
 	protected void search(String term) {
-		_adapter.query(term);
+		mAdapter.query(term);
 	}
 
 	@Override
 	protected void onListItemClick(ListView l, View v, int position, long id) {
-		_adapter.getChildren(position);
+		mAdapter.getChildren(position);
 	}
 
 	@Override

@@ -42,11 +42,11 @@ public class FavoritesActivity extends NodeBrowseActivity
 	public void onCreate(Bundle savedInstanceState) {
 		this.setTheme(R.style.Theme_HoloEverywhereLight);
 		// Prevent call to home() in parent
-		_adapterInitialized = true;
+		mAdapterInitialized = true;
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.favorites);
 		registerForContextMenu(getListView());
-		_adapter.setFavoritesView(true);
+		mAdapter.setFavoritesView(true);
 
 		Resources res = getResources();
 		StringBuilder title = new StringBuilder(
@@ -63,19 +63,19 @@ public class FavoritesActivity extends NodeBrowseActivity
 	};
 
 	protected void initializeFavorites() {
-		_adapter.clear();
+		mAdapter.clear();
 
 		CMISPreferencesManager prefsMgr = CMISPreferencesManager.getInstance();
 		Set<NodeRef> favorites = prefsMgr.getFavorites(this);
 
 		for (NodeRef ref : favorites) {
-			_adapter.add(ref);
+			mAdapter.add(ref);
 		}
 	}
 
 	@Override
 	protected void onListItemClick(ListView l, View v, int position, long id) {
-		_adapter.viewFavorite(position);
+		mAdapter.viewFavorite(position);
 	}
 
 	@Override

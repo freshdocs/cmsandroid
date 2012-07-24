@@ -32,5 +32,25 @@
     <color name="background3">#ffe3e8f1</color>
     <color name="large_background">#ff000022</color>
     <color name="title_separator">#40ffffff</color>
+    
+    <!-- File Explorer -->
+
+	<color name="textColorIconOverlay">#fff</color>
+    <color name="textColorIconOverlayShadow">#000</color>
+    <color name="sect_secondary">#4fff</color>
+    <color name="quickaction_disambig">#f2f2f2</color>
+    <color name="quickaction_disambig_divider">#afafaf</color>
+    <color name="edit_divider">#ff666666</color>
+	<color name="white">#FFFFFF</color>
+	<color name="offWhite">#DDDDDD</color>
+	<color name="black">#000000</color>
+	<color name="darkGray">#333333</color>
+	<color name="lightGray">#777777</color>
+	<color name="brightRed">#FF0000</color>
+	<color name="brightGreen">#00FF00</color>
+	<color name="brightBlue">#0000FF</color>
+	<color name="darkBlue">#880000FF</color>
+	<color name="blue">#627AAD</color>
+	<color name="blue_2">#3B5998</color>
 
 </resources>

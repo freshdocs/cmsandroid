@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="hello">FreshDocs rocks!</string>
     <string name="app_name">FreshDocs</string>
     <string name="username">Username</string>
     <string name="password">Password</string>
@@ -51,12 +50,6 @@
     <string name="description_about">About</string>
     <string name="description_home">Home</string>
     <string name="description_search">Search</string>
-    <string name="description_feature1">CMIS</string>
-    <string name="description_feature2">File Explorer</string>
-    <string name="description_feature3">Workflow</string>
-    <string name="description_feature4">Feature 4</string>
-    <string name="description_feature5">Feature 5</string>
-    <string name="description_feature6">Feature 6</string>
     <string name="title_about">About</string>
     <string name="title_home">Home</string>
     <string name="title_search">Search</string>
@@ -75,5 +68,36 @@
     <string name="feature6_intro">Feature 6 content goes here.</string>
     <string name="about_intro">This app is a demo to show you how to do an Android app based on the Dashboard pattern that has been used in apps like Google+, Twitter, Google IO, and Evernote.</string>
     <string name="search_intro">Content for the Search page goes here.</string>
+    <string name="media_dialog">Media preview</string>
+    <string name="dir_info">Folder Information</string>
+    <string name="manager_act">Phone Management</string>
+    <string name="str_color_white">White</string>
+    <string name="str_color_magenta">Magenta</string>
+    <string name="str_color_yellow">Yellow</string>
+    <string name="str_color_red">Red</string>
+    <string name="str_color_cyan">Cyan</string>
+    <string name="str_color_blue">Blue</string>
+    <string name="str_color_green">Green</string>
+    <string name="str_color_black">Black</string>
+    <string name="str_change_text_color_setting">Change text color</string>
+    
+    <string name="str_sort_files_folders">Choose how to sort files and folders</string>
+    <string name="str_sorting_type">Sorting type</string>
+    <string name="str_display">Display</string>
+    <string name="str_change_text_color">Change the preferred text color</string>
+    <string name="str_show_hidden_file_folder">Show hidden files/folders</string>
+    <string name="str_display_files_folders">Display files and folders that begin with a (period)</string>
+    <string name="str_show_image_preview">Show Image Preview</string>
+    <string name="str_display_thumbnail">Display a thumbnail for image files</string>
+    <string name="str_show_storage_banner">Show Storage Banner</string>
+    <string name="str_display_sdcard_information">Display sdcard storage information</string>
+    <string name="str_no_sdcard">No Sdcard</string>
+    <string name="str_exit">Exit</string>
+    <string name="str_cant_read_folder">Can not read folder due to permissions</string>
+    <string name="str_coundnt_find_fdf_viewer">Sorry, could not find a pdf viewer</string>
+    <string name="str_coundnt_find_html_viewer">"Sorry, could not find a HTML viewer"</string>
+    <string name="str_coundnt_find_to_open">Sorry, could not find anything to open </string>
+    <string name="str_create_folder">Create New Folder</string>
+    <string name="str_cant_create_folder">New folder was not created</string>
 
 </resources>

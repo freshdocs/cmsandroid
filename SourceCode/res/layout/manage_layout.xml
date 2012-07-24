@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+ 
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:andguru= "http://schemas.android.com/apk/res/com.zia.freshdocs"
+	android:layout_width="fill_parent"
+	android:layout_height="fill_parent"
+	android:orientation="vertical"
+	android:background="@color/black">
+	
+	<TextView
+		android:id="@+id/available_memory_label"
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content"
+		android:textColor="@color/white"
+		android:background="@color/black"
+		android:paddingRight="6dp"
+		android:gravity="right"/>
+	<TextView
+		android:id="@+id/num_processes_label"
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content"
+		android:textColor="@color/white"
+		android:background="@color/black"
+		android:paddingRight="6dp"
+		android:gravity="right"/>
+	<com.zia.freshdocs.widget.fileexplorer.CustomFastScrollView 
+			android:layout_width="fill_parent"
+	        android:layout_height="fill_parent" 
+	        andguru:overlayWidth="175dp" 
+	        andguru:overlayHeight="110dp" 
+	        andguru:overlayTextSize="36dp"
+	        andguru:overlayScrollThumbWidth="60dp" 
+	        android:id="@+id/fast_scroll_view">
+	        
+	      <ListView 
+			android:id="@+id/android:list" 
+			android:layout_width="fill_parent"
+			android:layout_height="fill_parent"
+			android:scrollbars="none"	
+    		android:longClickable="true"
+    		android:clickable="true"
+    		android:background="@color/black"/>
+			
+	      <TextView 
+			android:id="@+id/empty"
+			android:layout_width="wrap_content" 
+			android:layout_height="wrap_content"
+			android:text="" />
+	    </com.zia.freshdocs.widget.fileexplorer.CustomFastScrollView>     	
+</LinearLayout>

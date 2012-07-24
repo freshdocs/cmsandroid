@@ -26,6 +26,7 @@
   			android:layout_height="wrap_content"
   			android:lines="1"
   			android:ellipsize="middle"
+  			android:textStyle="bold"
   			android:textAppearance="?android:attr/textAppearanceMedium"/>
   			
   		<TextView

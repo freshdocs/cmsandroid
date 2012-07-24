@@ -54,12 +54,12 @@ import com.zia.freshdocs.preference.CMISPreferencesManager;
 import com.zia.freshdocs.widget.adapter.CMISAdapter;
 import com.zia.freshdocs.widget.quickaction.QuickActionWindow;
 
-public class NodeBrowseActivity extends ListActivity implements OnItemLongClickListener
+public class NodeBrowseActivity extends DashboardActivity implements OnItemLongClickListener
 {
 	private static final String HOST_ID_KEY = "id";
 	
-	protected CMISAdapter _adapter;
-	protected boolean _adapterInitialized = false;
+	protected CMISAdapter mAdapter;
+	protected boolean mAdapterInitialized = false;
 
 	/** Called when the activity is first created. */
 	@Override
@@ -74,10 +74,10 @@ public class NodeBrowseActivity extends ListActivity implements OnItemLongClickL
 //		registerForContextMenu(getListView());
 		getListView().setOnItemLongClickListener(this);
 		
-		if(!_adapterInitialized && _adapter != null && _adapter.getCmis() != null)
+		if(!mAdapterInitialized && mAdapter != null && mAdapter.getCmis() != null)
 		{
-			_adapterInitialized = true;
-			_adapter.home();
+			mAdapterInitialized = true;
+			mAdapter.home();
 		}
 	}
 	
@@ -128,7 +128,7 @@ public class NodeBrowseActivity extends ListActivity implements OnItemLongClickL
 		switch (item.getItemId())
 		{
 		case R.id.menu_item_refresh:
-			_adapter.refresh();
+			mAdapter.refresh();
 			return true;
 		case R.id.menu_item_search:
 			onSearch();
@@ -163,13 +163,13 @@ public class NodeBrowseActivity extends ListActivity implements OnItemLongClickL
 	{
 		int position = ((AdapterContextMenuInfo) menuInfo).position;
 		
-		if(!_adapter.isFolder(position))
+		if(!mAdapter.isFolder(position))
 		{
 			MenuInflater inflater = getMenuInflater();
 			inflater.inflate(R.menu.node_context_menu, menu);
 			MenuItem item = menu.findItem(R.id.menu_item_favorite);
 			
-			NodeRef ref = _adapter.getItem(position);
+			NodeRef ref = mAdapter.getItem(position);
 			CMISPreferencesManager prefsMgr = CMISPreferencesManager.getInstance();
 			Set<NodeRef> favorites = prefsMgr.getFavorites(this);
 
@@ -189,10 +189,10 @@ public class NodeBrowseActivity extends ListActivity implements OnItemLongClickL
 		switch (item.getItemId())
 		{
 		case R.id.menu_item_send:	
-			_adapter.shareContent(info.position);
+			mAdapter.shareContent(info.position);
 			return true;
 		case R.id.menu_item_favorite:
-			_adapter.toggleFavorite(info.position);
+			mAdapter.toggleFavorite(info.position);
 			return true;
 		}
 		
@@ -213,9 +213,9 @@ public class NodeBrowseActivity extends ListActivity implements OnItemLongClickL
 			setContentView(R.layout.nodes_offline);						
 		}
 
-		_adapter = new CMISAdapter(this, R.layout.node_ref_item, R.id.node_ref_label);
-		_adapter.setCmis(cmis);
-		setListAdapter(_adapter);
+		mAdapter = new CMISAdapter(this, R.layout.node_ref_item, R.id.node_ref_label);
+		mAdapter.setCmis(cmis);
+		setListAdapter(mAdapter);
 
 		if(cmis != null)
 		{
@@ -229,9 +229,9 @@ public class NodeBrowseActivity extends ListActivity implements OnItemLongClickL
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event)
 	{
-		if(keyCode == KeyEvent.KEYCODE_BACK && _adapter != null && _adapter.hasPrevious())
+		if(keyCode == KeyEvent.KEYCODE_BACK && mAdapter != null && mAdapter.hasPrevious())
 		{
-			_adapter.previous();
+			mAdapter.previous();
 			return true;
 		} 
 		else
@@ -243,7 +243,7 @@ public class NodeBrowseActivity extends ListActivity implements OnItemLongClickL
 	@Override
 	protected void onListItemClick(ListView l, View v, int position, long id)
 	{
-		_adapter.getChildren(position);
+		mAdapter.getChildren(position);
 	}
 	
 	protected void onSearch()
@@ -265,13 +265,9 @@ public class NodeBrowseActivity extends ListActivity implements OnItemLongClickL
 	@Override
 	public boolean onItemLongClick(AdapterView<?> arg0, View view, final int position, long value) {
 		
-		if(!_adapter.isFolder(position))
+		if(!mAdapter.isFolder(position))
 		{
-//			MenuInflater inflater = getMenuInflater();
-//			inflater.inflate(R.menu.node_context_menu, menu);
-//			MenuItem item = menu.findItem(R.id.menu_item_favorite);
-			
-			NodeRef ref = _adapter.getItem(position);
+			NodeRef ref = mAdapter.getItem(position);
 			CMISPreferencesManager prefsMgr = CMISPreferencesManager.getInstance();
 			Set<NodeRef> favorites = prefsMgr.getFavorites(this);
 			
@@ -290,7 +286,7 @@ public class NodeBrowseActivity extends ListActivity implements OnItemLongClickL
 					getString(R.string.send), new OnClickListener() {
 						public void onClick(View v) {
 							quickAction.dismiss();
-							_adapter.shareContent(position);
+							mAdapter.shareContent(position);
 						}
 					});
 			String favoriteTitle = getString(R.string.add_favorite);
@@ -303,7 +299,7 @@ public class NodeBrowseActivity extends ListActivity implements OnItemLongClickL
 					favoriteTitle , new OnClickListener() {
 						public void onClick(View v) {
 							quickAction.dismiss();
-							_adapter.toggleFavorite(position);
+							mAdapter.toggleFavorite(position);
 						}
 					});
 			// shows the quick action window on the screen

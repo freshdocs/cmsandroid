@@ -333,23 +333,23 @@ public class HostsActivity extends ListActivity implements OnItemLongClickListen
 	}
 	
 //	private class ChildDownloadThread extends Thread {
-//		Handler _handler;
-//		Downloadable _delegate;
+//		Handler handler;
+//		Downloadable delegate;
 //
 //		ChildDownloadThread(Handler h, Downloadable delegate) 
 //		{
-//			_handler = h;
-//			_delegate = delegate;
+//			handler = h;
+//			delegate = delegate;
 //		}
 //
 //		public void run() 
 //		{
-//			Boolean result = (Boolean) _delegate.execute();
-//			Message msg = _handler.obtainMessage();
+//			Boolean result = (Boolean) delegate.execute();
+//			Message msg = handler.obtainMessage();
 //			Bundle b = new Bundle();
 //			b.putBoolean(OK_KEY, result);
 //			msg.setData(b);
-//			_handler.sendMessage(msg);
+//			handler.sendMessage(msg);
 //		}		
 //	}
 
