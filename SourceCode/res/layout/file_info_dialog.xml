@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     style="@style/Theme.HoloEverywhereLight"
-    android:layout_width="wrap_content"
+    android:layout_width="fill_parent"
     android:layout_height="wrap_content"
     android:background="@drawable/dialog_full_holo_light"
     android:gravity="center"
@@ -11,145 +11,41 @@
         android:id="@+id/dialog_title"
         style="@style/content_large_text"
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
+        android:layout_height="wrap_content"
         android:gravity="center"
         android:padding="5dip"
         android:textStyle="bold" />
 
     <View
+        android:id="@+id/view"
         android:layout_width="fill_parent"
         android:layout_height="1dip"
+        android:layout_below="@+id/dialog_title"
+        android:layout_centerHorizontal="true"
         android:layout_margin="5dip"
         android:background="@color/light" />
 
-    <TableLayout
+    <ScrollView
+        android:id="@+id/scroll_table"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/view" >
+
+        <com.zia.freshdocs.widget.UITableView
+            android:id="@+id/tableView"
+            style="@style/UITableView" >
+        </com.zia.freshdocs.widget.UITableView>
+    </ScrollView>
+
+    <Button
+        android:id="@+id/btn_cancel"
+        style="@style/Theme.HoloEverywhereLight"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:stretchColumns="1" >
+        android:layout_below="@+id/scroll_table"
+        android:layout_centerHorizontal="true"
+        android:padding="5dip"
+        android:text="@string/str_back"
+        android:visibility="gone" />
 
-        <TableRow
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:padding="10dip" >
-
-            <TextView
-                android:text="@string/str_name"
-                android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/file_name"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:ellipsize="marquee"
-                android:singleLine="true" />
-        </TableRow>
-
-        <TableRow
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:padding="10dip" >
-
-            <TextView
-                android:text="@string/str_last_modification_date"
-                android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/last_modification_date"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:ellipsize="marquee"
-                android:singleLine="true" />
-        </TableRow>
-
-        <TableRow
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:padding="10dip" >
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:text="@string/str_last_modified_by"
-                android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/last_modified_by"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:ellipsize="marquee"
-                android:singleLine="true" />
-        </TableRow>
-
-        <TableRow
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:padding="10dip" >
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:text="@string/str_content"
-                android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/content"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:ellipsize="marquee"
-                android:singleLine="true" />
-        </TableRow>
-
-        <TableRow
-            android:id="@+id/content_type_row"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:padding="10dip" >
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:text="@string/str_content_type"
-                android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/content_type"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:ellipsize="marquee"
-                android:singleLine="true" />
-        </TableRow>
-
-        <TableRow
-            android:id="@+id/version_row"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:padding="10dip" >
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:text="@string/str_version"
-                android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/version"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:ellipsize="marquee"
-                android:singleLine="true" />
-        </TableRow>
-    </TableLayout>
-
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:padding="5dip" >
-
-        <Button
-            android:id="@+id/btn_cancel"
-            style="@style/Theme.HoloEverywhereLight"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:padding="5dip"
-            android:text="@string/str_back" />
-    </LinearLayout>
-
-</LinearLayout>
+</RelativeLayout>

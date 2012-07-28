@@ -37,6 +37,7 @@ import java.util.Stack;
 
 import org.apache.commons.io.IOUtils;
 
+import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
@@ -45,9 +46,9 @@ import android.content.DialogInterface.OnCancelListener;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Rect;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
-import android.opengl.Visibility;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
@@ -59,10 +60,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.PopupWindow;
-import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -71,9 +70,12 @@ import com.zia.freshdocs.R;
 import com.zia.freshdocs.app.CMISApplication;
 import com.zia.freshdocs.cmis.CMIS;
 import com.zia.freshdocs.model.NodeRef;
+import com.zia.freshdocs.model.ViewItem;
 import com.zia.freshdocs.net.Downloadable;
 import com.zia.freshdocs.preference.CMISPreferencesManager;
 import com.zia.freshdocs.util.Pair;
+import com.zia.freshdocs.util.Utils;
+import com.zia.freshdocs.widget.UITableView;
 
 /**
  * Handles navigation of the repo via the CMIS api.
@@ -81,6 +83,7 @@ import com.zia.freshdocs.util.Pair;
  * @author jsimpson
  * 
  */
+@SuppressLint("HandlerLeak")
 public class CMISAdapter extends ArrayAdapter<NodeRef> {
 	private static final int BUF_SIZE = 16384;
 
@@ -340,80 +343,62 @@ public class CMISAdapter extends ArrayAdapter<NodeRef> {
 	 * @param context
 	 */
 	
-	public void showFileInfo(Context context, int position){
+	public void showFileInfo(Context context, int position, boolean isFile){
 		
-		final CMISPreferencesManager prefsMgr = CMISPreferencesManager
-				.getInstance();
 		final NodeRef ref = getItem(position);
-		final PopupWindow mPopUp;
 		try {
 			//We need to get the instance of the LayoutInflater, use the context of this activity
 	        LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 	        //Inflate the view from a predefined XML layout
 	        View layout = inflater.inflate(R.layout.file_info_dialog, null, false);
 	        // create a WRAP_CONTENT PopupWindow
-	        mPopUp = new PopupWindow(layout, WindowManager.LayoutParams.WRAP_CONTENT, WindowManager.LayoutParams.WRAP_CONTENT, true);
+	        PopupWindow mPopUp = new PopupWindow(layout, WindowManager.LayoutParams.FILL_PARENT, WindowManager.LayoutParams.WRAP_CONTENT, true);
+	        mPopUp.setBackgroundDrawable(new BitmapDrawable());
+	        mPopUp.setOutsideTouchable(true);
 	        // display the popup in the center
 	        mPopUp.showAtLocation(layout, Gravity.CENTER, 0, 0);
 	        
 	        TextView title = (TextView) layout.findViewById(R.id.dialog_title);
-	        title.setText(context.getString(R.string.str_file_information));
+	        if(isFile)
+	        	title.setText(context.getString(R.string.str_file_information));
+	        else
+	        	title.setText(context.getString(R.string.str_folder_information));
 	        
-	        Button back = (Button) layout.findViewById(R.id.btn_cancel);
-	        back.setOnClickListener(new View.OnClickListener() {
-				@Override
-				public void onClick(View v) {
-					mPopUp.dismiss();
-				}
-			});
+	        UITableView tableView = (UITableView) layout.findViewById(R.id.tableView);
 	        
-	        
-	        TextView tvName = (TextView) layout.findViewById(R.id.file_name);
-	        TextView tvLastModificationDate = (TextView) layout.findViewById(R.id.last_modification_date);
-	        TextView tvLastModifiedBy = (TextView) layout.findViewById(R.id.last_modified_by);
-	        TextView tvContent = (TextView) layout.findViewById(R.id.content);
-	        TextView tvContentType = (TextView) layout.findViewById(R.id.content_type);
-	        TextView tvVersion = (TextView) layout.findViewById(R.id.version);
+	        ViewItem viewItem;
 	        
 	        if(ref.getName() != null){
-	        	tvName.setText(ref.getName());
+	        	viewItem = Utils.createCustomView(context, context.getString(R.string.str_name), ref.getName());
+	    		tableView.addViewItem(viewItem);
 	        }
 	        
 	        if(ref.getLastModificationDate() != null){
-	        	tvLastModificationDate.setText(ref.getLastModificationDate());
+	        	viewItem = Utils.createCustomView(context, context.getString(R.string.str_last_modification_date), ref.getLastModificationDate());
+	     		tableView.addViewItem(viewItem);
 	        }
-	        
+    		
 	        if(ref.getLastModifiedBy() != null){
-	        	tvLastModifiedBy.setText(ref.getLastModifiedBy());
+	        	viewItem = Utils.createCustomView(context, context.getString(R.string.str_last_modified_by), ref.getLastModifiedBy());
+	     		tableView.addViewItem(viewItem);
 	        }
 	        
 	        if(ref.getContent() != null){
-	        	tvContent.setText(ref.getContent());
+	        	viewItem = Utils.createCustomView(context, context.getString(R.string.str_content), ref.getContent());
+	     		tableView.addViewItem(viewItem);
 	        }
 	        
 	        if(ref.getContentType() != null){
-	        	tvContentType.setText(ref.getContentType());
-	        }else{
-	        	((TableRow)layout.findViewById(R.id.content_type_row)).setVisibility(View.GONE);
+	        	viewItem = Utils.createCustomView(context, context.getString(R.string.str_content_type), ref.getContentType());
+	     		tableView.addViewItem(viewItem);
 	        }
 	        
 	        if(ref.getVersion() != null){
-	        	tvVersion.setText(ref.getVersion());
-	        }else{
-	        	((TableRow)layout.findViewById(R.id.version_row)).setVisibility(View.GONE);
+	        	viewItem = Utils.createCustomView(context, context.getString(R.string.str_content_type), ref.getVersion());
+	     		tableView.addViewItem(viewItem);
 	        }
 	        
-	        	
-	        Log.d("===============", "============================================");
-			Log.d("nodeRef.getName()", ref.getName());
-			Log.d("nodeRef.getContent()", ref.getContent());
-			if (ref.getContentType() != null)
-				Log.d("nodeRef.getContentType()", ref.getContentType());
-			Log.d("nodeRef.getLastModificationDate()", ref.getLastModificationDate());
-			Log.d("nodeRef.getLastModifiedBy()", ref.getLastModifiedBy());
-			if (ref.getVersion() != null)
-				Log.d("nodeRef.getVersion()", ref.getVersion().toString());
-	        
+	        tableView.commit();
 	        
 		} catch (Exception e) {
 			e.printStackTrace();

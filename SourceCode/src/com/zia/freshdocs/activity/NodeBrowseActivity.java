@@ -42,6 +42,7 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ListView;
+import android.widget.PopupWindow;
 
 import com.zia.freshdocs.Constants;
 import com.zia.freshdocs.Constants.NetworkStatus;
@@ -59,6 +60,7 @@ public class NodeBrowseActivity extends DashboardActivity implements OnItemLongC
 	
 	protected CMISAdapter mAdapter;
 	protected boolean mAdapterInitialized = false;
+	private QuickActionWindow mQuickAction;
 
 	/** Called when the activity is first created. */
 	@Override
@@ -241,28 +243,30 @@ public class NodeBrowseActivity extends DashboardActivity implements OnItemLongC
 	@Override
 	public boolean onItemLongClick(AdapterView<?> arg0, View view,
 			final int position, long value) {
-
+		final boolean isFile;
+		
 		// array to hold the coordinates of the clicked view
 		int[] xy = new int[2];
 		// fills the array with the computed coordinates
 		view.getLocationInWindow(xy);
 		// rectangle holding the clicked view area
 		Rect rect = new Rect(xy[0], xy[1], xy[0] + view.getWidth(), xy[1] + view.getHeight());
-
+		
 		// a new QuickActionWindow object
-		final QuickActionWindow quickAction = new QuickActionWindow(
+		mQuickAction = new QuickActionWindow(
 				NodeBrowseActivity.this, view, rect);
 
 		if (!mAdapter.isFolder(position)) {
+			isFile = true;
 			NodeRef ref = mAdapter.getItem(position);
 			CMISPreferencesManager prefsMgr = CMISPreferencesManager
 					.getInstance();
 			Set<NodeRef> favorites = prefsMgr.getFavorites(this);
 
-			quickAction.addItem(getResources().getDrawable(R.drawable.excel),
+			mQuickAction.addItem(getResources().getDrawable(R.drawable.excel),
 					getString(R.string.send), new OnClickListener() {
 						public void onClick(View v) {
-							quickAction.dismiss();
+							mQuickAction.dismiss();
 							mAdapter.shareContent(position);
 						}
 					});
@@ -272,39 +276,41 @@ public class NodeBrowseActivity extends DashboardActivity implements OnItemLongC
 				favoriteTitle = getString(R.string.remove_favorite);
 			}
 
-			quickAction.addItem(getResources().getDrawable(R.drawable.excel),
+			mQuickAction.addItem(getResources().getDrawable(R.drawable.excel),
 					favoriteTitle, new OnClickListener() {
 						public void onClick(View v) {
-							quickAction.dismiss();
+							mQuickAction.dismiss();
 							mAdapter.toggleFavorite(position);
 						}
 					});
 
 			// Show file information
 
-			quickAction.addItem(getResources().getDrawable(R.drawable.excel),
+			mQuickAction.addItem(getResources().getDrawable(R.drawable.excel),
 					getString(R.string.str_file_information),
 					new OnClickListener() {
 						public void onClick(View v) {
-							mAdapter.showFileInfo(NodeBrowseActivity.this, position);
-							quickAction.dismiss();
+							mAdapter.showFileInfo(NodeBrowseActivity.this, position, isFile);
+							mQuickAction.dismiss();
 						}
 					});
 
 		} else {
+			isFile = false;
 			// Show folder information
-			quickAction.addItem(getResources().getDrawable(R.drawable.excel),
-					getString(R.string.str_file_information),
+			mQuickAction.addItem(getResources().getDrawable(R.drawable.excel),
+					getString(R.string.str_folder_information),
 					new OnClickListener() {
 						public void onClick(View v) {
-							mAdapter.showFileInfo(NodeBrowseActivity.this, position);	
-							quickAction.dismiss();
+							mAdapter.showFileInfo(NodeBrowseActivity.this, position, isFile);	
+							mQuickAction.dismiss();
 						}
 					});
 		}
 		// shows the quick action window on the screen
-		quickAction.show();
+		mQuickAction.show();
 
 		return false;
 	}
+	
 }

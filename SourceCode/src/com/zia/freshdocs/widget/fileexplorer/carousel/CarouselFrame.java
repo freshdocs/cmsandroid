@@ -1,6 +1,5 @@
 package com.zia.freshdocs.widget.fileexplorer.carousel;
 
-import android.R.color;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.util.AttributeSet;
