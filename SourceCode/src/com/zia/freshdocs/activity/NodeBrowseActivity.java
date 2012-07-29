@@ -42,7 +42,6 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ListView;
-import android.widget.PopupWindow;
 
 import com.zia.freshdocs.Constants;
 import com.zia.freshdocs.Constants.NetworkStatus;
@@ -202,13 +201,13 @@ public class NodeBrowseActivity extends DashboardActivity implements OnItemLongC
 		mAdapter.setCmis(cmis);
 		setListAdapter(mAdapter);
 
-		if (cmis != null) {
-			Resources res = getResources();
-			StringBuilder title = new StringBuilder(
-					res.getString(R.string.app_name)).append(" - ").append(
-					cmis.getPrefs().getHostname());
-			setTitle(title.toString());
-		}
+//		if (cmis != null) {
+//			Resources res = getResources();
+//			StringBuilder title = new StringBuilder(
+//					res.getString(R.string.app_name)).append(" - ").append(
+//					cmis.getPrefs().getHostname());
+//			setTitle(title.toString());
+//		}
 	}	
 
 	@Override

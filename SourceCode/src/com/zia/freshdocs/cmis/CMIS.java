@@ -69,21 +69,21 @@ public class CMIS {
 	protected static final String QUERY_URI = ALF_SERVICE_URI + "/api/query";
 	protected static final String QUERY_URI_1_0 = ALF_SERVICE_URI + "/cmis/queries";
 
-	private CMISHost _prefs;
-	private CMISParser _parser;
-	private String _ticket;
-	private String _version;
-	private NetworkStatus _networkStatus;
+	private CMISHost mPrefs;
+	private CMISParser mParser;
+	private String mTicket;
+	private String mVersion;
+	private NetworkStatus mNetworkStatus;
 
 	public CMIS(CMISHost prefs) {
 		super();
-		_prefs = prefs;
-		_networkStatus = NetworkStatus.OK;
+		mPrefs = prefs;
+		mNetworkStatus = NetworkStatus.OK;
 	}
 
 	public String authenticate() {
-		InputStream res = get(String.format(LOGIN_URI, _prefs.getUsername(),
-				_prefs.getPassword()));
+		InputStream res = get(String.format(LOGIN_URI, mPrefs.getUsername(),
+				mPrefs.getPassword()));
 
 		if (res != null) {
 			DocumentBuilder docBuilder = null;
@@ -91,7 +91,7 @@ public class CMIS {
 				docBuilder = DocumentBuilderFactory.newInstance()
 						.newDocumentBuilder();
 				Document doc = docBuilder.parse(res);
-				_ticket = doc.getDocumentElement().getFirstChild()
+				mTicket = doc.getDocumentElement().getFirstChild()
 						.getNodeValue();
 			} catch (Exception e) {
 				Log.e(CMIS.class.getSimpleName(),
@@ -99,7 +99,7 @@ public class CMIS {
 			}
 		}
 
-		return _ticket;
+		return mTicket;
 	}
 
 	public NodeRef[] getCompanyHome() {
@@ -107,13 +107,13 @@ public class CMIS {
 		if (res != null) {
 			CMISParser parser = new CMISParserBase();
 			CMISInfo cmisInfo = parser.getCMISInfo(res);
-			_version = cmisInfo.getVersion();
+			mVersion = cmisInfo.getVersion();
 
 			// This should probably be a factory method
-			if (_version.equals("1.0")) {
-				_parser = new CMISParser10();
+			if (mVersion.equals("1.0")) {
+				mParser = new CMISParser10();
 			} else {
-				_parser = new CMISParser06();
+				mParser = new CMISParser06();
 			}
 
 			try {
@@ -121,7 +121,7 @@ public class CMIS {
 				StringBuilder buf = new StringBuilder(
 						new URL(rootUrl).getPath());
 				String path = buf.toString();
-				String rootURI = _prefs.getWebappRoot();
+				String rootURI = mPrefs.getWebappRoot();
 
 				if (buf.toString().startsWith(rootURI)) {
 					path = buf.substring(rootURI.length());
@@ -129,7 +129,7 @@ public class CMIS {
 
 				res = get(path);
 				if (res != null) {
-					return _parser.parseChildren(res);
+					return mParser.parseChildren(res);
 				}
 			} catch (MalformedURLException e) {
 				Log.e(CMIS.class.getSimpleName(), "Error parsing root uri", e);
@@ -142,18 +142,18 @@ public class CMIS {
 	public NodeRef[] getChildren(String uuid) {
 		InputStream res = get(String.format(CHILDREN_URI, uuid));
 		if (res != null) {
-			return _parser.parseChildren(res);
+			return mParser.parseChildren(res);
 		}
 
 		return null;
 	}
 
 	public NodeRef[] query(String xmlQuery) {
-		String uri = String.format(_version.equals("1.0") ? QUERY_URI_1_0
+		String uri = String.format(mVersion.equals("1.0") ? QUERY_URI_1_0
 				: QUERY_URI);
 		InputStream res = post(uri, xmlQuery, CMIS_QUERY_TYPE);
 		if (res != null) {
-			return _parser.parseChildren(res);
+			return mParser.parseChildren(res);
 		}
 
 		return null;
@@ -161,7 +161,7 @@ public class CMIS {
 
 	protected String buildRelativeURI(String path) {
 		StringBuilder uri = new StringBuilder();
-		String rootURI = _prefs.getWebappRoot();
+		String rootURI = mPrefs.getWebappRoot();
 
 		if (!path.startsWith(rootURI)) {
 			if (rootURI.endsWith("/")) {
@@ -173,8 +173,8 @@ public class CMIS {
 
 		uri.append(path);
 
-		if (_ticket != null) {
-			uri.append("?alf_ticket=").append(_ticket);
+		if (mTicket != null) {
+			uri.append("?alf_ticket=").append(mTicket);
 		}
 
 		return uri.toString();
@@ -204,17 +204,17 @@ public class CMIS {
 			// registers schemes for both http and https
 			SchemeRegistry registry = new SchemeRegistry();
 			registry.register(new Scheme("http", PlainSocketFactory
-					.getSocketFactory(), _prefs.getPort()));
+					.getSocketFactory(), mPrefs.getPort()));
 			registry.register(new Scheme("https", new EasySSLSocketFactory(),
-					_prefs.getPort()));
+					mPrefs.getPort()));
 			ThreadSafeClientConnManager manager = new ThreadSafeClientConnManager(
 					params, registry);
 
-			String url = new URL(_prefs.isSSL() ? "https" : "http",
-					_prefs.getHostname(), buildRelativeURI(path)).toString();
+			String url = new URL(mPrefs.isSSL() ? "https" : "http",
+					mPrefs.getHostname(), buildRelativeURI(path)).toString();
 			HttpClient client = new DefaultHttpClient(manager, params);
 			client.getParams();
-			_networkStatus = NetworkStatus.OK;
+			mNetworkStatus = NetworkStatus.OK;
 
 			HttpRequestBase request = null;
 
@@ -241,41 +241,41 @@ public class CMIS {
 					// Just return the whole chunk
 					return entity.getContent();
 				} else if (statusCode == HttpStatus.SC_UNAUTHORIZED) {
-					_networkStatus = NetworkStatus.CREDENTIALS_ERROR;
+					mNetworkStatus = NetworkStatus.CREDENTIALS_ERROR;
 				}
 			} catch (Exception ex) {
 				Log.e(CMIS.class.getName(), "Get method error", ex);
-				_networkStatus = NetworkStatus.CONNECTION_ERROR;
+				mNetworkStatus = NetworkStatus.CONNECTION_ERROR;
 			}
 		} catch (Exception ex) {
 			Log.e(CMIS.class.getName(), "Get method error", ex);
-			_networkStatus = NetworkStatus.UNKNOWN_ERROR;
+			mNetworkStatus = NetworkStatus.UNKNOWN_ERROR;
 		}
 
 		return null;
 	}
 
 	public String getTicket() {
-		return _ticket;
+		return mTicket;
 	}
 
 	public String getVersion() {
-		return _version;
+		return mVersion;
 	}
 
 	public void setVersion(String version) {
-		this._version = version;
+		this.mVersion = version;
 	}
 
 	public NetworkStatus getNetworkStatus() {
-		return _networkStatus;
+		return mNetworkStatus;
 	}
 
 	public CMISHost getPrefs() {
-		return _prefs;
+		return mPrefs;
 	}
 
 	public void setPrefs(CMISHost prefs) {
-		this._prefs = prefs;
+		this.mPrefs = prefs;
 	}
 }

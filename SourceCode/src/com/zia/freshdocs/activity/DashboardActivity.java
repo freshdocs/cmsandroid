@@ -178,7 +178,7 @@ public void onClickHome (View v)
 
 public void onClickSearch (View v)
 {
-    startActivity (new Intent(getApplicationContext(), SearchActivity.class));
+	onSearchRequested();
 }
 
 /**

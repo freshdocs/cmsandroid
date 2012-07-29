@@ -25,27 +25,27 @@ package com.zia.freshdocs.cmis;
 
 public class CMISInfo
 {
-	private String _version;
-	private String _rootURI;
+	private String mVersion;
+	private String mRootURI;
 
 	public String getVersion()
 	{
-		return _version;
+		return mVersion;
 	}
 
 	public void setVersion(String version)
 	{
-		this._version = version;
+		this.mVersion = version;
 	}
 
 	public String getRootURI()
 	{
-		return _rootURI;
+		return mRootURI;
 	}
 
 	public void setRootURI(String rootURI)
 	{
-		this._rootURI = rootURI;
+		this.mRootURI = rootURI;
 	}
 
 }
