@@ -42,6 +42,9 @@ public class NodeRef implements Serializable
 	private String _version;
 	private long _contentLength;
 	private boolean _isFolder;
+	private String mCreateBy;
+	private String mObjectId;
+	private String mParentId;
 
 	public String getContent()
 	{
@@ -121,6 +124,48 @@ public class NodeRef implements Serializable
 	public void setVersion(String version)
 	{
 		this._version = version;
+	}
+
+	/**
+	 * @return the mCreateBy
+	 */
+	public String getCreateBy() {
+		return mCreateBy;
+	}
+
+	/**
+	 * @param mCreateBy the mCreateBy to set
+	 */
+	public void setCreateBy(String mCreateBy) {
+		this.mCreateBy = mCreateBy;
+	}
+
+	/**
+	 * @return the mObjectId
+	 */
+	public String getObjectId() {
+		return mObjectId;
+	}
+
+	/**
+	 * @param mObjectId the mObjectId to set
+	 */
+	public void setObjectId(String mObjectId) {
+		this.mObjectId = mObjectId;
+	}
+
+	/**
+	 * @return the mParentId
+	 */
+	public String getParentId() {
+		return mParentId;
+	}
+
+	/**
+	 * @param mParentId the mParentId to set
+	 */
+	public void setParentId(String mParentId) {
+		this.mParentId = mParentId;
 	}
 
 	@Override

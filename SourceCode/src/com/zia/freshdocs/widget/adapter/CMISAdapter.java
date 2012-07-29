@@ -87,13 +87,13 @@ import com.zia.freshdocs.widget.UITableView;
 public class CMISAdapter extends ArrayAdapter<NodeRef> {
 	private static final int BUF_SIZE = 16384;
 
-	private Pair<String, NodeRef[]> _currentState = new Pair<String, NodeRef[]>(
+	private Pair<String, NodeRef[]> mCurrentState = new Pair<String, NodeRef[]>(
 			null, null);
-	private Stack<Pair<String, NodeRef[]>> _stack = new Stack<Pair<String, NodeRef[]>>();
-	private CMIS _cmis;
-	private ProgressDialog _progressDlg = null;
-	private ChildDownloadThread _dlThread = null;
-	private boolean _favoritesView = false;
+	private Stack<Pair<String, NodeRef[]>> mStack = new Stack<Pair<String, NodeRef[]>>();
+	private CMIS mCmis;
+	private ProgressDialog mProgressDlg = null;
+	private ChildDownloadThread mDlThread = null;
+	private boolean mFavoritesView = false;
 
 	public CMISAdapter(Context context, int textViewResourceId,
 			NodeRef[] objects) {
@@ -109,23 +109,23 @@ public class CMISAdapter extends ArrayAdapter<NodeRef> {
 	}
 
 	public CMIS getCmis() {
-		return _cmis;
+		return mCmis;
 	}
 
 	public void setCmis(CMIS cmis) {
-		this._cmis = cmis;
+		this.mCmis = cmis;
 	}
 
 	public boolean isFavoritesView() {
-		return _favoritesView;
+		return mFavoritesView;
 	}
 
 	public void setFavoritesView(boolean favoritesView) {
-		this._favoritesView = favoritesView;
+		this.mFavoritesView = favoritesView;
 	}
 
 	public void refresh() {
-		getChildren(_currentState.getFirst());
+		getChildren(mCurrentState.getFirst());
 	}
 
 	/**
@@ -135,18 +135,18 @@ public class CMISAdapter extends ArrayAdapter<NodeRef> {
 	public void home() {
 		startProgressDlg(true);
 
-		_dlThread = new ChildDownloadThread(new Handler() {
+		mDlThread = new ChildDownloadThread(new Handler() {
 			public void handleMessage(Message msg) {
 				// Save reference to current entry
-				_stack.clear();
+				mStack.clear();
 
-				NodeRef[] companyHome = (NodeRef[]) _dlThread.getResult();
+				NodeRef[] companyHome = (NodeRef[]) mDlThread.getResult();
 
 				if (companyHome != null) {
 					dismissProgressDlg();
 
 					// Get Company Home children
-					_currentState = new Pair<String, NodeRef[]>("", companyHome);
+					mCurrentState = new Pair<String, NodeRef[]>("", companyHome);
 					populateList(companyHome);
 				} else {
 					CMISApplication app = (CMISApplication) getContext()
@@ -156,10 +156,10 @@ public class CMISAdapter extends ArrayAdapter<NodeRef> {
 			}
 		}, new Downloadable() {
 			public Object execute() {
-				return _cmis.getCompanyHome();
+				return mCmis.getCompanyHome();
 			}
 		});
-		_dlThread.start();
+		mDlThread.start();
 	}
 
 	public boolean isFolder(int position) {
@@ -167,13 +167,13 @@ public class CMISAdapter extends ArrayAdapter<NodeRef> {
 	}
 
 	public boolean hasPrevious() {
-		return _stack.size() > 0;
+		return mStack.size() > 0;
 	}
 
 	public void previous() {
-		if (_stack.size() > 0) {
-			_currentState = _stack.pop();
-			populateList(_currentState.getSecond());
+		if (mStack.size() > 0) {
+			mCurrentState = mStack.pop();
+			populateList(mCurrentState.getSecond());
 		}
 	}
 
@@ -188,9 +188,9 @@ public class CMISAdapter extends ArrayAdapter<NodeRef> {
 
 		// For folders display the contents for the specified URI
 		if (ref.isFolder()) {
-			_stack.push(_currentState);
+			mStack.push(mCurrentState);
 			String uuid = ref.getContent();
-			_currentState = new Pair<String, NodeRef[]>(uuid, null);
+			mCurrentState = new Pair<String, NodeRef[]>(uuid, null);
 			getChildren(uuid);
 		}
 		// For non-folders try a download (if there is an external storage card)
@@ -203,14 +203,14 @@ public class CMISAdapter extends ArrayAdapter<NodeRef> {
 						if (done) {
 							dismissProgressDlg();
 
-							File file = (File) _dlThread.getResult();
+							File file = (File) mDlThread.getResult();
 							if (file != null) {
 								viewContent(file, ref);
 							}
 						} else {
 							int value = msg.getData().getInt("progress");
 							if (value > 0) {
-								_progressDlg.setProgress(value);
+								mProgressDlg.setProgress(value);
 							}
 						}
 					}
@@ -235,7 +235,7 @@ public class CMISAdapter extends ArrayAdapter<NodeRef> {
 				if (done) {
 					dismissProgressDlg();
 
-					File file = (File) _dlThread.getResult();
+					File file = (File) mDlThread.getResult();
 
 					if (file != null) {
 						Resources res = context.getResources();
@@ -264,7 +264,7 @@ public class CMISAdapter extends ArrayAdapter<NodeRef> {
 				} else {
 					int value = msg.getData().getInt("progress");
 					if (value > 0) {
-						_progressDlg.setProgress(value);
+						mProgressDlg.setProgress(value);
 					}
 				}
 			}
@@ -309,7 +309,7 @@ public class CMISAdapter extends ArrayAdapter<NodeRef> {
 			favorites.remove(ref);
 			prefsMgr.storeFavorites(context, favorites);
 
-			if (_favoritesView) {
+			if (mFavoritesView) {
 				remove(ref);
 				notifyDataSetChanged();
 			}
@@ -320,7 +320,7 @@ public class CMISAdapter extends ArrayAdapter<NodeRef> {
 					if (done) {
 						dismissProgressDlg();
 
-						File file = (File) _dlThread.getResult();
+						File file = (File) mDlThread.getResult();
 
 						if (file != null) {
 							favorites.add(ref);
@@ -329,7 +329,7 @@ public class CMISAdapter extends ArrayAdapter<NodeRef> {
 					} else {
 						int value = msg.getData().getInt("progress");
 						if (value > 0) {
-							_progressDlg.setProgress(value);
+							mProgressDlg.setProgress(value);
 						}
 					}
 				}
@@ -372,6 +372,10 @@ public class CMISAdapter extends ArrayAdapter<NodeRef> {
 	        	viewItem = Utils.createCustomView(context, context.getString(R.string.str_name), ref.getName());
 	    		tableView.addViewItem(viewItem);
 	        }
+	        if(ref.getCreateBy() != null){
+	        	viewItem = Utils.createCustomView(context, context.getString(R.string.str_created_by), ref.getCreateBy());
+	    		tableView.addViewItem(viewItem);
+	        }
 	        
 	        if(ref.getLastModificationDate() != null){
 	        	viewItem = Utils.createCustomView(context, context.getString(R.string.str_last_modification_date), ref.getLastModificationDate());
@@ -393,8 +397,18 @@ public class CMISAdapter extends ArrayAdapter<NodeRef> {
 	     		tableView.addViewItem(viewItem);
 	        }
 	        
+	        if(ref.getObjectId() != null){
+	        	viewItem = Utils.createCustomView(context, context.getString(R.string.str_object_id), ref.getObjectId());
+	     		tableView.addViewItem(viewItem);
+	        }
+	        
+	        if(ref.getParentId() != null){
+	        	viewItem = Utils.createCustomView(context, context.getString(R.string.str_parent_id), ref.getParentId());
+	     		tableView.addViewItem(viewItem);
+	        }
+	        
 	        if(ref.getVersion() != null){
-	        	viewItem = Utils.createCustomView(context, context.getString(R.string.str_content_type), ref.getVersion());
+	        	viewItem = Utils.createCustomView(context, context.getString(R.string.str_version), ref.getVersion());
 	     		tableView.addViewItem(viewItem);
 	        }
 	        
@@ -414,9 +428,9 @@ public class CMISAdapter extends ArrayAdapter<NodeRef> {
 	 */
 	protected void downloadContent(final NodeRef ref, final Handler handler) {
 		startProgressDlg(false);
-		_progressDlg.setMax(Long.valueOf(ref.getContentLength()).intValue());
+		mProgressDlg.setMax(Long.valueOf(ref.getContentLength()).intValue());
 
-		_dlThread = new ChildDownloadThread(handler, new Downloadable() {
+		mDlThread = new ChildDownloadThread(handler, new Downloadable() {
 			public Object execute() {
 				File f = null;
 
@@ -432,7 +446,7 @@ public class CMISAdapter extends ArrayAdapter<NodeRef> {
 						Thread.currentThread().setPriority(Thread.MIN_PRIORITY);
 
 						FileOutputStream fos = new FileOutputStream(f);
-						InputStream is = _cmis.get(url.getPath());
+						InputStream is = mCmis.get(url.getPath());
 
 						byte[] buffer = new byte[BUF_SIZE];
 						int len = is.read(buffer);
@@ -468,12 +482,12 @@ public class CMISAdapter extends ArrayAdapter<NodeRef> {
 				return f;
 			}
 		});
-		_dlThread.start();
+		mDlThread.start();
 	}
 
 	public void interrupt() {
-		if (_dlThread != null && _dlThread.isAlive()) {
-			_dlThread.interrupt();
+		if (mDlThread != null && mDlThread.isAlive()) {
+			mDlThread.interrupt();
 		}
 	}
 
@@ -510,39 +524,39 @@ public class CMISAdapter extends ArrayAdapter<NodeRef> {
 	protected void getChildren(final String uuid) {
 		startProgressDlg(true);
 
-		_dlThread = new ChildDownloadThread(_resultHandler, new Downloadable() {
+		mDlThread = new ChildDownloadThread(mResultHandler, new Downloadable() {
 			public Object execute() {
-				return _cmis.getChildren(uuid);
+				return mCmis.getChildren(uuid);
 			}
 		});
-		_dlThread.start();
+		mDlThread.start();
 	}
 
 	protected void startProgressDlg(boolean indeterminate) {
 		Context context = getContext();
 		Resources res = context.getResources();
 
-		if (_progressDlg == null || !_progressDlg.isShowing()) {
-			_progressDlg = new ProgressDialog(context);
-			_progressDlg
+		if (mProgressDlg == null || !mProgressDlg.isShowing()) {
+			mProgressDlg = new ProgressDialog(context);
+			mProgressDlg
 					.setProgressStyle(indeterminate ? ProgressDialog.STYLE_SPINNER
 							: ProgressDialog.STYLE_HORIZONTAL);
-			_progressDlg.setMessage(res.getString(R.string.loading));
-			_progressDlg.setTitle("");
-			_progressDlg.setCancelable(true);
-			_progressDlg.setIndeterminate(indeterminate);
-			_progressDlg.setOnCancelListener(new OnCancelListener() {
+			mProgressDlg.setMessage(res.getString(R.string.loading));
+			mProgressDlg.setTitle("");
+			mProgressDlg.setCancelable(true);
+			mProgressDlg.setIndeterminate(indeterminate);
+			mProgressDlg.setOnCancelListener(new OnCancelListener() {
 				public void onCancel(DialogInterface dialog) {
 					interrupt();
 				}
 			});
-			_progressDlg.show();
+			mProgressDlg.show();
 		}
 	}
 
 	protected void dismissProgressDlg() {
-		if (_progressDlg != null && _progressDlg.isShowing()) {
-			_progressDlg.dismiss();
+		if (mProgressDlg != null && mProgressDlg.isShowing()) {
+			mProgressDlg.dismiss();
 		}
 	}
 
@@ -554,17 +568,17 @@ public class CMISAdapter extends ArrayAdapter<NodeRef> {
 	public void query(final String term) {
 		startProgressDlg(true);
 
-		_dlThread = new ChildDownloadThread(_resultHandler, new Downloadable() {
+		mDlThread = new ChildDownloadThread(mResultHandler, new Downloadable() {
 			public Object execute() {
 				Context context = getContext();
 				Resources res = context.getResources();
-				InputStream is = res.openRawResource(_cmis.getVersion()
+				InputStream is = res.openRawResource(mCmis.getVersion()
 						.contains("0.6") ? R.raw.query_0_6 : R.raw.query_1_0);
 				String xml = null;
 
 				try {
 					xml = String.format(IOUtils.toString(is), term, term);
-					return _cmis.query(xml);
+					return mCmis.query(xml);
 				} catch (IOException e) {
 					Log.e(CMISAdapter.class.getSimpleName(), "", e);
 				}
@@ -572,7 +586,7 @@ public class CMISAdapter extends ArrayAdapter<NodeRef> {
 				return null;
 			}
 		});
-		_dlThread.start();
+		mDlThread.start();
 
 	}
 
@@ -652,15 +666,15 @@ public class CMISAdapter extends ArrayAdapter<NodeRef> {
 		}
 	}
 
-	final Handler _resultHandler = new Handler() {
+	final Handler mResultHandler = new Handler() {
 		public void handleMessage(Message msg) {
 			dismissProgressDlg();
 
 			boolean done = msg.getData().getBoolean("done");
 			if (done) {
-				NodeRef[] nodes = (NodeRef[]) _dlThread.getResult();
-				_currentState = new Pair<String, NodeRef[]>(
-						_currentState.getFirst(), nodes);
+				NodeRef[] nodes = (NodeRef[]) mDlThread.getResult();
+				mCurrentState = new Pair<String, NodeRef[]>(
+						mCurrentState.getFirst(), nodes);
 				populateList(nodes);
 			}
 		}

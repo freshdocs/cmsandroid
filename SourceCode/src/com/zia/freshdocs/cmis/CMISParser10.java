@@ -127,7 +127,22 @@ public class CMISParser10 extends CMISParserBase
 					if(attrValue.equals("cmis:versionLabel"))
 					{
 						nodeRef.setVersion(cmisProperty.elementTextTrim("value"));
-					}					
+					}
+					
+					if(attrValue.equals("cmis:createdBy"))
+					{
+						nodeRef.setCreateBy(cmisProperty.elementTextTrim("value"));
+					}
+					
+					if(attrValue.equals("cmis:objectId"))
+					{
+						nodeRef.setObjectId(cmisProperty.elementTextTrim("value"));
+					}
+					
+					if(attrValue.equals("cmis:parentId"))
+					{
+						nodeRef.setParentId(cmisProperty.elementTextTrim("value"));
+					}
 					
 					if(attrValue.equals("cmis:contentStreamLength"))
 					{

@@ -84,11 +84,13 @@
     <string name="str_folder_information">Folder information</string>
     <string name="str_back">Back</string>
     <string name="str_name">Name</string>
+    <string name="str_created_by">Created by</string>
     <string name="str_last_modification_date">Last Modification Date</string>
     <string name="str_last_modified_by">Last Modified By</string>
     <string name="str_version">Version</string>
     <string name="str_content_type">Content Type</string>
-    
+    <string name="str_object_id">Object Id</string>
+    <string name="str_parent_id">Parent Id</string>
     <string name="str_content">Content</string> 
 	
 
