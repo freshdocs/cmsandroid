@@ -23,25 +23,35 @@
  ******************************************************************************/
 package com.zia.freshdocs.activity;
 
+import java.io.IOException;
 import java.util.Set;
 
+import org.apache.http.client.ClientProtocolException;
+
+import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
-import android.content.res.Resources;
 import android.graphics.Rect;
 import android.os.Bundle;
-import android.view.ContextMenu;
-import android.view.ContextMenu.ContextMenuInfo;
+import android.os.Handler;
+import android.os.Message;
+import android.view.Gravity;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.WindowManager;
 import android.widget.AdapterView;
-import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.AdapterView.OnItemLongClickListener;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.PopupWindow;
+import android.widget.TextView;
 
 import com.zia.freshdocs.Constants;
 import com.zia.freshdocs.Constants.NetworkStatus;
@@ -53,6 +63,7 @@ import com.zia.freshdocs.preference.CMISPreferencesManager;
 import com.zia.freshdocs.widget.adapter.CMISAdapter;
 import com.zia.freshdocs.widget.quickaction.QuickActionWindow;
 
+@SuppressLint("HandlerLeak")
 public class NodeBrowseActivity extends DashboardActivity implements OnItemLongClickListener
 {
 	private static final String HOST_ID_KEY = "id";
@@ -60,6 +71,13 @@ public class NodeBrowseActivity extends DashboardActivity implements OnItemLongC
 	protected CMISAdapter mAdapter;
 	protected boolean mAdapterInitialized = false;
 	private QuickActionWindow mQuickAction;
+	private NodeRef mTempParent;
+	private Thread mRequestThread;
+	private PopupWindow mPopUp;
+	private final int REFRESH = 0;
+	private final int CLOSE_DIALOG = 1;
+	private final int SHOW_DIALOG = 2;
+	private String mFolderName, mFolderDescription;
 
 	/** Called when the activity is first created. */
 	@Override
@@ -114,23 +132,26 @@ public class NodeBrowseActivity extends DashboardActivity implements OnItemLongC
 		inflater.inflate(R.menu.browser, menu);
 		return true;
 	}
+	
+	@Override
+	public boolean onPrepareOptionsMenu(Menu menu) {
+		// Remove About
+		menu.removeItem(3);
+		return super.onPrepareOptionsMenu(menu);
+	}
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case R.id.menu_item_refresh:
-			mAdapter.refresh();
+			mHandler.sendEmptyMessage(REFRESH);
 			return true;
-		case R.id.menu_item_search:
-			onSearch();
+		case R.id.menu_item_create_folder:
+			mHandler.sendEmptyMessage(SHOW_DIALOG);
 			return true;
 		case R.id.menu_item_favorites:
 			Intent favoritesIntent = new Intent(this, FavoritesActivity.class);
 			startActivityForResult(favoritesIntent, 0);
-			return true;
-		case R.id.menu_item_about:
-			Intent aboutIntent = new Intent(this, AboutActivity.class);
-			startActivityForResult(aboutIntent, 0);
 			return true;
 		case R.id.menu_item_quit:
 			onQuit();
@@ -140,6 +161,21 @@ public class NodeBrowseActivity extends DashboardActivity implements OnItemLongC
 		}
 	}
 	
+	Handler mHandler = new Handler() {
+		public void handleMessage(Message msg) {
+			switch (msg.what) {
+			case REFRESH:
+				mAdapter.refresh();
+				break;
+			case CLOSE_DIALOG:
+				mPopUp.dismiss();
+				break;
+			case SHOW_DIALOG:
+				showConfirmDialog();
+				break;
+			}
+		}};
+	
 	protected void onQuit() {
 		Intent quitIntent = new Intent();
 		quitIntent.putExtra(Constants.QUIT, true);
@@ -147,46 +183,6 @@ public class NodeBrowseActivity extends DashboardActivity implements OnItemLongC
 		finish();
 	}
 	
-	@Override
-	public void onCreateContextMenu(ContextMenu menu, View v,
-			ContextMenuInfo menuInfo) {
-		int position = ((AdapterContextMenuInfo) menuInfo).position;
-
-		if (!mAdapter.isFolder(position)) {
-			MenuInflater inflater = getMenuInflater();
-			inflater.inflate(R.menu.node_context_menu, menu);
-			MenuItem item = menu.findItem(R.id.menu_item_favorite);
-
-			NodeRef ref = mAdapter.getItem(position);
-			CMISPreferencesManager prefsMgr = CMISPreferencesManager
-					.getInstance();
-			Set<NodeRef> favorites = prefsMgr.getFavorites(this);
-
-			if (favorites.contains(ref)) {
-				item.setTitle(R.string.remove_favorite);
-			}
-
-		}
-	}
-
-	@Override
-	public boolean onContextItemSelected(MenuItem item)
-	{
-		AdapterContextMenuInfo info = (AdapterContextMenuInfo) item.getMenuInfo();
-		
-		switch (item.getItemId())
-		{
-		case R.id.menu_item_send:	
-			mAdapter.shareContent(info.position);
-			return true;
-		case R.id.menu_item_favorite:
-			mAdapter.toggleFavorite(info.position);
-			return true;
-		}
-		
-		return false;
-	}
-
 	protected void initializeListView() {
 		CMISApplication app = (CMISApplication) getApplication();
 		CMIS cmis = app.getCMIS();
@@ -200,14 +196,6 @@ public class NodeBrowseActivity extends DashboardActivity implements OnItemLongC
 		mAdapter = new CMISAdapter(this, R.layout.node_ref_item, R.id.node_ref_label);
 		mAdapter.setCmis(cmis);
 		setListAdapter(mAdapter);
-
-//		if (cmis != null) {
-//			Resources res = getResources();
-//			StringBuilder title = new StringBuilder(
-//					res.getString(R.string.app_name)).append(" - ").append(
-//					cmis.getPrefs().getHostname());
-//			setTitle(title.toString());
-//		}
 	}	
 
 	@Override
@@ -224,6 +212,10 @@ public class NodeBrowseActivity extends DashboardActivity implements OnItemLongC
 	@Override
 	protected void onListItemClick(ListView l, View v, int position, long id) {
 		mAdapter.getChildren(position);
+		NodeRef ref = mAdapter.getItem(position);
+		// Get parent folder
+		if(ref.isFolder())
+			mTempParent = mAdapter.getItem(position);
 	}
 
 	protected void onSearch() {
@@ -236,6 +228,67 @@ public class NodeBrowseActivity extends DashboardActivity implements OnItemLongC
 
 		if (data != null && data.hasExtra(Constants.QUIT)) {
 			onQuit();
+		}
+	}
+	
+	private void showConfirmDialog() {
+		try {
+			//We need to get the instance of the LayoutInflater, use the context of this activity
+	        LayoutInflater inflater = (LayoutInflater) NodeBrowseActivity.this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+	        //Inflate the view from a predefined XML layout
+	        View layout = inflater.inflate(R.layout.create_folder_alfresco_dialog, null, false);
+	        // create a WRAP_CONTENT PopupWindow
+	        mPopUp = new PopupWindow(layout, WindowManager.LayoutParams.FILL_PARENT, WindowManager.LayoutParams.WRAP_CONTENT, true);
+	        // display the popup in the center
+	        mPopUp.showAtLocation(layout, Gravity.CENTER, 0, 0);
+	        
+	        TextView title = (TextView) layout.findViewById(R.id.dialog_title);
+	        title.setText(getString(R.string.str_create_folder));
+	        
+	        final EditText edtFolderName = (EditText) layout.findViewById(R.id.folder_name);
+	        final EditText edtFolderDescription = (EditText) layout.findViewById(R.id.folder_description);
+	        
+	        Button ok = (Button) layout.findViewById(R.id.btn_ok);
+	        ok.setOnClickListener(new OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					mFolderName = edtFolderName.getText().toString();
+					mFolderDescription = edtFolderDescription.getText().toString();
+					mHandler.sendEmptyMessage(CLOSE_DIALOG);
+					
+					mRequestThread = new Thread(new Runnable() {
+						public void run() {
+							synchronized (this) {
+								// Get folderId from its child
+								String folderID = mTempParent.getObjectId();
+								if(folderID != null){
+									folderID = folderID.substring(folderID.lastIndexOf("/") + 1, folderID.length());
+									try {
+										mAdapter.getCmis().createFolder(folderID, mFolderName, mFolderDescription);
+									} catch (ClientProtocolException e) {
+										e.printStackTrace();
+									} catch (IOException e) {
+										e.printStackTrace();
+									}
+									// Refresh content
+									mHandler.sendEmptyMessage(REFRESH);
+								}
+							}
+						}});
+					mRequestThread.start();
+				}
+			});
+	        
+	        Button cancel = (Button) layout.findViewById(R.id.btn_cancel);
+	        cancel.setOnClickListener(new OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					mHandler.sendEmptyMessage(CLOSE_DIALOG);
+				}
+			});
+	        
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 	}
 
@@ -311,5 +364,4 @@ public class NodeBrowseActivity extends DashboardActivity implements OnItemLongC
 
 		return false;
 	}
-	
 }

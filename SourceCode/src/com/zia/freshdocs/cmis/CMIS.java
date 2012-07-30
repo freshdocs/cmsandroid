@@ -23,6 +23,7 @@
  ******************************************************************************/
 package com.zia.freshdocs.cmis;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -35,6 +36,7 @@ import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.HttpVersion;
 import org.apache.http.StatusLine;
+import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
@@ -50,6 +52,7 @@ import org.apache.http.params.HttpParams;
 import org.apache.http.params.HttpProtocolParams;
 import org.w3c.dom.Document;
 
+import android.text.format.DateFormat;
 import android.util.Log;
 
 import com.zia.freshdocs.Constants.NetworkStatus;
@@ -68,6 +71,10 @@ public class CMIS {
 	protected static final String LOGIN_URI = ALF_SERVICE_URI + "/api/login?u=%s&pw=%s";
 	protected static final String QUERY_URI = ALF_SERVICE_URI + "/api/query";
 	protected static final String QUERY_URI_1_0 = ALF_SERVICE_URI + "/cmis/queries";
+	
+	
+	protected static final String CREATE_FOLDER_URI = "/alfresco/service/cmis/i/%s/children";
+	
 
 	private CMISHost mPrefs;
 	private CMISParser mParser;
@@ -138,7 +145,7 @@ public class CMIS {
 
 		return null;
 	}
-
+	
 	public NodeRef[] getChildren(String uuid) {
 		InputStream res = get(String.format(CHILDREN_URI, uuid));
 		if (res != null) {
@@ -199,7 +206,7 @@ public class CMIS {
 			HttpProtocolParams.setVersion(params, HttpVersion.HTTP_1_1);
 			HttpProtocolParams.setContentCharset(params, "utf-8");
 			params.setBooleanParameter("http.protocol.expect-continue", false);
-			params.setParameter("http.connection.timeout", new Integer(TIMEOUT));
+			params.setParameter("http.connection.timeout", Integer.valueOf(TIMEOUT));
 
 			// registers schemes for both http and https
 			SchemeRegistry registry = new SchemeRegistry();
@@ -254,6 +261,62 @@ public class CMIS {
 
 		return null;
 	}
+	
+	public void createFolder(String parentFolder, String folderName, String description)
+			throws ClientProtocolException, IOException {
+
+		  String path = String.format(CREATE_FOLDER_URI, parentFolder);
+		  String url = new URL(mPrefs.isSSL() ? "https" : "http",
+					mPrefs.getHostname(), buildRelativeURI(path)).toString();
+		  
+		  String contentType = "application/atom+xml;type=entry";
+		  String updateDate = DateFormat.format("yyyy-MM-ddThh:mm:sszzz", System.currentTimeMillis()).toString();
+		
+		  String xml = 
+				"<?xml version='1.0' encoding='utf-8'?>\n" +
+				"<entry xmlns=\"http://www.w3.org/2005/Atom\"\n" +  
+				"xmlns:app=\"http://www.w3.org/2007/app\"\n" +
+				"xmlns:cmisra=\"http://docs.oasis-open.org/ns/cmis/restatom/200908/\" xmlns:cmis=\"http://docs.oasis-open.org/ns/cmis/core/200908/\">\n" +
+				"<author>\n" +
+				"<name>admin</name>\n" +
+				"</author>\n" +
+				"<id>ignored</id>\n" +
+				"<summary>"+ description +"</summary>\n" +
+				"<title>"+ folderName +"</title>\n" +
+				"<updated>" + updateDate + "</updated>\n" +
+				"<cmisra:object>\n" +
+				"<cmis:properties>\n" +
+				"<cmis:propertyId propertyDefinitionId=\"cmis:objectTypeId\">\n" +
+				"<cmis:value>cmis:folder</cmis:value> \n" +
+				"</cmis:propertyId>\n" +
+				"<cmis:propertyString propertyDefinitionId=\"cmis:name\">\n" +
+				"<cmis:value></cmis:value>\n" +
+				"</cmis:propertyString>\n" +
+				"</cmis:properties>\n" +
+				"</cmisra:object>\n" +
+				"</entry>";
+		  
+		  DefaultHttpClient httpclient = new DefaultHttpClient();
+		
+		  HttpPost httppost = new HttpPost(url);
+		  httppost.setHeader("Content-type", contentType);
+		  
+		  StringEntity requestEntity = new StringEntity(xml, "UTF-8");
+		  httppost.setEntity(requestEntity);
+		
+		  
+		  System.out.println("executing request" + httppost.getRequestLine());
+		  HttpResponse response = httpclient.execute(httppost);
+		  HttpEntity entity = response.getEntity();
+		
+		  System.out.println("----------------------------------------");
+		  System.out.println(response.getStatusLine());
+	      
+	      // When HttpClient instance is no longer needed,
+	      // shut down the connection manager to ensure
+	      // immediate deallocation of all system resources
+	      httpclient.getConnectionManager().shutdown();
+	   }
 
 	public String getTicket() {
 		return mTicket;

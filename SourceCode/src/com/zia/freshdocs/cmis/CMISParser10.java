@@ -34,6 +34,8 @@ import org.dom4j.DocumentFactory;
 import org.dom4j.Element;
 import org.dom4j.io.SAXReader;
 
+import android.util.Log;
+
 import com.zia.freshdocs.model.NodeRef;
 
 public class CMISParser10 extends CMISParserBase 

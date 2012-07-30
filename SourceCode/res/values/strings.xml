@@ -92,7 +92,10 @@
     <string name="str_object_id">Object Id</string>
     <string name="str_parent_id">Parent Id</string>
     <string name="str_content">Content</string> 
-	
+    <string name="str_ok">Ok</string> 
+	<string name="str_cancel">Cancel</string> 
+	<string name="str_folder_name">Folder Name</string>
+	<string name="str_folder_description">Folder Description</string>
 
 	<string name="str_sort_files_folders">Choose how to sort files and folders</string>
     <string name="str_sorting_type">Sorting type</string>
@@ -110,7 +113,7 @@
     <string name="str_coundnt_find_fdf_viewer">Sorry, could not find a pdf viewer</string>
     <string name="str_coundnt_find_html_viewer">"Sorry, could not find a HTML viewer"</string>
     <string name="str_coundnt_find_to_open">Sorry, could not find anything to open </string>
-    <string name="str_create_folder">Create New Folder</string>
+    <string name="str_create_folder">New Folder</string>
     <string name="str_cant_create_folder">New folder was not created</string>
 
 </resources>

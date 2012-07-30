@@ -3,9 +3,9 @@
           android:title="@string/refresh" 
           android:icon="@drawable/refresh"/>
 
-    <item android:id="@+id/menu_item_search"
-          android:title="@string/search"
-          android:icon="@android:drawable/ic_menu_search"/>
+    <item android:id="@+id/menu_item_create_folder"
+          android:title="@string/str_create_folder"
+          android:icon="@android:drawable/ic_menu_add"/>
 
     <item android:id="@+id/menu_item_favorites"
           android:title="@string/favorites" 
