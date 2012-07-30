@@ -38,6 +38,7 @@ import org.apache.http.HttpVersion;
 import org.apache.http.StatusLine;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpRequestBase;
@@ -74,6 +75,10 @@ public class CMIS {
 	
 	
 	protected static final String CREATE_FOLDER_URI = "/alfresco/service/cmis/i/%s/children";
+	protected static final String DELETE_FOLDER_URI = "/alfresco/service/cmis/i/%s/descendants";
+	protected static final String DELETE_FILE_URI = "/alfresco/service/cmis/i/%s";
+	
+	 
 	
 
 	private CMISHost mPrefs;
@@ -233,7 +238,6 @@ public class CMIS {
 			}
 
 			try {
-
 				if (contentType != null) {
 					request.setHeader("Content-type", contentType);
 				}
@@ -260,6 +264,48 @@ public class CMIS {
 		}
 
 		return null;
+	}
+	
+	public void deleleFolder(String folderId) throws ClientProtocolException, IOException{
+		String path = String.format(DELETE_FOLDER_URI, folderId);
+		  String url = new URL(mPrefs.isSSL() ? "https" : "http",
+					mPrefs.getHostname(), buildRelativeURI(path)).toString();
+		  
+		  DefaultHttpClient httpclient = new DefaultHttpClient();
+			
+		  HttpDelete httpDelete = new HttpDelete(url);
+		  
+		  HttpResponse response = httpclient.execute(httpDelete);
+		  HttpEntity entity = response.getEntity();
+		  
+		  System.out.println("----------------------------------------");
+		  System.out.println(response.getStatusLine());
+	      
+	      // When HttpClient instance is no longer needed,
+	      // shut down the connection manager to ensure
+	      // immediate deallocation of all system resources
+	      httpclient.getConnectionManager().shutdown();
+	}
+	
+	public void deleleFile(String fileId) throws ClientProtocolException, IOException{
+		String path = String.format(DELETE_FILE_URI, fileId);
+		  String url = new URL(mPrefs.isSSL() ? "https" : "http",
+					mPrefs.getHostname(), buildRelativeURI(path)).toString();
+		  
+		  DefaultHttpClient httpclient = new DefaultHttpClient();
+			
+		  HttpDelete httpDelete = new HttpDelete(url);
+		  
+		  HttpResponse response = httpclient.execute(httpDelete);
+		  HttpEntity entity = response.getEntity();
+		  
+		  System.out.println("----------------------------------------");
+		  System.out.println(response.getStatusLine());
+	      
+	      // When HttpClient instance is no longer needed,
+	      // shut down the connection manager to ensure
+	      // immediate deallocation of all system resources
+	      httpclient.getConnectionManager().shutdown();
 	}
 	
 	public void createFolder(String parentFolder, String folderName, String description)

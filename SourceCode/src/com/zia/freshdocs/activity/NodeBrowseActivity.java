@@ -307,7 +307,7 @@ public class NodeBrowseActivity extends DashboardActivity implements OnItemLongC
 		// a new QuickActionWindow object
 		mQuickAction = new QuickActionWindow(
 				NodeBrowseActivity.this, view, rect);
-
+		// If file
 		if (!mAdapter.isFolder(position)) {
 			isFile = true;
 			NodeRef ref = mAdapter.getItem(position);
@@ -335,6 +335,33 @@ public class NodeBrowseActivity extends DashboardActivity implements OnItemLongC
 							mAdapter.toggleFavorite(position);
 						}
 					});
+			
+			mQuickAction.addItem(getResources().getDrawable(R.drawable.excel),
+					getString(R.string.str_delete),
+					new OnClickListener() {
+						public void onClick(View v) {
+							mRequestThread = new Thread(new Runnable() {
+								public void run() {
+									synchronized (this) {
+										String fileId = mAdapter.getItem(position).getObjectId();
+										if (fileId != null) {
+											fileId = fileId.substring(fileId.lastIndexOf("/") + 1,fileId.length());
+											try {
+												mAdapter.getCmis().deleleFile(fileId);
+											} catch (ClientProtocolException e) {
+												e.printStackTrace();
+											} catch (IOException e) {
+												e.printStackTrace();
+											}
+											mQuickAction.dismiss();
+											mHandler.sendEmptyMessage(REFRESH);
+										}
+									}
+								}
+							});
+							mRequestThread.start();
+						}
+					});
 
 			// Show file information
 
@@ -347,7 +374,7 @@ public class NodeBrowseActivity extends DashboardActivity implements OnItemLongC
 						}
 					});
 
-		} else {
+		} else { // If folder
 			isFile = false;
 			// Show folder information
 			mQuickAction.addItem(getResources().getDrawable(R.drawable.excel),
@@ -356,6 +383,34 @@ public class NodeBrowseActivity extends DashboardActivity implements OnItemLongC
 						public void onClick(View v) {
 							mAdapter.showFileInfo(NodeBrowseActivity.this, position, isFile);	
 							mQuickAction.dismiss();
+						}
+					});
+			
+			mQuickAction.addItem(getResources().getDrawable(R.drawable.excel),
+					getString(R.string.str_delete),
+					new OnClickListener() {
+						public void onClick(View v) {
+							mRequestThread = new Thread(new Runnable() {
+								public void run() {
+									synchronized (this) {
+										String folderId = mAdapter.getItem(
+												position).getObjectId();
+										if (folderId != null) {
+											folderId = folderId.substring(folderId.lastIndexOf("/") + 1,folderId.length());
+											try {
+												mAdapter.getCmis().deleleFolder(folderId);
+											} catch (ClientProtocolException e) {
+												e.printStackTrace();
+											} catch (IOException e) {
+												e.printStackTrace();
+											}
+											mQuickAction.dismiss();
+											mHandler.sendEmptyMessage(REFRESH);
+										}
+									}
+								}
+							});
+							mRequestThread.start();
 						}
 					});
 		}
