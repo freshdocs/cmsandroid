@@ -82,6 +82,7 @@
     <string name="str_change_text_color_setting">Change text color</string>
     <string name="str_file_information">File information</string>
     <string name="str_folder_information">Folder information</string>
+    <string name="str_upload">Upload</string>
     <string name="str_delete">Detele</string>
     <string name="str_back">Back</string>
     <string name="str_name">Name</string>

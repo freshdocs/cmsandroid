@@ -4,7 +4,7 @@
     android:versionCode="8"
     android:versionName="1.2" >
 
-    <uses-sdk android:minSdkVersion="4" />
+    <uses-sdk android:minSdkVersion="8" />
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
@@ -39,14 +39,6 @@
         <activity
             android:name=".activity.F6Activity"
             android:label="@string/title_feature6"
-            android:theme="@style/Theme.D1" />
-        <activity
-            android:name=".activity.AboutActivity"
-            android:label="@string/title_about"
-            android:theme="@style/Theme.D1" />
-        <activity
-            android:name=".activity.SearchActivity"
-            android:label="@string/title_search"
             android:theme="@style/Theme.D1" />
         <activity
             android:name=".activity.NodeBrowseActivity"

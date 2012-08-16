@@ -37,7 +37,9 @@
             android:contentDescription="@string/description_logo"
             android:src="@drawable/title_logo" />
 
-        <ImageView style="@style/TitleBarSeparator" />
+        <ImageView
+            style="@style/TitleBarSeparator"
+            android:contentDescription="TODO" />
 
         <TextView style="@style/TitleBarText" />
 
@@ -65,6 +67,7 @@
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
             android:layout_weight="1"
+            android:baselineAligned="false"
             android:orientation="horizontal"
             android:weightSum="2" >
 
@@ -88,7 +91,7 @@
             android:layout_height="fill_parent"
             android:layout_weight="1"
             android:orientation="horizontal"
-            android:weightSum="2" >
+            android:weightSum="2" android:baselineAligned="false">
 
             <FrameLayout
                 android:id="@+id/frame3"
@@ -110,7 +113,7 @@
             android:layout_height="fill_parent"
             android:layout_weight="1"
             android:orientation="horizontal"
-            android:weightSum="2" >
+            android:weightSum="2" android:baselineAligned="false">
 
             <FrameLayout
                 android:id="@+id/frame5"

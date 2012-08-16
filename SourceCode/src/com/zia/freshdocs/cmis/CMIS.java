@@ -23,6 +23,7 @@
  ******************************************************************************/
 package com.zia.freshdocs.cmis;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
@@ -46,11 +47,15 @@ import org.apache.http.conn.scheme.PlainSocketFactory;
 import org.apache.http.conn.scheme.Scheme;
 import org.apache.http.conn.scheme.SchemeRegistry;
 import org.apache.http.entity.StringEntity;
+import org.apache.http.entity.mime.MultipartEntity;
+import org.apache.http.entity.mime.content.FileBody;
+import org.apache.http.entity.mime.content.StringBody;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.impl.conn.tsccm.ThreadSafeClientConnManager;
 import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.HttpParams;
 import org.apache.http.params.HttpProtocolParams;
+import org.apache.http.util.EntityUtils;
 import org.w3c.dom.Document;
 
 import android.text.format.DateFormat;
@@ -78,9 +83,14 @@ public class CMIS {
 	protected static final String DELETE_FOLDER_URI = "/alfresco/service/cmis/i/%s/descendants";
 	protected static final String DELETE_FILE_URI = "/alfresco/service/cmis/i/%s";
 	
-	 
+	protected static final String UPLOAD_FILE_URI = "/alfresco/service/api/upload";
 	
-
+	protected static final String ADD_COMMENT_URI = "/alfresco/s/api/node/workspace/SpacesStore/%s/comments";
+	
+	protected static final String GET_RATING_URI = "/alfresco/service/api/node/workspace/SpacesStore/%s/ratings";
+	
+	protected static final String DELETE_COMMENT_URI = "/alfresco/service/api/comment/node/workspace/SpacesStore/%s";
+	
 	private CMISHost mPrefs;
 	private CMISParser mParser;
 	private String mTicket;
@@ -308,6 +318,153 @@ public class CMIS {
 	      httpclient.getConnectionManager().shutdown();
 	}
 	
+	public void addComment(String fileId, String title, String content) throws ClientProtocolException, IOException{
+		String json;
+		String path = String.format(ADD_COMMENT_URI, fileId);
+		 String url = new URL(mPrefs.isSSL() ? "https" : "http",
+					mPrefs.getHostname(), buildRelativeURI(path)).toString();
+		 DefaultHttpClient httpclient = new DefaultHttpClient();
+			
+		 HttpPost httppost = new HttpPost(url);
+		 
+		 String data = "{" 
+				 	+ "\"title\" : \"" + title + "\","
+				   + "\"content\" : \"" + content+ "\""
+					+ "}";
+		 
+		 StringEntity requestEntity = new StringEntity(data, "UTF-8");
+		  httppost.setEntity(requestEntity);
+		  httppost.setHeader("Content-type", "application/json'");
+		 
+		  Log.i("executing request" , String.valueOf(httppost.getRequestLine()));
+		  HttpResponse response = httpclient.execute(httppost);
+		  HttpEntity entity = response.getEntity();
+		
+		  System.out.println("----------------------------------------");
+		  System.out.println(response.getStatusLine());
+		  
+		  if (entity != null) {
+	        	 Log.i("response content length:", entity.getContentLength() + "");
+
+	            json = EntityUtils.toString(entity);
+	            
+	            Log.i("response content:" , json);
+	            
+	            response.getEntity().consumeContent();
+	         }
+	      
+	      // When HttpClient instance is no longer needed,
+	      // shut down the connection manager to ensure
+	      // immediate deallocation of all system resources
+	      httpclient.getConnectionManager().shutdown();
+		 
+	}
+	
+	public void getRating(String fileId) throws ClientProtocolException, IOException{
+		String json;
+		String path = String.format(GET_RATING_URI, fileId);
+		 String url = new URL(mPrefs.isSSL() ? "https" : "http",
+					mPrefs.getHostname(), buildRelativeURI(path)).toString();
+		 DefaultHttpClient httpclient = new DefaultHttpClient();
+			
+		 HttpGet httpGet = new HttpGet(url);
+		 
+//		 String data = "{" 
+//				 	+ "\"title\" : \"" + title + "\","
+//				   + "\"content\" : \"" + content+ "\""
+//					+ "}";
+		 
+//		 StringEntity requestEntity = new StringEntity(data, "UTF-8");
+//		  httpGet.setEntity(requestEntity);
+//		  httpGet.setHeader("Content-type", "application/json'");
+		 
+		  Log.i("executing request" , String.valueOf(httpGet.getRequestLine()));
+		  HttpResponse response = httpclient.execute(httpGet);
+		  HttpEntity entity = response.getEntity();
+		
+		  System.out.println("----------------------------------------");
+		  System.out.println(response.getStatusLine());
+		  
+		  if (entity != null) {
+	        	 Log.i("response content length:", entity.getContentLength() + "");
+
+	            json = EntityUtils.toString(entity);
+	            
+	            Log.i("response content:" , json);
+	            
+	            response.getEntity().consumeContent();
+	         }
+	      
+	      // When HttpClient instance is no longer needed,
+	      // shut down the connection manager to ensure
+	      // immediate deallocation of all system resources
+	      httpclient.getConnectionManager().shutdown();
+		 
+	}
+	
+	public void getComment(String fileId) throws ClientProtocolException, IOException{
+		String json;
+		String path = String.format(ADD_COMMENT_URI, fileId);
+		 String url = new URL(mPrefs.isSSL() ? "https" : "http",
+					mPrefs.getHostname(), buildRelativeURI(path)).toString();
+		 DefaultHttpClient httpclient = new DefaultHttpClient();
+			
+		 HttpGet httpGet = new HttpGet(url);
+		 
+//		 String data = "{" 
+//				 	+ "\"title\" : \"" + title + "\","
+//				   + "\"content\" : \"" + content+ "\""
+//					+ "}";
+		 
+//		 StringEntity requestEntity = new StringEntity(data, "UTF-8");
+//		  httpGet.setEntity(requestEntity);
+//		  httpGet.setHeader("Content-type", "application/json'");
+		 
+		  Log.i("executing request" , String.valueOf(httpGet.getRequestLine()));
+		  HttpResponse response = httpclient.execute(httpGet);
+		  HttpEntity entity = response.getEntity();
+		
+		  System.out.println("----------------------------------------");
+		  System.out.println(response.getStatusLine());
+		  
+		  if (entity != null) {
+	        	 Log.i("response content length:", entity.getContentLength() + "");
+
+	            json = EntityUtils.toString(entity);
+	            
+	            Log.i("response content:" , json);
+	            
+	            response.getEntity().consumeContent();
+	         }
+	      
+	      // When HttpClient instance is no longer needed,
+	      // shut down the connection manager to ensure
+	      // immediate deallocation of all system resources
+	      httpclient.getConnectionManager().shutdown();
+		 
+	}
+	
+	public void deleleComment(String fileId) throws ClientProtocolException, IOException{
+		String path = String.format(DELETE_COMMENT_URI, fileId);
+		  String url = new URL(mPrefs.isSSL() ? "https" : "http",
+					mPrefs.getHostname(), buildRelativeURI(path)).toString();
+		  
+		  DefaultHttpClient httpclient = new DefaultHttpClient();
+			
+		  HttpDelete httpDelete = new HttpDelete(url);
+		  
+		  HttpResponse response = httpclient.execute(httpDelete);
+		  HttpEntity entity = response.getEntity();
+		  
+		  System.out.println("----------------------------------------");
+		  System.out.println(response.getStatusLine());
+	      
+	      // When HttpClient instance is no longer needed,
+	      // shut down the connection manager to ensure
+	      // immediate deallocation of all system resources
+	      httpclient.getConnectionManager().shutdown();
+	}
+	
 	public void createFolder(String parentFolder, String folderName, String description)
 			throws ClientProtocolException, IOException {
 
@@ -363,6 +520,64 @@ public class CMIS {
 	      // immediate deallocation of all system resources
 	      httpclient.getConnectionManager().shutdown();
 	   }
+	
+	/**
+	* A simple example that uses HttpClient to execute an HTTP request against a
+	* target site that requires user authentication.
+	 * @throws MalformedURLException 
+	*/
+	
+	public String upload(File file, String siteId, String containerId, String uploadDirectory) throws MalformedURLException {
+
+	      String json = null;
+
+	      DefaultHttpClient httpclient = new DefaultHttpClient();
+
+          String url = new URL(mPrefs.isSSL() ? "https" : "http",mPrefs.getHostname(), "").toString();
+
+	      try {
+	         HttpPost httppost = new HttpPost(url + "/alfresco/service/api/upload?alf_ticket=" + mTicket);
+
+	         FileBody bin = new FileBody(file);
+	         StringBody siteid = new StringBody(siteId);
+	         StringBody containerid = new StringBody(containerId);
+	         StringBody uploaddirectory = new StringBody(uploadDirectory);
+
+	         MultipartEntity reqEntity = new MultipartEntity();
+	         reqEntity.addPart("filedata", bin);
+	         reqEntity.addPart("siteid", siteid);
+	         reqEntity.addPart("containerid", containerid);
+	         reqEntity.addPart("uploaddirectory", uploaddirectory);
+
+	         httppost.setEntity(reqEntity);
+	         
+	         Log.i("executing request:" , httppost.getRequestLine().toString());
+	         
+
+	         HttpResponse response = httpclient.execute(httppost);
+
+	         HttpEntity resEntity = response.getEntity();
+	         
+	         Log.i("response status:" , response.getStatusLine().toString());
+
+	         if (resEntity != null) {
+	        	 Log.i("response content length:", resEntity.getContentLength() + "");
+
+	            json = EntityUtils.toString(resEntity);
+	            
+	            Log.i("response content:" , json);
+	            
+	            response.getEntity().consumeContent();
+	         }
+
+	      } catch (Exception e) {
+	         e.printStackTrace();
+	      } finally {
+	         httpclient.getConnectionManager().shutdown();
+	      }
+
+	      return json;
+	    }
 
 	public String getTicket() {
 		return mTicket;

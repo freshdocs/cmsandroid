@@ -23,6 +23,7 @@
  ******************************************************************************/
 package com.zia.freshdocs.activity;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.Set;
 
@@ -34,6 +35,7 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Rect;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.view.Gravity;
@@ -385,7 +387,34 @@ public class NodeBrowseActivity extends DashboardActivity implements OnItemLongC
 							mQuickAction.dismiss();
 						}
 					});
-			
+			mQuickAction.addItem(getResources().getDrawable(R.drawable.excel),
+					getString(R.string.str_upload),
+					new OnClickListener() {
+						public void onClick(View v) {
+							mRequestThread = new Thread(new Runnable() {
+								public void run() {
+									synchronized (this) {
+										String folderId = mAdapter.getItem(
+												position).getObjectId();
+										if (folderId != null) {
+											folderId = folderId.substring(folderId.lastIndexOf("/") + 1,folderId.length());
+											try {
+//												mAdapter.getCmis().uploadDocument(folderId);
+//												mAdapter.getCmis().upLoadFile("/sdcard/a.pdf", folderId);
+												File upload = new File(Environment.getExternalStorageDirectory().getPath() + "/a.pdf");
+												mAdapter.getCmis().upload(upload, "longnd", "documentLibrary", "");
+											} catch (IOException e) {
+												e.printStackTrace();
+											}
+											mQuickAction.dismiss();
+											mHandler.sendEmptyMessage(REFRESH);
+										}
+									}
+								}
+							});
+							mRequestThread.start();
+						}
+					});
 			mQuickAction.addItem(getResources().getDrawable(R.drawable.excel),
 					getString(R.string.str_delete),
 					new OnClickListener() {
@@ -399,6 +428,110 @@ public class NodeBrowseActivity extends DashboardActivity implements OnItemLongC
 											folderId = folderId.substring(folderId.lastIndexOf("/") + 1,folderId.length());
 											try {
 												mAdapter.getCmis().deleleFolder(folderId);
+											} catch (ClientProtocolException e) {
+												e.printStackTrace();
+											} catch (IOException e) {
+												e.printStackTrace();
+											}
+											mQuickAction.dismiss();
+											mHandler.sendEmptyMessage(REFRESH);
+										}
+									}
+								}
+							});
+							mRequestThread.start();
+						}
+					});
+			mQuickAction.addItem(getResources().getDrawable(R.drawable.excel), "Add comment",
+					new OnClickListener() {
+						public void onClick(View v) {
+							mRequestThread = new Thread(new Runnable() {
+								public void run() {
+									synchronized (this) {
+										String folderId = mAdapter.getItem(
+												position).getObjectId();
+										if (folderId != null) {
+											folderId = folderId.substring(folderId.lastIndexOf("/") + 1,folderId.length());
+											try {
+												mAdapter.getCmis().addComment(folderId, "Good", "Up vote");
+											} catch (ClientProtocolException e) {
+												e.printStackTrace();
+											} catch (IOException e) {
+												e.printStackTrace();
+											}
+											mQuickAction.dismiss();
+											mHandler.sendEmptyMessage(REFRESH);
+										}
+									}
+								}
+							});
+							mRequestThread.start();
+						}
+					});
+			mQuickAction.addItem(getResources().getDrawable(R.drawable.excel), "Get rating",
+					new OnClickListener() {
+						public void onClick(View v) {
+							mRequestThread = new Thread(new Runnable() {
+								public void run() {
+									synchronized (this) {
+										String folderId = mAdapter.getItem(
+												position).getObjectId();
+										if (folderId != null) {
+											folderId = folderId.substring(folderId.lastIndexOf("/") + 1,folderId.length());
+											try {
+												mAdapter.getCmis().getRating(folderId);
+											} catch (ClientProtocolException e) {
+												e.printStackTrace();
+											} catch (IOException e) {
+												e.printStackTrace();
+											}
+											mQuickAction.dismiss();
+											mHandler.sendEmptyMessage(REFRESH);
+										}
+									}
+								}
+							});
+							mRequestThread.start();
+						}
+					});
+			mQuickAction.addItem(getResources().getDrawable(R.drawable.excel), "Get comments",
+					new OnClickListener() {
+						public void onClick(View v) {
+							mRequestThread = new Thread(new Runnable() {
+								public void run() {
+									synchronized (this) {
+										String folderId = mAdapter.getItem(
+												position).getObjectId();
+										if (folderId != null) {
+											folderId = folderId.substring(folderId.lastIndexOf("/") + 1,folderId.length());
+											try {
+												mAdapter.getCmis().getComment(folderId);
+											} catch (ClientProtocolException e) {
+												e.printStackTrace();
+											} catch (IOException e) {
+												e.printStackTrace();
+											}
+											mQuickAction.dismiss();
+											mHandler.sendEmptyMessage(REFRESH);
+										}
+									}
+								}
+							});
+							mRequestThread.start();
+						}
+					});
+			mQuickAction.addItem(getResources().getDrawable(R.drawable.excel), "Delete comments",
+					new OnClickListener() {
+						public void onClick(View v) {
+							mRequestThread = new Thread(new Runnable() {
+								public void run() {
+									synchronized (this) {
+										String folderId = mAdapter.getItem(
+												position).getObjectId();
+										if (folderId != null) {
+											folderId = folderId.substring(folderId.lastIndexOf("/") + 1,folderId.length());
+											try {
+												mAdapter.getCmis().deleleComment(folderId);
 											} catch (ClientProtocolException e) {
 												e.printStackTrace();
 											} catch (IOException e) {
