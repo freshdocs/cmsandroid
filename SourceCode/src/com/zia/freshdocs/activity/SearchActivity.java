@@ -34,8 +34,8 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.zia.freshdocs.R;
-import com.zia.freshdocs.Constants.NetworkStatus;
 import com.zia.freshdocs.cmis.CMIS;
+import com.zia.freshdocs.model.Constants.NetworkStatus;
 
 public class SearchActivity extends NodeBrowseActivity {
 	private boolean _isDirty = true;

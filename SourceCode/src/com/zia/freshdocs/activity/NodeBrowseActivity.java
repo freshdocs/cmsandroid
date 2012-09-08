@@ -55,12 +55,12 @@ import android.widget.ListView;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 
-import com.zia.freshdocs.Constants;
-import com.zia.freshdocs.Constants.NetworkStatus;
 import com.zia.freshdocs.R;
 import com.zia.freshdocs.app.CMISApplication;
 import com.zia.freshdocs.cmis.CMIS;
+import com.zia.freshdocs.model.Constants;
 import com.zia.freshdocs.model.NodeRef;
+import com.zia.freshdocs.model.Constants.NetworkStatus;
 import com.zia.freshdocs.preference.CMISPreferencesManager;
 import com.zia.freshdocs.widget.adapter.CMISAdapter;
 import com.zia.freshdocs.widget.quickaction.QuickActionWindow;
@@ -173,7 +173,7 @@ public class NodeBrowseActivity extends DashboardActivity implements OnItemLongC
 				mPopUp.dismiss();
 				break;
 			case SHOW_DIALOG:
-				showConfirmDialog();
+				showCreateNewFolderDialog();
 				break;
 			}
 		}};
@@ -233,7 +233,7 @@ public class NodeBrowseActivity extends DashboardActivity implements OnItemLongC
 		}
 	}
 	
-	private void showConfirmDialog() {
+	private void showCreateNewFolderDialog() {
 		try {
 			//We need to get the instance of the LayoutInflater, use the context of this activity
 	        LayoutInflater inflater = (LayoutInflater) NodeBrowseActivity.this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -375,7 +375,28 @@ public class NodeBrowseActivity extends DashboardActivity implements OnItemLongC
 							mQuickAction.dismiss();
 						}
 					});
-
+			mQuickAction.addItem(getResources().getDrawable(R.drawable.excel),
+					getString(R.string.str_delete),
+					new OnClickListener() {
+						public void onClick(View v) {
+							mRequestThread = new Thread(new Runnable() {
+								public void run() {
+									synchronized (this) {
+											try {
+												mAdapter.getCmis().getPerson("demo");
+											} catch (ClientProtocolException e) {
+												e.printStackTrace();
+											} catch (IOException e) {
+												e.printStackTrace();
+											}
+											mQuickAction.dismiss();
+											mHandler.sendEmptyMessage(REFRESH);
+									}
+								}
+							});
+							mRequestThread.start();
+						}
+					});
 		} else { // If folder
 			isFile = false;
 			// Show folder information
@@ -480,6 +501,33 @@ public class NodeBrowseActivity extends DashboardActivity implements OnItemLongC
 											folderId = folderId.substring(folderId.lastIndexOf("/") + 1,folderId.length());
 											try {
 												mAdapter.getCmis().getRating(folderId);
+											} catch (ClientProtocolException e) {
+												e.printStackTrace();
+											} catch (IOException e) {
+												e.printStackTrace();
+											}
+											mQuickAction.dismiss();
+											mHandler.sendEmptyMessage(REFRESH);
+										}
+									}
+								}
+							});
+							mRequestThread.start();
+						}
+					});
+			
+			mQuickAction.addItem(getResources().getDrawable(R.drawable.excel), "Add rating",
+					new OnClickListener() {
+						public void onClick(View v) {
+							mRequestThread = new Thread(new Runnable() {
+								public void run() {
+									synchronized (this) {
+										String folderId = mAdapter.getItem(
+												position).getObjectId();
+										if (folderId != null) {
+											folderId = folderId.substring(folderId.lastIndexOf("/") + 1,folderId.length());
+											try {
+												mAdapter.getCmis().addRating(folderId, "5", "Rate via Android");
 											} catch (ClientProtocolException e) {
 												e.printStackTrace();
 											} catch (IOException e) {

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.zia.freshdocs.widget.TransparentPanel xmlns:android="http://schemas.android.com/apk/res/android"
     style="@style/Theme.HoloEverywhereLight"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
@@ -30,7 +30,7 @@
         android:hint="@string/str_folder_name"
         android:inputType="text"
         android:padding="5dip"
-        android:textStyle="bold" />
+        android:textStyle="bold|italic" />
 
     <EditText
         android:id="@+id/folder_description"
@@ -40,7 +40,7 @@
         android:hint="@string/str_folder_description"
         android:inputType="text"
         android:padding="5dip"
-        android:textStyle="bold" />
+        android:textStyle="bold|italic" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -65,4 +65,4 @@
             android:text="@string/str_cancel" />
     </LinearLayout>
 
-</LinearLayout>
+</com.zia.freshdocs.widget.TransparentPanel>

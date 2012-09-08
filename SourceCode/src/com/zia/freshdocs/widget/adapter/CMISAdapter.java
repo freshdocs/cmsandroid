@@ -65,10 +65,10 @@ import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.zia.freshdocs.Constants;
 import com.zia.freshdocs.R;
 import com.zia.freshdocs.app.CMISApplication;
 import com.zia.freshdocs.cmis.CMIS;
+import com.zia.freshdocs.model.Constants;
 import com.zia.freshdocs.model.NodeRef;
 import com.zia.freshdocs.model.ViewItem;
 import com.zia.freshdocs.net.Downloadable;

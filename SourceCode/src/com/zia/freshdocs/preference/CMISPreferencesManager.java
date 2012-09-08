@@ -40,7 +40,7 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.preference.PreferenceManager;
 
-import com.zia.freshdocs.Constants;
+import com.zia.freshdocs.model.Constants;
 import com.zia.freshdocs.model.NodeRef;
 
 public class CMISPreferencesManager

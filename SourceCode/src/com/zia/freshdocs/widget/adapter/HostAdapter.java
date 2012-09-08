@@ -40,7 +40,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.RelativeLayout.LayoutParams;
 
-import com.zia.freshdocs.Constants;
+import com.zia.freshdocs.model.Constants;
 import com.zia.freshdocs.preference.CMISHost;
 
 public class HostAdapter extends ArrayAdapter<CMISHost>

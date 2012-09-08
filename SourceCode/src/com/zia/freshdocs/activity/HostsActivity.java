@@ -44,9 +44,9 @@ import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ListView;
 
 import com.google.gson.Gson;
-import com.zia.freshdocs.Constants;
 import com.zia.freshdocs.R;
 import com.zia.freshdocs.app.CMISApplication;
+import com.zia.freshdocs.model.Constants;
 import com.zia.freshdocs.preference.CMISHost;
 import com.zia.freshdocs.preference.CMISPreferencesManager;
 import com.zia.freshdocs.widget.adapter.HostAdapter;

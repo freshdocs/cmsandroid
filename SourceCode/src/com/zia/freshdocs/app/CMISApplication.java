@@ -37,9 +37,9 @@ import android.os.Environment;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.zia.freshdocs.Constants;
 import com.zia.freshdocs.R;
 import com.zia.freshdocs.cmis.CMIS;
+import com.zia.freshdocs.model.Constants;
 import com.zia.freshdocs.model.NodeRef;
 import com.zia.freshdocs.preference.CMISHost;
 import com.zia.freshdocs.preference.CMISPreferencesManager;

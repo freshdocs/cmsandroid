@@ -26,7 +26,7 @@ package com.zia.freshdocs.preference;
 import java.io.Serializable;
 import java.util.UUID;
 
-import com.zia.freshdocs.Constants;
+import com.zia.freshdocs.model.Constants;
 
 public class CMISHost implements Serializable, Comparable<CMISHost>
 {

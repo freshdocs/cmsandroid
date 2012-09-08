@@ -61,8 +61,8 @@ import org.w3c.dom.Document;
 import android.text.format.DateFormat;
 import android.util.Log;
 
-import com.zia.freshdocs.Constants.NetworkStatus;
 import com.zia.freshdocs.model.NodeRef;
+import com.zia.freshdocs.model.Constants.NetworkStatus;
 import com.zia.freshdocs.net.EasySSLSocketFactory;
 import com.zia.freshdocs.preference.CMISHost;
 
@@ -90,6 +90,8 @@ public class CMIS {
 	protected static final String GET_RATING_URI = "/alfresco/service/api/node/workspace/SpacesStore/%s/ratings";
 	
 	protected static final String DELETE_COMMENT_URI = "/alfresco/service/api/comment/node/workspace/SpacesStore/%s";
+	
+	protected static final String GET_PERSON_URI = "/alfresco/service/api/people/%s";
 	
 	private CMISHost mPrefs;
 	private CMISParser mParser;
@@ -334,7 +336,49 @@ public class CMIS {
 		 
 		 StringEntity requestEntity = new StringEntity(data, "UTF-8");
 		  httppost.setEntity(requestEntity);
-		  httppost.setHeader("Content-type", "application/json'");
+		  httppost.setHeader("Content-type", "application/json");
+		 
+		  Log.i("executing request" , String.valueOf(httppost.getRequestLine()));
+		  HttpResponse response = httpclient.execute(httppost);
+		  HttpEntity entity = response.getEntity();
+		
+		  System.out.println("----------------------------------------");
+		  System.out.println(response.getStatusLine());
+		  
+		  if (entity != null) {
+	        	 Log.i("response content length:", entity.getContentLength() + "");
+
+	            json = EntityUtils.toString(entity);
+	            
+	            Log.i("response content:" , json);
+	            
+	            response.getEntity().consumeContent();
+	         }
+	      
+	      // When HttpClient instance is no longer needed,
+	      // shut down the connection manager to ensure
+	      // immediate deallocation of all system resources
+	      httpclient.getConnectionManager().shutdown();
+		 
+	}
+	
+	public void addRating(String fileId, String rating, String ratingScheme) throws ClientProtocolException, IOException{
+		String json;
+		String path = String.format(GET_RATING_URI, fileId);
+		 String url = new URL(mPrefs.isSSL() ? "https" : "http",
+					mPrefs.getHostname(), buildRelativeURI(path)).toString();
+		 DefaultHttpClient httpclient = new DefaultHttpClient();
+			
+		 HttpPost httppost = new HttpPost(url);
+		 
+		 String data = "{" 
+				 	+ "\"rating\" : " + rating + ","
+				   + "\"ratingScheme\" : \"" + "fiveStarRatingScheme"+ "\""
+					+ "}";
+		 
+		 StringEntity requestEntity = new StringEntity(data, "UTF-8");
+		  httppost.setEntity(requestEntity);
+		  httppost.setHeader("Content-type", "application/json");
 		 
 		  Log.i("executing request" , String.valueOf(httppost.getRequestLine()));
 		  HttpResponse response = httpclient.execute(httppost);
@@ -410,15 +454,6 @@ public class CMIS {
 		 DefaultHttpClient httpclient = new DefaultHttpClient();
 			
 		 HttpGet httpGet = new HttpGet(url);
-		 
-//		 String data = "{" 
-//				 	+ "\"title\" : \"" + title + "\","
-//				   + "\"content\" : \"" + content+ "\""
-//					+ "}";
-		 
-//		 StringEntity requestEntity = new StringEntity(data, "UTF-8");
-//		  httpGet.setEntity(requestEntity);
-//		  httpGet.setHeader("Content-type", "application/json'");
 		 
 		  Log.i("executing request" , String.valueOf(httpGet.getRequestLine()));
 		  HttpResponse response = httpclient.execute(httpGet);
@@ -578,6 +613,39 @@ public class CMIS {
 
 	      return json;
 	    }
+	
+	public void getPerson(String userName) throws ClientProtocolException, IOException{
+		String json;
+		String path = String.format(GET_PERSON_URI, userName);
+		 String url = new URL(mPrefs.isSSL() ? "https" : "http",
+					mPrefs.getHostname(), buildRelativeURI(path)).toString();
+		 DefaultHttpClient httpclient = new DefaultHttpClient();
+			
+		 HttpGet httpGet = new HttpGet(url);
+		 
+		  Log.i("executing request" , String.valueOf(httpGet.getRequestLine()));
+		  HttpResponse response = httpclient.execute(httpGet);
+		  HttpEntity entity = response.getEntity();
+		
+		  System.out.println("----------------------------------------");
+		  System.out.println(response.getStatusLine());
+		  
+		  if (entity != null) {
+	        	 Log.i("response content length:", entity.getContentLength() + "");
+
+	            json = EntityUtils.toString(entity);
+	            
+	            Log.i("response content:" , json);
+	            
+	            response.getEntity().consumeContent();
+	         }
+	      
+	      // When HttpClient instance is no longer needed,
+	      // shut down the connection manager to ensure
+	      // immediate deallocation of all system resources
+	      httpclient.getConnectionManager().shutdown();
+		 
+	}
 
 	public String getTicket() {
 		return mTicket;

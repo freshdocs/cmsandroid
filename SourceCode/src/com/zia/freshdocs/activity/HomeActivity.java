@@ -31,9 +31,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
-import com.zia.freshdocs.Constants;
 import com.zia.freshdocs.R;
 import com.zia.freshdocs.app.CMISApplication;
+import com.zia.freshdocs.model.Constants;
 import com.zia.freshdocs.net.Downloadable;
 import com.zia.freshdocs.preference.CMISHost;
 
