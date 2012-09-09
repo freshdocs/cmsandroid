@@ -29,7 +29,6 @@ import java.util.Set;
 
 import org.apache.http.client.ClientProtocolException;
 
-import android.R.integer;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
@@ -40,6 +39,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
+import android.view.Display;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -57,15 +57,17 @@ import android.widget.ListView;
 import android.widget.PopupWindow;
 import android.widget.RatingBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.zia.freshdocs.R;
 import com.zia.freshdocs.app.CMISApplication;
 import com.zia.freshdocs.cmis.CMIS;
 import com.zia.freshdocs.model.Constants;
-import com.zia.freshdocs.model.NodeRef;
 import com.zia.freshdocs.model.Constants.NetworkStatus;
+import com.zia.freshdocs.model.NodeRef;
 import com.zia.freshdocs.preference.CMISPreferencesManager;
 import com.zia.freshdocs.util.SharedPreferencesAccess;
+import com.zia.freshdocs.util.StringUtils;
 import com.zia.freshdocs.widget.ViVoteChart;
 import com.zia.freshdocs.widget.adapter.CMISAdapter;
 import com.zia.freshdocs.widget.quickaction.QuickActionWindow;
@@ -85,7 +87,9 @@ public class NodeBrowseActivity extends DashboardActivity implements OnItemLongC
 	private final int CLOSE_DIALOG = 1;
 	private final int CREATE_NEW_FOLDER = 2;
 	private final int RATING = 3;
+	private final int RATE_COMMENT = 4;
 	private String mFolderName, mFolderDescription;
+	private String mFolderId; 
 
 	/** Called when the activity is first created. */
 	@Override
@@ -183,7 +187,10 @@ public class NodeBrowseActivity extends DashboardActivity implements OnItemLongC
 				break;
 			case RATING:
 				showRatingDialog();
-			break;
+				break;
+			case RATE_COMMENT:
+				showCommentDialog();
+				break;
 			}
 		}
 		};
@@ -249,8 +256,13 @@ public class NodeBrowseActivity extends DashboardActivity implements OnItemLongC
 	        LayoutInflater inflater = (LayoutInflater) NodeBrowseActivity.this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 	        //Inflate the view from a predefined XML layout
 	        View layout = inflater.inflate(R.layout.rating_layout, null, false);
+	        
+	        // Avoid Popup's bug
+	        Display display = getWindowManager().getDefaultDisplay(); 
+	        int height = display.getHeight() - 100;
+	        
 	        // create a WRAP_CONTENT PopupWindow
-	        mPopUp = new PopupWindow(layout, WindowManager.LayoutParams.FILL_PARENT, WindowManager.LayoutParams.WRAP_CONTENT, true);
+	        mPopUp = new PopupWindow(layout, WindowManager.LayoutParams.FILL_PARENT, height, true);
 	        mPopUp.setBackgroundDrawable(new BitmapDrawable());
 	        mPopUp.setOutsideTouchable(true);
 	        // display the popup in the center
@@ -275,6 +287,65 @@ public class NodeBrowseActivity extends DashboardActivity implements OnItemLongC
 	        int[] rateValue = {0,0,0,2,1};
 	        viVoteChart.setAttribute(rateValue);
 	        viVoteChart.createChart();
+	        
+	        Button btnComment = (Button) layout.findViewById(R.id.btn_comment_post);
+	        btnComment.setOnClickListener(new OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					// Close dialog
+					mPopUp.dismiss();
+					mHandler.sendEmptyMessage(RATE_COMMENT);
+				}
+			});
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	
+	private void showCommentDialog(){
+		try {
+			//We need to get the instance of the LayoutInflater, use the context of this activity
+	        LayoutInflater inflater = (LayoutInflater) NodeBrowseActivity.this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+	        //Inflate the view from a predefined XML layout
+	        View layout = inflater.inflate(R.layout.rating, null, false);
+	        
+	        // Avoid Popup's bug
+	        Display display = getWindowManager().getDefaultDisplay(); 
+	        int height = display.getHeight() - 100;
+	        
+	        // create a WRAP_CONTENT PopupWindow
+	        mPopUp = new PopupWindow(layout, WindowManager.LayoutParams.FILL_PARENT, height, true);
+	        mPopUp.setBackgroundDrawable(new BitmapDrawable());
+	        mPopUp.setOutsideTouchable(true);
+	        // display the popup in the center
+	        mPopUp.showAtLocation(layout, Gravity.CENTER, 0, 0);
+	        
+	        final EditText txtComment = (EditText) layout.findViewById(R.id.txtComment);
+	        final EditText txtTitle = (EditText) layout.findViewById(R.id.txtTitle);
+	        final RatingBar rtbRate = (RatingBar) layout.findViewById(R.id.rtb_comment_input);
+	        
+	        Button btnComment = (Button) layout.findViewById(R.id.btnComment);
+	        btnComment.setOnClickListener(new OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					if(StringUtils.isEmpty(txtComment.getText().toString())||StringUtils.isEmpty(txtTitle.getText().toString()) ){
+//						txtComment.setError(NodeBrowseActivity.this.getString(R.string.str_mandatory_info));
+						Toast.makeText(NodeBrowseActivity.this, getString(R.string.str_mandatory_info), Toast.LENGTH_SHORT).show();
+					}else{
+						try {
+							mAdapter.getCmis().addComment(mFolderId, txtTitle.getText().toString() , txtComment.getText().toString());
+							
+							if(rtbRate.getRating() != 0)
+								mAdapter.getCmis().addRating(mFolderId, String.valueOf(rtbRate.getRating()), "Rate via Android");
+						} catch (ClientProtocolException e) {
+							e.printStackTrace();
+						} catch (IOException e) {
+							e.printStackTrace();
+						}
+					}
+				}
+			});
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -462,10 +533,9 @@ public class NodeBrowseActivity extends DashboardActivity implements OnItemLongC
 							mRequestThread = new Thread(new Runnable() {
 								public void run() {
 									synchronized (this) {
-										String folderId = mAdapter.getItem(
-												position).getObjectId();
-										if (folderId != null) {
-											folderId = folderId.substring(folderId.lastIndexOf("/") + 1,folderId.length());
+										mFolderId = mAdapter.getItem(position).getObjectId();
+										if (mFolderId != null) {
+											mFolderId = mFolderId.substring(mFolderId.lastIndexOf("/") + 1,mFolderId.length());
 											try {
 //												mAdapter.getCmis().uploadDocument(folderId);
 //												mAdapter.getCmis().upLoadFile("/sdcard/a.pdf", folderId);
@@ -483,19 +553,17 @@ public class NodeBrowseActivity extends DashboardActivity implements OnItemLongC
 							mRequestThread.start();
 						}
 					});
-			mQuickAction.addItem(getResources().getDrawable(R.drawable.excel),
-					getString(R.string.str_delete),
+			mQuickAction.addItem(getResources().getDrawable(R.drawable.excel), getString(R.string.str_delete),
 					new OnClickListener() {
 						public void onClick(View v) {
 							mRequestThread = new Thread(new Runnable() {
 								public void run() {
 									synchronized (this) {
-										String folderId = mAdapter.getItem(
-												position).getObjectId();
-										if (folderId != null) {
-											folderId = folderId.substring(folderId.lastIndexOf("/") + 1,folderId.length());
+										mFolderId = mAdapter.getItem(position).getObjectId();
+										if (mFolderId != null) {
+											mFolderId = mFolderId.substring(mFolderId.lastIndexOf("/") + 1,mFolderId.length());
 											try {
-												mAdapter.getCmis().deleleFolder(folderId);
+												mAdapter.getCmis().deleleFolder(mFolderId);
 											} catch (ClientProtocolException e) {
 												e.printStackTrace();
 											} catch (IOException e) {
@@ -510,32 +578,31 @@ public class NodeBrowseActivity extends DashboardActivity implements OnItemLongC
 							mRequestThread.start();
 						}
 					});
-			mQuickAction.addItem(getResources().getDrawable(R.drawable.excel), "Add comment",
-					new OnClickListener() {
-						public void onClick(View v) {
-							mRequestThread = new Thread(new Runnable() {
-								public void run() {
-									synchronized (this) {
-										String folderId = mAdapter.getItem(
-												position).getObjectId();
-										if (folderId != null) {
-											folderId = folderId.substring(folderId.lastIndexOf("/") + 1,folderId.length());
-											try {
-												mAdapter.getCmis().addComment(folderId, "Good", "Up vote");
-											} catch (ClientProtocolException e) {
-												e.printStackTrace();
-											} catch (IOException e) {
-												e.printStackTrace();
-											}
-											mQuickAction.dismiss();
-											mHandler.sendEmptyMessage(REFRESH);
-										}
-									}
-								}
-							});
-							mRequestThread.start();
-						}
-					});
+//			mQuickAction.addItem(getResources().getDrawable(R.drawable.excel), "Add comment",
+//					new OnClickListener() {
+//						public void onClick(View v) {
+//							mRequestThread = new Thread(new Runnable() {
+//								public void run() {
+//									synchronized (this) {
+//										mFolderId = mAdapter.getItem(position).getObjectId();
+//										if (mFolderId != null) {
+//											mFolderId = mFolderId.substring(mFolderId.lastIndexOf("/") + 1,mFolderId.length());
+//											try {
+//												mAdapter.getCmis().addComment(mFolderId, "Good", "Up vote");
+//											} catch (ClientProtocolException e) {
+//												e.printStackTrace();
+//											} catch (IOException e) {
+//												e.printStackTrace();
+//											}
+//											mQuickAction.dismiss();
+//											mHandler.sendEmptyMessage(REFRESH);
+//										}
+//									}
+//								}
+//							});
+//							mRequestThread.start();
+//						}
+//					});
 			
 			mQuickAction.addItem(getResources().getDrawable(R.drawable.excel), "Rating",
 					new OnClickListener() {
@@ -543,11 +610,11 @@ public class NodeBrowseActivity extends DashboardActivity implements OnItemLongC
 							mRequestThread = new Thread(new Runnable() {
 								public void run() {
 									synchronized (this) {
-										String folderId = mAdapter.getItem(position).getObjectId();
-										if (folderId != null) {
-											folderId = folderId.substring(folderId.lastIndexOf("/") + 1,folderId.length());
+										mFolderId = mAdapter.getItem(position).getObjectId();
+										if (mFolderId != null) {
+											mFolderId = mFolderId.substring(mFolderId.lastIndexOf("/") + 1,mFolderId.length());
 											try {
-												if(mAdapter.getCmis().getRating(NodeBrowseActivity.this, folderId)){
+												if(mAdapter.getCmis().getRating(NodeBrowseActivity.this, mFolderId)){
 													mHandler.sendEmptyMessage(RATING);
 													mQuickAction.dismiss();
 												}
@@ -565,32 +632,32 @@ public class NodeBrowseActivity extends DashboardActivity implements OnItemLongC
 						}
 					});
 			
-			mQuickAction.addItem(getResources().getDrawable(R.drawable.excel), "Add rating",
-					new OnClickListener() {
-						public void onClick(View v) {
-							mRequestThread = new Thread(new Runnable() {
-								public void run() {
-									synchronized (this) {
-										String folderId = mAdapter.getItem(
-												position).getObjectId();
-										if (folderId != null) {
-											folderId = folderId.substring(folderId.lastIndexOf("/") + 1,folderId.length());
-											try {
-												mAdapter.getCmis().addRating(folderId, "1", "Rate via Android");
-											} catch (ClientProtocolException e) {
-												e.printStackTrace();
-											} catch (IOException e) {
-												e.printStackTrace();
-											}
-											mQuickAction.dismiss();
-											mHandler.sendEmptyMessage(REFRESH);
-										}
-									}
-								}
-							});
-							mRequestThread.start();
-						}
-					});
+//			mQuickAction.addItem(getResources().getDrawable(R.drawable.excel), "Add rating",
+//					new OnClickListener() {
+//						public void onClick(View v) {
+//							mRequestThread = new Thread(new Runnable() {
+//								public void run() {
+//									synchronized (this) {
+//										String folderId = mAdapter.getItem(
+//												position).getObjectId();
+//										if (folderId != null) {
+//											folderId = folderId.substring(folderId.lastIndexOf("/") + 1,folderId.length());
+//											try {
+//												mAdapter.getCmis().addRating(folderId, "1", "Rate via Android");
+//											} catch (ClientProtocolException e) {
+//												e.printStackTrace();
+//											} catch (IOException e) {
+//												e.printStackTrace();
+//											}
+//											mQuickAction.dismiss();
+//											mHandler.sendEmptyMessage(REFRESH);
+//										}
+//									}
+//								}
+//							});
+//							mRequestThread.start();
+//						}
+//					});
 			mQuickAction.addItem(getResources().getDrawable(R.drawable.excel), "Get comments",
 					new OnClickListener() {
 						public void onClick(View v) {

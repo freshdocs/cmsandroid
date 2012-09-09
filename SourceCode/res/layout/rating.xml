@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.zia.freshdocs.widget.TransparentPanel xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/dialog_full_holo_light"
+    android:orientation="vertical" >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/body_background"
+        android:orientation="vertical"
+        android:padding="5dip"
+        android:paddingTop="10dp" >
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+                android:gravity="center"
+            
+            android:orientation="vertical"
+            android:paddingTop="10dp" >
+
+            <RatingBar
+                android:id="@+id/rtb_comment_input"
+                style="@style/Holo.RatingBar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:max="5"
+                android:numStars="5"
+                android:rating="0.0"
+                android:stepSize="0.5" />
+
+            <EditText
+                android:id="@+id/txtTitle"
+                style="@style/EditTextHoloLight"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/str_title"
+                android:inputType="text"
+                android:textColor="@color/black"
+                android:paddingTop="5dp" />
+
+            <EditText
+                android:id="@+id/txtComment"
+                style="@style/EditTextHoloLight"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/str_comment"
+                android:textColor="@color/black"
+                android:inputType="textMultiLine"
+                android:lines="5" />
+
+            <Button
+                android:id="@+id/btnComment"
+                style="@style/ButtonHoloLight"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right"
+                android:layout_marginTop="15dp"
+                android:text="@string/str_comment" />
+        </LinearLayout>
+    </LinearLayout>
+
+</com.zia.freshdocs.widget.TransparentPanel>

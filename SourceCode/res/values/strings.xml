@@ -119,4 +119,9 @@
 	<string name="str_three_star">3 star</string>
 	<string name="str_two_star">2 star</string>
 	<string name="str_one_star">1 star</string>
+	
+	<string name="str_comment">Comment</string>
+	<string name="str_title">Title</string>
+	<string name="str_mandatory_info">You must enter a valid data</string>
+	
 </resources>
