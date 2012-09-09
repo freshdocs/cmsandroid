@@ -56,15 +56,20 @@ import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.HttpParams;
 import org.apache.http.params.HttpProtocolParams;
 import org.apache.http.util.EntityUtils;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.w3c.dom.Document;
 
+import android.content.Context;
 import android.text.format.DateFormat;
 import android.util.Log;
 
-import com.zia.freshdocs.model.NodeRef;
 import com.zia.freshdocs.model.Constants.NetworkStatus;
+import com.zia.freshdocs.model.NodeRef;
 import com.zia.freshdocs.net.EasySSLSocketFactory;
 import com.zia.freshdocs.preference.CMISHost;
+import com.zia.freshdocs.util.SharedPreferencesAccess;
 
 public class CMIS {
 	protected static final String CMIS_QUERY_TYPE = "application/cmisquery+xml";
@@ -404,46 +409,104 @@ public class CMIS {
 		 
 	}
 	
-	public void getRating(String fileId) throws ClientProtocolException, IOException{
+	public boolean getRating(Context context, String fileId) throws ClientProtocolException, IOException {
 		String json;
-		String path = String.format(GET_RATING_URI, fileId);
-		 String url = new URL(mPrefs.isSSL() ? "https" : "http",
-					mPrefs.getHostname(), buildRelativeURI(path)).toString();
-		 DefaultHttpClient httpclient = new DefaultHttpClient();
-			
-		 HttpGet httpGet = new HttpGet(url);
-		 
-//		 String data = "{" 
-//				 	+ "\"title\" : \"" + title + "\","
-//				   + "\"content\" : \"" + content+ "\""
-//					+ "}";
-		 
-//		 StringEntity requestEntity = new StringEntity(data, "UTF-8");
-//		  httpGet.setEntity(requestEntity);
-//		  httpGet.setHeader("Content-type", "application/json'");
-		 
-		  Log.i("executing request" , String.valueOf(httpGet.getRequestLine()));
-		  HttpResponse response = httpclient.execute(httpGet);
-		  HttpEntity entity = response.getEntity();
+		JSONObject  jsonObj;
+		JSONArray dataName, dataValue, rateName, rateValue;
 		
-		  System.out.println("----------------------------------------");
-		  System.out.println(response.getStatusLine());
-		  
-		  if (entity != null) {
-	        	 Log.i("response content length:", entity.getContentLength() + "");
+		String path = String.format(GET_RATING_URI, fileId);
+		String url = new URL(mPrefs.isSSL() ? "https" : "http",
+				mPrefs.getHostname(), buildRelativeURI(path)).toString();
+		DefaultHttpClient httpclient = new DefaultHttpClient();
 
-	            json = EntityUtils.toString(entity);
-	            
-	            Log.i("response content:" , json);
-	            
-	            response.getEntity().consumeContent();
-	         }
-	      
-	      // When HttpClient instance is no longer needed,
-	      // shut down the connection manager to ensure
-	      // immediate deallocation of all system resources
-	      httpclient.getConnectionManager().shutdown();
-		 
+		HttpGet httpGet = new HttpGet(url);
+
+		Log.i("executing request", String.valueOf(httpGet.getRequestLine()));
+		HttpResponse response = httpclient.execute(httpGet);
+		HttpEntity entity = response.getEntity();
+
+		System.out.println("----------------------------------------");
+		System.out.println(response.getStatusLine());
+		
+		String ratingsCount, ratingsTotal, averageRating;
+		
+		int responseCode = response.getStatusLine().getStatusCode();
+
+		if (entity != null) {
+			Log.i("response content length:", entity.getContentLength() + "");
+
+			json = EntityUtils.toString(entity);
+
+			Log.i("response content:", json);
+			
+			if(responseCode == 200){
+				try {
+					jsonObj = new JSONObject(json);
+					
+					dataName = jsonObj.names();
+				    dataValue = jsonObj.toJSONArray(dataName); // Main data
+					
+				    for (int i = 0; i < dataValue.length(); i++){
+				    	JSONObject rateObj = (JSONObject) dataValue.get(i); 
+				    	rateName = rateObj.names();
+				    	rateValue = rateObj.toJSONArray(rateName); // Main data
+				    	
+				    	 for (int j = 0; j < rateName.length(); j++){
+				    		 if(rateName.getString(j).equalsIgnoreCase("nodeStatistics")){
+				    			 Log.e("nodeStatistics", "============");
+				    			 
+				    			 Log.e(rateName.getString(j), rateValue.getString(j));
+				    			 JSONObject valueObj = new JSONObject(rateValue.getString(j)); 
+			    				 JSONArray valueName = valueObj.names();
+			    				 JSONArray value = valueObj.toJSONArray(valueName); // Main data
+
+				    			 for (int k = 0; k < valueName.length(); k++){
+				    				 
+				    				 if(valueName.getString(k).equalsIgnoreCase("fiveStarRatingScheme")){
+				    					 JSONObject valueObjDetail = (JSONObject) value.get(k);
+				    					
+				    					 ratingsCount = valueObjDetail.isNull("ratingsCount") ? "" : valueObjDetail.getString("ratingsCount");
+				    					 SharedPreferencesAccess.saveValueToSharedPreferences(context, "ratingsCount", ratingsCount);
+				    					 
+				    					 ratingsTotal = valueObjDetail.isNull("ratingsTotal") ? "" : valueObjDetail.getString("ratingsTotal");
+				    					 SharedPreferencesAccess.saveValueToSharedPreferences(context, "ratingsTotal", ratingsTotal);
+				    					 
+				    					 averageRating = valueObjDetail.isNull("averageRating") ? "" : valueObjDetail.getString("averageRating");
+				    					 SharedPreferencesAccess.saveValueToSharedPreferences(context, "averageRating", averageRating);
+				    					 
+				    					 Log.w("ratingsCount", valueObjDetail.getString("ratingsCount"));
+				    					 Log.w("ratingsTotal", valueObjDetail.getString("ratingsTotal"));
+				    					 Log.w("averageRating", valueObjDetail.getString("averageRating"));
+				    				 }
+				    					 
+				    			 }
+				    			 
+				    			 
+				    		 }else if(rateName.getString(j).equalsIgnoreCase("ratings")){
+				    			 Log.e("ratings", "============");
+				    			 Log.e(rateName.getString(j), rateValue.getString(j));
+				    			 
+				    		 }
+				    	 }
+				    }
+					
+				} catch (JSONException e) {
+					e.printStackTrace();
+					return false;
+				}
+				response.getEntity().consumeContent();
+				return true;
+			}else
+				return false;
+			
+		}
+
+		// When HttpClient instance is no longer needed,
+		// shut down the connection manager to ensure
+		// immediate deallocation of all system resources
+		httpclient.getConnectionManager().shutdown();
+		
+		return true;
 	}
 	
 	public void getComment(String fileId) throws ClientProtocolException, IOException{

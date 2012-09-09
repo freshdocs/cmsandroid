@@ -57,15 +57,11 @@
     <string name="title_feature2">File Explorer</string>
     <string name="title_feature3">Workflow</string>
     <string name="title_feature4">Feature 4</string>
-    <string name="title_feature5">Feature 5</string>
-    <string name="title_feature6">Feature 6</string>
     <string name="default_intro">This is the default content view for an activity. Be sure to change your activity\'s onCreate method. Use setContentView on a custom layout.</string>
     <string name="feature1_intro">Feature 1 content goes here.</string>
     <string name="feature2_intro">Feature 2 content goes here.</string>
     <string name="feature3_intro">Feature 3 content goes here.</string>
     <string name="feature4_intro">Feature 4 content goes here.</string>
-    <string name="feature5_intro">Feature 5 content goes here.</string>
-    <string name="feature6_intro">Feature 6 content goes here.</string>
     <string name="about_intro">This app is a demo to show you how to do an Android app based on the Dashboard pattern that has been used in apps like Google+, Twitter, Google IO, and Evernote.</string>
     <string name="search_intro">Content for the Search page goes here.</string>
     <string name="media_dialog">Media preview</string>
@@ -117,5 +113,10 @@
     <string name="str_coundnt_find_to_open">Sorry, could not find anything to open </string>
     <string name="str_create_folder">New Folder</string>
     <string name="str_cant_create_folder">New folder was not created</string>
-
+    <string name="str_average_rating">Average rating</string>
+    <string name="str_five_star">5 star</string>
+	<string name="str_four_star">4 star</string>
+	<string name="str_three_star">3 star</string>
+	<string name="str_two_star">2 star</string>
+	<string name="str_one_star">1 star</string>
 </resources>

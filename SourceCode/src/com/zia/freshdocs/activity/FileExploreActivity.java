@@ -10,6 +10,7 @@ import android.content.ActivityNotFoundException;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Bundle;
@@ -100,7 +101,7 @@ public final class FileExploreActivity extends ListActivity implements OnMenuIte
 			boolean hide = mSettings.getBoolean(PREFS_HIDDEN, false);
 			boolean thumb = mSettings.getBoolean(PREFS_THUMBNAIL, true);
 			int space = mSettings.getInt(PREFS_STORAGE, View.VISIBLE);
-			int color = mSettings.getInt(PREFS_COLOR, -1);
+			int color = mSettings.getInt(PREFS_COLOR, Color.BLACK);
 			int sort = mSettings.getInt(PREFS_SORT, 1);
 
 			mFileManager = new FileManager();
@@ -486,7 +487,7 @@ public final class FileExploreActivity extends ListActivity implements OnMenuIte
 			// save the information we get from settings activity
 			check = data.getBooleanExtra("HIDDEN", false);
 			thumbnail = data.getBooleanExtra("THUMBNAIL", true);
-			color = data.getIntExtra("COLOR", -1);
+			color = data.getIntExtra("COLOR", Color.BLACK);
 			sort = data.getIntExtra("SORT", 0);
 			space = data.getIntExtra("SPACE", View.VISIBLE);
 
@@ -742,7 +743,7 @@ public final class FileExploreActivity extends ListActivity implements OnMenuIte
 					mSettings.getBoolean(PREFS_HIDDEN, false));
 			settings_int.putExtra("THUMBNAIL",
 					mSettings.getBoolean(PREFS_THUMBNAIL, true));
-			settings_int.putExtra("COLOR", mSettings.getInt(PREFS_COLOR, -1));
+			settings_int.putExtra("COLOR", mSettings.getInt(PREFS_COLOR, Color.BLACK));
 			settings_int.putExtra("SORT", mSettings.getInt(PREFS_SORT, 0));
 			settings_int.putExtra("SPACE",mSettings.getInt(PREFS_STORAGE, View.VISIBLE));
 			startActivityForResult(settings_int, SETTING_REQ);

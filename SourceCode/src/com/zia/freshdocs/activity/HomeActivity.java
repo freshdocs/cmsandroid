@@ -53,18 +53,16 @@ public class HomeActivity extends DashboardActivity {
 	// Image resources for the buttons
 	private Integer[] mImageIds = { R.drawable.home_button1,
 			R.drawable.home_button2, R.drawable.home_button3,
-			R.drawable.home_button4, R.drawable.home_button5,
-			R.drawable.home_button6 };
+			R.drawable.home_button4};
 
 	// Labels for the buttons
 	private Integer[] mLabelIds = { R.string.title_feature1,
 			R.string.title_feature2, R.string.title_feature3,
-			R.string.title_feature4, R.string.title_feature5,
-			R.string.title_feature6 };
+			R.string.title_feature4};
 
 	// Ids for the frames that define where the images go
 	private Integer[] mFrameIds = { R.id.frame1, R.id.frame2, R.id.frame3,
-			R.id.frame4, R.id.frame5, R.id.frame6 };
+			R.id.frame4};
 
 	/**
 	 * onCreate - called when the activity is first created. Called when the
@@ -266,12 +264,6 @@ public class HomeActivity extends DashboardActivity {
 			break;
 		case 4:
 			startActivity(new Intent(getApplicationContext(), F4Activity.class));
-			break;
-		case 5:
-			startActivity(new Intent(getApplicationContext(), F5Activity.class));
-			break;
-		case 6:
-			startActivity(new Intent(getApplicationContext(), F6Activity.class));
 			break;
 		default:
 			break;

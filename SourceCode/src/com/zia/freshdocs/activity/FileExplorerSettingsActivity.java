@@ -52,9 +52,9 @@ public class FileExplorerSettingsActivity extends Activity {
 		imgBtnColor.setOnClickListener(new OnClickListener() {
 			public void onClick(View view) {
 				AlertDialog.Builder builder = new AlertDialog.Builder(FileExplorerSettingsActivity.this);
-				CharSequence[] options = {getString(R.string.str_color_white), getString(R.string.str_color_magenta),
+				CharSequence[] options = {getString(R.string.str_color_black), getString(R.string.str_color_magenta),
 										getString(R.string.str_color_yellow), getString(R.string.str_color_red), getString(R.string.str_color_cyan),
-										getString(R.string.str_color_blue), getString(R.string.str_color_green), getString(R.string.str_color_black)};
+										getString(R.string.str_color_blue), getString(R.string.str_color_green), getString(R.string.str_color_white )};
 				
 				int index = ((color_state & 0x00000000) << 2) % options.length;
 				
@@ -65,7 +65,7 @@ public class FileExplorerSettingsActivity extends Activity {
 					public void onClick(DialogInterface dialog, int index) {
 						switch(index) {
 							case 0:
-								color_state = Color.WHITE;
+								color_state = Color.BLACK;
 								is.putExtra("COLOR", color_state);
 								mColorChanged = true;
 								
@@ -105,9 +105,10 @@ public class FileExplorerSettingsActivity extends Activity {
 								is.putExtra("COLOR", color_state);
 								mColorChanged = true;
 							case 7:
-								color_state = Color.BLACK;
+								color_state = Color.WHITE;
 								is.putExtra("COLOR", color_state);
-								mColorChanged = true;	
+								mColorChanged = true;
+									
 								break;
 						}
 					}

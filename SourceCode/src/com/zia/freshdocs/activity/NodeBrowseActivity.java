@@ -29,11 +29,13 @@ import java.util.Set;
 
 import org.apache.http.client.ClientProtocolException;
 
+import android.R.integer;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Rect;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
@@ -53,6 +55,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.PopupWindow;
+import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.zia.freshdocs.R;
@@ -62,6 +65,8 @@ import com.zia.freshdocs.model.Constants;
 import com.zia.freshdocs.model.NodeRef;
 import com.zia.freshdocs.model.Constants.NetworkStatus;
 import com.zia.freshdocs.preference.CMISPreferencesManager;
+import com.zia.freshdocs.util.SharedPreferencesAccess;
+import com.zia.freshdocs.widget.ViVoteChart;
 import com.zia.freshdocs.widget.adapter.CMISAdapter;
 import com.zia.freshdocs.widget.quickaction.QuickActionWindow;
 
@@ -78,7 +83,8 @@ public class NodeBrowseActivity extends DashboardActivity implements OnItemLongC
 	private PopupWindow mPopUp;
 	private final int REFRESH = 0;
 	private final int CLOSE_DIALOG = 1;
-	private final int SHOW_DIALOG = 2;
+	private final int CREATE_NEW_FOLDER = 2;
+	private final int RATING = 3;
 	private String mFolderName, mFolderDescription;
 
 	/** Called when the activity is first created. */
@@ -149,7 +155,7 @@ public class NodeBrowseActivity extends DashboardActivity implements OnItemLongC
 			mHandler.sendEmptyMessage(REFRESH);
 			return true;
 		case R.id.menu_item_create_folder:
-			mHandler.sendEmptyMessage(SHOW_DIALOG);
+			mHandler.sendEmptyMessage(CREATE_NEW_FOLDER);
 			return true;
 		case R.id.menu_item_favorites:
 			Intent favoritesIntent = new Intent(this, FavoritesActivity.class);
@@ -172,11 +178,15 @@ public class NodeBrowseActivity extends DashboardActivity implements OnItemLongC
 			case CLOSE_DIALOG:
 				mPopUp.dismiss();
 				break;
-			case SHOW_DIALOG:
+			case CREATE_NEW_FOLDER:
 				showCreateNewFolderDialog();
 				break;
+			case RATING:
+				showRatingDialog();
+			break;
 			}
-		}};
+		}
+		};
 	
 	protected void onQuit() {
 		Intent quitIntent = new Intent();
@@ -230,6 +240,43 @@ public class NodeBrowseActivity extends DashboardActivity implements OnItemLongC
 
 		if (data != null && data.hasExtra(Constants.QUIT)) {
 			onQuit();
+		}
+	}
+	
+	private void showRatingDialog(){
+		try {
+			//We need to get the instance of the LayoutInflater, use the context of this activity
+	        LayoutInflater inflater = (LayoutInflater) NodeBrowseActivity.this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+	        //Inflate the view from a predefined XML layout
+	        View layout = inflater.inflate(R.layout.rating_layout, null, false);
+	        // create a WRAP_CONTENT PopupWindow
+	        mPopUp = new PopupWindow(layout, WindowManager.LayoutParams.FILL_PARENT, WindowManager.LayoutParams.WRAP_CONTENT, true);
+	        mPopUp.setBackgroundDrawable(new BitmapDrawable());
+	        mPopUp.setOutsideTouchable(true);
+	        // display the popup in the center
+	        mPopUp.showAtLocation(layout, Gravity.CENTER, 0, 0);
+	        
+	        String ratingsCount, ratingsTotal, averageRating;
+	        
+	        ratingsCount = SharedPreferencesAccess.getValueFromSharedPreferences(NodeBrowseActivity.this, "ratingsCount");
+	        ratingsTotal = SharedPreferencesAccess.getValueFromSharedPreferences(NodeBrowseActivity.this, "ratingsTotal");
+	        averageRating = SharedPreferencesAccess.getValueFromSharedPreferences(NodeBrowseActivity.this, "averageRating");
+	        
+	        TextView txtChartVoteRankPoint = (TextView) layout.findViewById(R.id.txtChartVoteRankPoint);
+	        txtChartVoteRankPoint.setText(averageRating);
+	        
+	        RatingBar rtbChartVoteRankPoint = (RatingBar) layout.findViewById(R.id.rtbChartVoteRankPoint);
+	        rtbChartVoteRankPoint.setRating(Float.parseFloat(averageRating.trim()));
+	        
+	        TextView txtChartVoteTotalComment = (TextView) layout.findViewById(R.id.txtChartVoteTotalComment);
+	        txtChartVoteTotalComment.setText("(" + ratingsTotal + ")");
+	        
+	        ViVoteChart viVoteChart = (ViVoteChart) layout.findViewById(R.id.loChartView);
+	        int[] rateValue = {0,0,0,2,1};
+	        viVoteChart.setAttribute(rateValue);
+	        viVoteChart.createChart();
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 	}
 	
@@ -489,26 +536,28 @@ public class NodeBrowseActivity extends DashboardActivity implements OnItemLongC
 							mRequestThread.start();
 						}
 					});
-			mQuickAction.addItem(getResources().getDrawable(R.drawable.excel), "Get rating",
+			
+			mQuickAction.addItem(getResources().getDrawable(R.drawable.excel), "Rating",
 					new OnClickListener() {
 						public void onClick(View v) {
 							mRequestThread = new Thread(new Runnable() {
 								public void run() {
 									synchronized (this) {
-										String folderId = mAdapter.getItem(
-												position).getObjectId();
+										String folderId = mAdapter.getItem(position).getObjectId();
 										if (folderId != null) {
 											folderId = folderId.substring(folderId.lastIndexOf("/") + 1,folderId.length());
 											try {
-												mAdapter.getCmis().getRating(folderId);
+												if(mAdapter.getCmis().getRating(NodeBrowseActivity.this, folderId)){
+													mHandler.sendEmptyMessage(RATING);
+													mQuickAction.dismiss();
+												}
 											} catch (ClientProtocolException e) {
 												e.printStackTrace();
 											} catch (IOException e) {
 												e.printStackTrace();
 											}
-											mQuickAction.dismiss();
-											mHandler.sendEmptyMessage(REFRESH);
 										}
+										
 									}
 								}
 							});
@@ -527,7 +576,7 @@ public class NodeBrowseActivity extends DashboardActivity implements OnItemLongC
 										if (folderId != null) {
 											folderId = folderId.substring(folderId.lastIndexOf("/") + 1,folderId.length());
 											try {
-												mAdapter.getCmis().addRating(folderId, "5", "Rate via Android");
+												mAdapter.getCmis().addRating(folderId, "1", "Rate via Android");
 											} catch (ClientProtocolException e) {
 												e.printStackTrace();
 											} catch (IOException e) {

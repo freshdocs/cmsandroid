@@ -55,5 +55,6 @@
 
     <!-- View -->
     <color name="light">#BBBBBB</color>
-
+    
+    <color name="body_background">#cecece</color>
 </resources>
