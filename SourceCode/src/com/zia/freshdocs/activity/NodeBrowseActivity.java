@@ -25,6 +25,7 @@ package com.zia.freshdocs.activity;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Set;
 
 import org.apache.http.client.ClientProtocolException;
@@ -39,6 +40,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 import android.view.Display;
 import android.view.Gravity;
 import android.view.KeyEvent;
@@ -90,6 +92,7 @@ public class NodeBrowseActivity extends DashboardActivity implements OnItemLongC
 	private final int RATE_COMMENT = 4;
 	private String mFolderName, mFolderDescription;
 	private String mFolderId; 
+	private String mFavoriteTitle;
 
 	/** Called when the activity is first created. */
 	@Override
@@ -337,7 +340,7 @@ public class NodeBrowseActivity extends DashboardActivity implements OnItemLongC
 							mAdapter.getCmis().addComment(mFolderId, txtTitle.getText().toString() , txtComment.getText().toString());
 							
 							if(rtbRate.getRating() != 0)
-								mAdapter.getCmis().addRating(mFolderId, String.valueOf(rtbRate.getRating()), "Rate via Android");
+								mAdapter.getCmis().addRating(mFolderId, String.valueOf(rtbRate.getRating()));
 						} catch (ClientProtocolException e) {
 							e.printStackTrace();
 						} catch (IOException e) {
@@ -442,17 +445,86 @@ public class NodeBrowseActivity extends DashboardActivity implements OnItemLongC
 							mAdapter.shareContent(position);
 						}
 					});
-
-			String favoriteTitle = getString(R.string.add_favorite);
+			mFavoriteTitle = getString(R.string.add_favorite);
 			if (favorites.contains(ref)) {
-				favoriteTitle = getString(R.string.remove_favorite);
+				mFavoriteTitle = getString(R.string.remove_favorite);
 			}
 
 			mQuickAction.addItem(getResources().getDrawable(R.drawable.excel),
-					favoriteTitle, new OnClickListener() {
+					mFavoriteTitle, new OnClickListener() {
 						public void onClick(View v) {
 							mQuickAction.dismiss();
+							
+							// Add/Remove favorite in Client
 							mAdapter.toggleFavorite(position);
+							
+							if(mFavoriteTitle.equalsIgnoreCase(getString(R.string.add_favorite))){
+								// Add favorite in Server
+								try {
+									String documentId = mAdapter.getItem(position).getObjectId();
+									String userId = mAdapter.getCmis().getPrefs().getUsername();
+									if(documentId != null && userId != null){
+										ArrayList<String> oldFavorites = mAdapter.getCmis().getFavorite(userId);
+										if(oldFavorites != null){
+											oldFavorites.add(documentId);
+											String newFavorites = "";
+											for(int i = 0; i < oldFavorites.size(); i++){
+												if(i == oldFavorites.size() - 1)
+													newFavorites = newFavorites + oldFavorites.get(i);
+												else
+													newFavorites = newFavorites + oldFavorites.get(i) + ",";
+											}
+											
+											Log.e("addFavorite", newFavorites);
+											
+											mAdapter.getCmis().addFavorite(userId, newFavorites);
+											mHandler.sendEmptyMessage(REFRESH);
+										}
+									}else{
+										
+									}
+									
+								} catch (ClientProtocolException e) {
+									e.printStackTrace();
+								} catch (IOException e) {
+									e.printStackTrace();
+								}
+							}else{
+								// Remove favorite in Server
+								try {
+									String documentId = mAdapter.getItem(position).getObjectId();
+									String userId = mAdapter.getCmis().getPrefs().getUsername();
+									if(documentId != null && userId != null){
+										ArrayList<String> oldFavorites = mAdapter.getCmis().getFavorite(userId);
+										if(oldFavorites != null){
+											int index = oldFavorites.indexOf(documentId);
+											if(index != -1){ // If found
+												oldFavorites.remove(index);  // Remove favorite
+												String newFavorites = "";
+												for(int i = 0; i < oldFavorites.size(); i++){
+													if(i == oldFavorites.size() - 1)
+														newFavorites = newFavorites + oldFavorites.get(i);
+													else
+														newFavorites = newFavorites + oldFavorites.get(i) + ",";
+												}
+												
+												Log.e("removeFavorite", newFavorites);
+												
+												mAdapter.getCmis().addFavorite(userId, newFavorites);
+												mHandler.sendEmptyMessage(REFRESH);
+											}
+										}
+									}else{
+										
+									}
+									
+								} catch (ClientProtocolException e) {
+									e.printStackTrace();
+								} catch (IOException e) {
+									e.printStackTrace();
+								}
+							}
+
 						}
 					});
 			
@@ -491,28 +563,6 @@ public class NodeBrowseActivity extends DashboardActivity implements OnItemLongC
 						public void onClick(View v) {
 							mAdapter.showFileInfo(NodeBrowseActivity.this, position, isFile);
 							mQuickAction.dismiss();
-						}
-					});
-			mQuickAction.addItem(getResources().getDrawable(R.drawable.excel),
-					getString(R.string.str_delete),
-					new OnClickListener() {
-						public void onClick(View v) {
-							mRequestThread = new Thread(new Runnable() {
-								public void run() {
-									synchronized (this) {
-											try {
-												mAdapter.getCmis().getPerson("demo");
-											} catch (ClientProtocolException e) {
-												e.printStackTrace();
-											} catch (IOException e) {
-												e.printStackTrace();
-											}
-											mQuickAction.dismiss();
-											mHandler.sendEmptyMessage(REFRESH);
-									}
-								}
-							});
-							mRequestThread.start();
 						}
 					});
 		} else { // If folder

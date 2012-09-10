@@ -28,6 +28,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -65,6 +68,7 @@ import android.content.Context;
 import android.text.format.DateFormat;
 import android.util.Log;
 
+import com.google.gson.Gson;
 import com.zia.freshdocs.model.Constants.NetworkStatus;
 import com.zia.freshdocs.model.NodeRef;
 import com.zia.freshdocs.net.EasySSLSocketFactory;
@@ -97,6 +101,8 @@ public class CMIS {
 	protected static final String DELETE_COMMENT_URI = "/alfresco/service/api/comment/node/workspace/SpacesStore/%s";
 	
 	protected static final String GET_PERSON_URI = "/alfresco/service/api/people/%s";
+	
+	protected static final String ADD_FAVORITE_URI = "/alfresco/s/api/people/%s/preferences";
 	
 	private CMISHost mPrefs;
 	private CMISParser mParser;
@@ -367,7 +373,7 @@ public class CMIS {
 		 
 	}
 	
-	public void addRating(String fileId, String rating, String ratingScheme) throws ClientProtocolException, IOException{
+	public void addRating(String fileId, String rating) throws ClientProtocolException, IOException{
 		String json;
 		String path = String.format(GET_RATING_URI, fileId);
 		 String url = new URL(mPrefs.isSSL() ? "https" : "http",
@@ -407,6 +413,117 @@ public class CMIS {
 	      // immediate deallocation of all system resources
 	      httpclient.getConnectionManager().shutdown();
 		 
+	}
+	
+	public void addFavorite(String userId, String documentId) throws ClientProtocolException, IOException{
+		String json;
+		String path = String.format(ADD_FAVORITE_URI, userId);
+		 String url = new URL(mPrefs.isSSL() ? "https" : "http",
+					mPrefs.getHostname(), buildRelativeURI(path)).toString();
+		 DefaultHttpClient httpclient = new DefaultHttpClient();
+			
+		 HttpPost httppost = new HttpPost(url);
+//		 
+//		 String data = "{" 
+//				 	+ "\"rating\" : " + rating + ","
+//				   + "\"ratingScheme\" : \"" + "fiveStarRatingScheme"+ "\""
+//					+ "}";
+		 
+		 String data = "{" + "\"org\":{\"alfresco\":{\"share\":{\"documents\":{\"favourites\":\"" + documentId + "\"}}}}}";
+		 
+		 StringEntity requestEntity = new StringEntity(data, "UTF-8");
+		  httppost.setEntity(requestEntity);
+		  httppost.setHeader("Content-type", "application/json");
+		 
+		  Log.i("executing request" , String.valueOf(httppost.getRequestLine()));
+		  HttpResponse response = httpclient.execute(httppost);
+		  HttpEntity entity = response.getEntity();
+		
+		  System.out.println("----------------------------------------");
+		  System.out.println(response.getStatusLine());
+		  
+		  if (entity != null) {
+	        	 Log.i("response content length:", entity.getContentLength() + "");
+
+	            json = EntityUtils.toString(entity);
+	            
+	            Log.i("response content:" , json);
+	            
+	            response.getEntity().consumeContent();
+	         }
+	      
+	      // When HttpClient instance is no longer needed,
+	      // shut down the connection manager to ensure
+	      // immediate deallocation of all system resources
+	      httpclient.getConnectionManager().shutdown();
+		 
+	}
+	
+	
+	public ArrayList<String> getFavorite(String userId) throws ClientProtocolException, IOException{
+		ArrayList<String> favouritesArr = new ArrayList<String>();
+		String json;
+		JSONObject jsonObj;
+		String path = String.format(ADD_FAVORITE_URI, userId);
+		 String url = new URL(mPrefs.isSSL() ? "https" : "http",
+					mPrefs.getHostname(), buildRelativeURI(path)).toString();
+		 DefaultHttpClient httpclient = new DefaultHttpClient();
+			
+		 HttpGet httpGet = new HttpGet(url);
+		 
+		  Log.i("executing request" , String.valueOf(httpGet.getRequestLine()));
+		  HttpResponse response = httpclient.execute(httpGet);
+		  HttpEntity entity = response.getEntity();
+		
+		  System.out.println("----------------------------------------");
+		  System.out.println(response.getStatusLine());
+		  int responseCode = response.getStatusLine().getStatusCode();
+		  
+		  if (entity != null) {
+	        	 Log.i("response content length:", entity.getContentLength() + "");
+
+	            json = EntityUtils.toString(entity);
+	            
+	            Log.i("response content:" , json);
+	            if(responseCode == 200){
+					try {
+						jsonObj = new JSONObject(json);
+						String orgData = jsonObj.isNull("org") ? "" : jsonObj.getString("org");
+						JSONObject orgObj = new JSONObject(orgData);
+						
+						String alfrescoData = orgObj.isNull("alfresco") ? "" : orgObj.getString("alfresco");
+						JSONObject alfrescoObj = new JSONObject(alfrescoData);
+						
+						String shareData = alfrescoObj.isNull("share") ? "" : alfrescoObj.getString("share");
+						JSONObject shareObj = new JSONObject(shareData);
+						
+						String documentsData = shareObj.isNull("documents") ? "" : shareObj.getString("documents");
+						JSONObject documentsObj = new JSONObject(documentsData);
+						
+						String favouritesData = documentsObj.isNull("favourites") ? "" : documentsObj.getString("favourites");
+						
+						Log.d("returnData", favouritesData);
+						
+						String[] favoritesTemp = favouritesData.split(",");
+						
+						for(int i = 0; i < favoritesTemp.length; i++){
+							favouritesArr.add(favoritesTemp[i]);
+						}
+	
+					} catch (Exception e) {
+						e.printStackTrace();
+						return null;
+					}
+	            }
+	            
+	            response.getEntity().consumeContent();
+	         }
+	      
+	      // When HttpClient instance is no longer needed,
+	      // shut down the connection manager to ensure
+	      // immediate deallocation of all system resources
+	      httpclient.getConnectionManager().shutdown();
+		 return favouritesArr;
 	}
 	
 	public boolean getRating(Context context, String fileId) throws ClientProtocolException, IOException {

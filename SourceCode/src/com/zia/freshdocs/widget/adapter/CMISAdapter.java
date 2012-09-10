@@ -314,26 +314,34 @@ public class CMISAdapter extends ArrayAdapter<NodeRef> {
 				notifyDataSetChanged();
 			}
 		} else {
-			downloadContent(ref, new Handler() {
-				public void handleMessage(Message msg) {
-					boolean done = msg.getData().getBoolean("done");
-					if (done) {
-						dismissProgressDlg();
+			try {
+				downloadContent(ref, new Handler() {
+					public void handleMessage(Message msg) {
+						boolean done = msg.getData().getBoolean("done");
+						if (done) {
+							dismissProgressDlg();
+							File file = null;
+							try {
+								file = (File) mDlThread.getResult();
+							} catch (ClassCastException e) {
+								e.printStackTrace();
+							}
 
-						File file = (File) mDlThread.getResult();
-
-						if (file != null) {
-							favorites.add(ref);
-							prefsMgr.storeFavorites(context, favorites);
-						}
-					} else {
-						int value = msg.getData().getInt("progress");
-						if (value > 0) {
-							mProgressDlg.setProgress(value);
+							if (file != null) {
+								favorites.add(ref);
+								prefsMgr.storeFavorites(context, favorites);
+							}
+						} else {
+							int value = msg.getData().getInt("progress");
+							if (value > 0) {
+								mProgressDlg.setProgress(value);
+							}
 						}
 					}
-				}
-			});
+				});
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
 	}
 	
