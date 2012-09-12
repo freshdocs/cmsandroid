@@ -260,10 +260,10 @@ public class HomeActivity extends DashboardActivity {
 			startActivity(new Intent(getApplicationContext(), FileExploreActivity.class));
 			break;
 		case 3:
-			startActivity(new Intent(getApplicationContext(), F3Activity.class));
+			startActivity(new Intent(getApplicationContext(), FavoritesActivity.class));
 			break;
 		case 4:
-			startActivity(new Intent(getApplicationContext(), F4Activity.class));
+			startActivity(new Intent(getApplicationContext(), HostPreferenceActivity.class));
 			break;
 		default:
 			break;

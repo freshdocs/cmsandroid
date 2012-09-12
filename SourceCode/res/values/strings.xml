@@ -55,8 +55,8 @@
     <string name="title_search">Search</string>
     <string name="title_feature1">CMIS</string>
     <string name="title_feature2">File Explorer</string>
-    <string name="title_feature3">Workflow</string>
-    <string name="title_feature4">Feature 4</string>
+    <string name="title_feature3">Favorites</string>
+    <string name="title_feature4">Add Server</string>
     <string name="default_intro">This is the default content view for an activity. Be sure to change your activity\'s onCreate method. Use setContentView on a custom layout.</string>
     <string name="feature1_intro">Feature 1 content goes here.</string>
     <string name="feature2_intro">Feature 2 content goes here.</string>

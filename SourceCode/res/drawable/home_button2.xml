@@ -15,8 +15,8 @@
     limitations under the License.
 -->
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:state_focused="true" android:state_pressed="true" android:drawable="@drawable/stack_pressed"/>
-    <item android:state_focused="false" android:state_pressed="true" android:drawable="@drawable/stack_pressed"/>
-    <item android:state_focused="true" android:drawable="@drawable/stack_selected"/>
-    <item android:state_focused="false" android:state_pressed="false" android:drawable="@drawable/stack_default"/>
+    <item android:state_focused="true" android:state_pressed="true" android:drawable="@drawable/menu_explorer_pressed"/>
+    <item android:state_focused="false" android:state_pressed="true" android:drawable="@drawable/menu_explorer_pressed"/>
+    <item android:state_focused="true" android:drawable="@drawable/menu_explorer_pressed"/>
+    <item android:state_focused="false" android:state_pressed="false" android:drawable="@drawable/menu_explorer_default"/>
 </selector>
