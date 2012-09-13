@@ -1,0 +1,359 @@
+2012-09-12 Hung Nguyen Ngoc  <the.freeze.heart@gmail.com>
+
+* HomeActivity.java (onClickFeature): Change some activity
+
+2012-09-10 Nam Vu Hai  <zuzoovn@gmail.com>
+
+* NodeBrowseActivity.java: (onClick) : add/ remove favorite
+
+* CMIS.java (addFavorite): Add file to favorite, synchronized with server
+(getFavorite): get user's favorite
+
+* CMISAdapter.java (toggleFavorite):implement add/remove favorite, synchronized with server
+
+2012-09-09 Nam Vu Hai  <zuzoovn@gmail.com>
+
+* rating_layout.xml: rating dialog
+
+* votechart.xml: display vote chart of rating
+
+* colors.xml: add more color
+
+* NodeBrowseActivity.java (showRatingDialog) : display rating dialog
+
+* CMIS.java: (getRating): get rating information
+
+* SharedPreferencesAccess.java (saveValueToSharedPreferences) Save value to SharedPreferences
+(getValueFromSharedPreferences) get value from SharedPreferences
+(saveJSONArrayToSharedPreferences) save JSON Array To SharedPreferences
+(loadJSONArrayToSharedPreferences) load JSON Array To SharedPreferences
+
+* DrawRect.java: draw rectangle view
+
+* ViVoteChart.java (ViVoteChart): create vote chart
+
+2012-09-08 Nam Vu Hai  <zuzoovn@gmail.com>
+
+* CMIS.java (addComment) : fix bug of this function
+(getPerson) : get user's information
+
+* TransparentPanel.java: create transparent layout
+
+2012-08-15 Nam Vu Hai  <zuzoovn@gmail.com>
+
+* NodeBrowseActivity.java (onClick) upload file to repository
+
+* CMIS.java (addComment) : add comment
+(getRating): get rating of file or folder
+(getComment): get file/folder's comment
+(deleleComment): delete file/folder's comment
+(upload): upload file
+
+2012-07-30 Nam Vu Hai  <zuzoovn@gmail.com>
+
+* create_folder_alfresco_dialog.xml: create new folder layout
+
+* NodeBrowseActivity.java: (onOptionsItemSelected) : improve refresh function
+(Handler) : even handler
+(onListItemClick) : get folder Id
+(showConfirmDialog) : show comfirm Dialog before create new folder
+
+* CMIS.java (createFolder): create folder in repository
+(deleleFolder): delete folder from repository
+
+2012-07-29 Nam Vu Hai  <zuzoovn@gmail.com>
+
+* DashboardActivity.java (onClickSearch ) : improve search
+
+* CMISParser10.java (parseChildren) : information parser
+
+* NodeRef.java (NodeRef) add more atribute
+
+* Utils.java (convertStreamToString): converts a stream to a string
+
+* CMISAdapter.java (showFileInfo): Add more information
+
+2012-07-28 Nam Vu Hai  <zuzoovn@gmail.com>
+
+* Utils.java (createCustomView) : create Custom View
+
+* custom_table.xml : create layout of table
+
+* AndroidManifest.xml: delete some unused data
+
+
+2012-07-24 Nam Vu Hai  <zuzoovn@gmail.com>
+
+* CMISAdapter.java (showFileInfo) : Display file information
+
+* AndroidManifest.xml: Add file explorer Activity
+
+* FileExploreActivity.java : File Explorer
+(returnIntentResults) : Returns the file that was selected to the intent
+(updateStorageLabel): update Storage Label
+(onListItemClick): add more functionality and let the user interact with more file types
+(onCreateDialog) : create Dialog
+(onKeyDown): Key press handler
+(loadMenuItems): Load up our menu
+(doMenu): Toggle our menu on user pressing the menu key
+(onItemLongClick) shows the quick action window on the screen
+
+* EventHandler.java: handle UI events and communicate
+
+* IconStore.java: store information of file icon
+
+* ThumbnailCreator.java : create file thumbnail
+
+* CustomFastScrollView.java : displays a special scroll bar
+
+* ApplicationBackupActivity.java : backup applications to the SDCard
+
+* AudioPlayblackActivity.java: Play audio File
+
+* DirectoryInfoActivity.java : List information of Directory
+
+* FileExplorerSettingsActivity.java: File Explorer Settings
+
+* ProcessManagerActivity.java: Process Manager
+
+* file_info_dialog.xml: layout of file infomation dialog
+
+* colors.xml: add more colors
+
+* btn_titlebar_bg.xml
+
+* custom_menu_selector.xml : defining the behavior for the background of individual menu items
+
+* list_selector_background.xml: defining the background of list selector
+
+* list_selector_background_transition.xml
+
+
+2012-07-23  Nam Vu Hai  <zuzoovn@gmail.com>
+
+* HostsActivity.java (onItemLongClick): Show quick action when long press a file/folder for edit, detele Host
+
+* NodeBrowseActivity.java (onItemLongClick): Show quick action when long press a file/folder for share, add favorite
+
+* SplashActivity.java (onCreate): remove app title
+
+* UITableViewActivity.java (UITableViewActivity) : UITable Gui
+
+* UITableView.java(UITableView): UITable Model
+
+* BasicItem.java(BasicItem): Basic Item for UITable
+
+* IListItem.java (IListItem): IList Item for UITable
+
+* ViewItem.java (ViewItem) : ViewItem for UITable
+
+* UIButton.java (UIButton) : UIButton for UITable
+
+* ActionItem.java: Action item, displayed as menu with icon and text.
+
+* CustomPopupWindow.java (CustomPopupWindow): Create a QuickAction
+(onCreate) : create a view and setup the event listeners on child views
+(preShow) :  stuff to do right before displaying
+(setContentView): Will inflate and set the view from a resource id
+(showDropDown): Displays like a popdown menu from the anchor view
+(showLikeQuickAction) : Displays like a QuickAction from the anchor view
+
+* QuickAction.java : Popup window, shows action list as icon and text like the one in Gallery3D app. 
+
+* QuickActionItem.java: A class that creates a layout arranged to fit in a QuickActionMenu
+
+* QuickActionWindow.java: A class that can display, as a popup badge, a collection of QuickActionItems
+
+* AndroidManifest.xml : Add some Holo , Quick Action Activity
+
+* ButtonHolo.java: Holo style for the Button
+
+* CheckedTextViewHolo.java: Holo style for the CheckedTextView
+
+* DialogHolo.java: Holo style for the Dialog
+
+* EditTextHolo.java: Holo style for the EditText
+
+* FontLoader.java: Roboto font loader
+
+* HoloAlertDialogBuilder.java: Holo style for the button
+
+* HoloToast.java: Holo style for the button
+
+* RadioButtonHolo.java: Holo style for the button
+
+* TextViewHolo.java: Holo style for the button
+
+* DashboardActivity.java : base class for activities in the dashboard application
+
+* HomeActivity.java: demonstrates the dashboard user interface pattern.
+
+* HomeButtonsAdapter.java: provides a set of ImageCell objects that support dragging and dropping
+
+* home_button1.xml: another style of button
+
+* home_button2.xml: another style of button
+
+* home_button3.xml: another style of button
+
+* home_button4.xml: another style of button
+
+* title_about.xml: title of about
+
+* title_button.xml: title of button
+
+* title_home.xml: title of dashboard
+
+* dimens.xml: Add more dimens
+
+* background_holo_dark.xml: background of holo dark style
+
+* background_holo_light.xml: background of holo light style
+
+* btn_checkbox_holo_dark.xml: check box holo dark style
+
+* btn_checkbox_holo_light.xml: check box holo light style
+
+* btn_default_holo_dark.xml: defaul holo dark style
+
+* btn_default_holo_light.xml: defaul holo light style
+
+* btn_radio_holo_dark.xml: radio holo dark style
+
+* btn_radio_holo_light.xml: radio holo light style
+
+* button_holo.xml: button holo layout
+
+* edit_text_holo.xml
+
+* edit_text_holo_dark.xml
+
+* edit_text_holo_light.xml
+
+* list_selector_background_transition_holo_dark.xml
+
+* list_selector_background_transition_holo_light.xml
+
+* list_selector_holo_dark.xml
+
+* list_selector_holo_light.xml
+
+* progress_horizontal_holo_dark.xml
+
+* progress_horizontal_holo_light.xml
+
+* progress_indeterminate_horizontal_holo.xml
+
+* progress_large_holo.xml
+
+* progress_medium_holo.xml
+
+* progress_small_holo.xml
+
+* scrubber_control_selector_holo.xml
+
+* scrubber_progress_horizontal_holo_dark.xml
+
+* scrubber_progress_horizontal_holo_light.xml
+
+* spinner_background_holo_dark.xml
+
+* spinner_background_holo_light.xml
+
+* alert_dialog_holo.xml
+
+* alert_dialog_message.xml
+
+* alert_dialog_progress.xml
+
+* alert_dialog_title.xml
+
+* disappear.xml: quick action disappear animation
+
+* grow_from_bottom.xml: another quick action animation
+
+* grow_from_bottomleft_to_topright.xml: another quick action animation
+
+* grow_from_bottomright_to_topleft.xml: another quick action animation
+
+* grow_from_top.xml: another quick action animation
+
+* grow_from_topleft_to_bottomright.xm: another quick action animation
+
+* grow_from_topright_to_bottomleft.xml: another quick action animation
+
+* pump_bottom.xml: another quick action animation
+
+* pump_top.xml: another quick action animation
+
+* quickaction_above_enter.xml: another quick action animation
+
+* quickaction_above_exit.xml: another quick action animation
+
+* quickaction_below_enter.xml: another quick action animation
+
+* quickaction_below_exit.xml: another quick action animation
+
+* shrink_from_bottom.xml: another quick action animation
+
+* shrink_from_bottomleft_to_topright.xml: another quick action animation
+
+* shrink_from_bottomright_to_topleft.xml: another quick action animation
+
+* shrink_from_top.xml: another quick action animation
+
+* shrink_from_topleft_to_bottomright.xml: another quick action animation
+
+* shrink_from_topright_to_bottomleft.xml: another quick action animation
+
+* text_color_selector.xml : color of text selector
+
+* quickaction_disambig_checkbox.xml: another quick action animation
+
+* quickaction_slider_btn.xml: another quick action animation
+
+* action_item_btn.xml
+
+* background_view_rounded_bottom.xml: background of rounded bottom
+
+* background_view_rounded_container.xml: background of rounded container
+
+* background_view_rounded_middle.xml: background of rounded middle
+
+* background_view_rounded_single.xml: background of rounded single
+
+* background_view_rounded_top.xml: background of rounded top
+
+* button_text_color.xml: color of button
+
+* chevron.xml: the chevron image
+
+* action_item.xml : the action item layout
+
+* custom_view2.xml: custom view of UITable
+
+* hosts.xml: hosts layout
+
+* list_container.xml : list container layout
+
+* list_item_bottom.xml: list item bottom layout
+
+* list_item_middle.xml: list item middle layout
+
+* list_item_single.xml: list item single layout
+
+* list_item_top.xml: list item layout
+
+* popup.xml: layout of popup windows
+
+* quickaction.xm: quick action layout
+
+* quickaction_item.xml: layout of quick action items
+
+* uitableview_activity.xml: layout of uitableview style
+
+* attrs.xml: add more atribute
+
+* dimens.xml : add more dimens
+
+* styles.xml : add quick action & holo style
