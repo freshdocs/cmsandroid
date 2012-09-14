@@ -117,5 +117,5 @@
 	<string name="str_title">Title</string>
 	<string name="str_mandatory_info">You must enter a valid data</string>
 	<string name="str_no_comment">No Comment</string>
-	
+	<string name="str_rating">Rating</string>
 </resources>

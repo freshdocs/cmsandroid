@@ -30,6 +30,7 @@ import java.util.Set;
 
 import org.apache.http.client.ClientProtocolException;
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.annotation.SuppressLint;
@@ -66,7 +67,6 @@ import android.widget.Toast;
 import com.zia.freshdocs.R;
 import com.zia.freshdocs.app.CMISApplication;
 import com.zia.freshdocs.cmis.CMIS;
-import com.zia.freshdocs.model.CommentAdapter;
 import com.zia.freshdocs.model.Constants;
 import com.zia.freshdocs.model.Constants.NetworkStatus;
 import com.zia.freshdocs.model.NodeRef;
@@ -75,6 +75,7 @@ import com.zia.freshdocs.util.SharedPreferencesAccess;
 import com.zia.freshdocs.util.StringUtils;
 import com.zia.freshdocs.widget.ViVoteChart;
 import com.zia.freshdocs.widget.adapter.CMISAdapter;
+import com.zia.freshdocs.widget.adapter.CommentAdapter;
 import com.zia.freshdocs.widget.quickaction.QuickActionWindow;
 
 @SuppressLint("HandlerLeak")
@@ -96,6 +97,7 @@ public class NodeBrowseActivity extends DashboardActivity implements OnItemLongC
 	private String mFolderName, mFolderDescription;
 	private String mFolderId; 
 	private String mFavoriteTitle;
+	private ArrayList<String> mArrayComment;
 
 	/** Called when the activity is first created. */
 	@Override
@@ -297,9 +299,49 @@ public class NodeBrowseActivity extends DashboardActivity implements OnItemLongC
 	        viVoteChart.createChart();
 	        
 	        ListView lvCcomment = (ListView) layout.findViewById(R.id.lvComment);
-	        ArrayList<String> arrayComment = new ArrayList<String>();
-	        final CommentAdapter arrayAdapter = new CommentAdapter(this,R.layout.user_comment_item, arrayComment);
+	        mArrayComment = new ArrayList<String>();
+	        final CommentAdapter arrayAdapter = new CommentAdapter(this,R.layout.user_comment_item, mArrayComment);
 	        lvCcomment.setAdapter(arrayAdapter);
+	        lvCcomment.setOnItemLongClickListener(new OnItemLongClickListener() {
+
+				@Override
+				public boolean onItemLongClick(AdapterView<?> adapterView, View view, final int position, long id) {
+					// Remove old view
+					mQuickAction.removeAll();
+					mQuickAction.addItem(getResources().getDrawable(R.drawable.excel),
+							getString(R.string.delete_server), new OnClickListener() {
+								public void onClick(View v) {
+									try {
+										String dataStr = mArrayComment.get(position);
+										JSONObject dataObj = new JSONObject(dataStr);
+										String nodeRef = dataObj.isNull("nodeRef") ? "" : dataObj.getString("nodeRef");
+										if(!StringUtils.isEmpty(nodeRef)){
+											try {
+												mAdapter.getCmis().deleleComment(nodeRef);
+												mArrayComment.remove(position);
+												arrayAdapter.notifyDataSetChanged();
+											} catch (ClientProtocolException e) {
+												e.printStackTrace();
+											} catch (IOException e) {
+												e.printStackTrace();
+											}
+											mQuickAction.dismiss();
+											
+										}
+										
+									} catch (JSONException e) {
+										e.printStackTrace();
+									}
+								}
+							});
+					
+					// shows the quick action window on the screen
+					mQuickAction.show();
+					
+					return false;
+				}
+	        	
+			});
 	        
 	        TextView txtNoComment = (TextView) layout.findViewById(R.id.txtNoComment);
 	        
@@ -322,13 +364,19 @@ public class NodeBrowseActivity extends DashboardActivity implements OnItemLongC
 					    String username = authorObj.isNull("username") ? "" : authorObj.getString("username");
 					    Log.d("username", username);
 					    
+					    String nodeRef = object.isNull("nodeRef") ? "" : object.getString("nodeRef");
+					    if(!StringUtils.isEmpty(nodeRef)){
+					    	nodeRef = nodeRef.substring(nodeRef.lastIndexOf("/") + 1, nodeRef.length());
+					    }
+					    Log.d("nodeRef", nodeRef);
+					    
 					    String createdOn =  object.isNull("createdOn") ? "" : object.getString("createdOn");
 					    Log.d("createdOn", createdOn);
 					    
-					    arrayComment.add("{\"content\": \"" +content + "\",\"createdOn\": \"" +createdOn + "\",\"username\": \"" + username + "\"}");
+					    mArrayComment.add("{\"content\": \"" +content + "\",\"createdOn\": \"" +createdOn + "\",\"nodeRef\": \"" +nodeRef + "\",\"username\": \"" + username + "\"}");
 					    
 					}
-					if(arrayComment.size() == 0){ // No comment
+					if(mArrayComment.size() == 0){ // No comment
 						lvCcomment.setVisibility(View.GONE);
 						txtNoComment.setVisibility(View.VISIBLE);
 					}
@@ -626,33 +674,7 @@ public class NodeBrowseActivity extends DashboardActivity implements OnItemLongC
 							mQuickAction.dismiss();
 						}
 					});
-			mQuickAction.addItem(getResources().getDrawable(R.drawable.excel),
-					getString(R.string.str_upload),
-					new OnClickListener() {
-						public void onClick(View v) {
-							mRequestThread = new Thread(new Runnable() {
-								public void run() {
-									synchronized (this) {
-										mFolderId = mAdapter.getItem(position).getObjectId();
-										if (mFolderId != null) {
-											mFolderId = mFolderId.substring(mFolderId.lastIndexOf("/") + 1,mFolderId.length());
-											try {
-//												mAdapter.getCmis().uploadDocument(folderId);
-//												mAdapter.getCmis().upLoadFile("/sdcard/a.pdf", folderId);
-												File upload = new File(Environment.getExternalStorageDirectory().getPath() + "/a.pdf");
-												mAdapter.getCmis().upload(upload, "longnd", "documentLibrary", "");
-											} catch (IOException e) {
-												e.printStackTrace();
-											}
-											mQuickAction.dismiss();
-											mHandler.sendEmptyMessage(REFRESH);
-										}
-									}
-								}
-							});
-							mRequestThread.start();
-						}
-					});
+
 			mQuickAction.addItem(getResources().getDrawable(R.drawable.excel), getString(R.string.str_delete),
 					new OnClickListener() {
 						public void onClick(View v) {
@@ -678,33 +700,8 @@ public class NodeBrowseActivity extends DashboardActivity implements OnItemLongC
 							mRequestThread.start();
 						}
 					});
-//			mQuickAction.addItem(getResources().getDrawable(R.drawable.excel), "Add comment",
-//					new OnClickListener() {
-//						public void onClick(View v) {
-//							mRequestThread = new Thread(new Runnable() {
-//								public void run() {
-//									synchronized (this) {
-//										mFolderId = mAdapter.getItem(position).getObjectId();
-//										if (mFolderId != null) {
-//											mFolderId = mFolderId.substring(mFolderId.lastIndexOf("/") + 1,mFolderId.length());
-//											try {
-//												mAdapter.getCmis().addComment(mFolderId, "Good", "Up vote");
-//											} catch (ClientProtocolException e) {
-//												e.printStackTrace();
-//											} catch (IOException e) {
-//												e.printStackTrace();
-//											}
-//											mQuickAction.dismiss();
-//											mHandler.sendEmptyMessage(REFRESH);
-//										}
-//									}
-//								}
-//							});
-//							mRequestThread.start();
-//						}
-//					});
 			
-			mQuickAction.addItem(getResources().getDrawable(R.drawable.excel), "Rating",
+			mQuickAction.addItem(getResources().getDrawable(R.drawable.excel), getString(R.string.str_rating),
 					new OnClickListener() {
 						public void onClick(View v) {
 							mRequestThread = new Thread(new Runnable() {
@@ -731,20 +728,19 @@ public class NodeBrowseActivity extends DashboardActivity implements OnItemLongC
 							mRequestThread.start();
 						}
 					});
-			mQuickAction.addItem(getResources().getDrawable(R.drawable.excel), "Delete comments",
+			mQuickAction.addItem(getResources().getDrawable(R.drawable.excel),
+					getString(R.string.str_upload),
 					new OnClickListener() {
 						public void onClick(View v) {
 							mRequestThread = new Thread(new Runnable() {
 								public void run() {
 									synchronized (this) {
-										String folderId = mAdapter.getItem(
-												position).getObjectId();
-										if (folderId != null) {
-											folderId = folderId.substring(folderId.lastIndexOf("/") + 1,folderId.length());
+										mFolderId = mAdapter.getItem(position).getObjectId();
+										if (mFolderId != null) {
+											mFolderId = mFolderId.substring(mFolderId.lastIndexOf("/") + 1,mFolderId.length());
 											try {
-												mAdapter.getCmis().deleleComment(folderId);
-											} catch (ClientProtocolException e) {
-												e.printStackTrace();
+												File upload = new File(Environment.getExternalStorageDirectory().getPath() + "/a.pdf");
+												mAdapter.getCmis().upload(upload, "longnd", "documentLibrary", "");
 											} catch (IOException e) {
 												e.printStackTrace();
 											}

@@ -1,4 +1,4 @@
-package com.zia.freshdocs.model;
+package com.zia.freshdocs.widget.adapter;
 
 import java.util.ArrayList;
 

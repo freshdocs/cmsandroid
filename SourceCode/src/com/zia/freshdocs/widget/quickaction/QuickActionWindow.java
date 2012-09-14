@@ -1,5 +1,7 @@
 package com.zia.freshdocs.widget.quickaction;
 
+import java.util.ArrayList;
+
 import android.app.Activity;
 import android.content.Context;
 import android.content.res.Resources;
@@ -17,7 +19,6 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.animation.Interpolator;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 
 import com.zia.freshdocs.R;
@@ -45,6 +46,8 @@ public class QuickActionWindow extends PopupWindow implements KeyEvent.Callback 
 
 	private View mPView;
 	private Rect mAnchor;
+	
+	private ArrayList<QuickActionItem> mQuickActionItemArray = new ArrayList<QuickActionItem>();
 		
     /**
      * Creates a new Instance of the QuickActionWindow
@@ -115,6 +118,7 @@ public class QuickActionWindow extends PopupWindow implements KeyEvent.Callback 
 		view.setGravity(Gravity.CENTER);
 		final int index = mTrack.getChildCount() - 1;
 		mTrack.addView(view, index);
+		mQuickActionItemArray.add(view);
 	}
 	
 	/**
@@ -148,6 +152,15 @@ public class QuickActionWindow extends PopupWindow implements KeyEvent.Callback 
 	 */
 	public void addItem(int drawable, int resid, OnClickListener l) {
 		addItem(mContext.getResources().getDrawable(drawable), mContext.getResources().getText(resid).toString(), l);
+	}
+	/**
+	 * Remove all items from the QuickActionWindow
+	 */
+	
+	public void  removeAll(){
+		for(int i = 0; i < mQuickActionItemArray.size(); i++){
+			mTrack.removeView(mQuickActionItemArray.get(i));
+		}
 	}
 
 	/**
