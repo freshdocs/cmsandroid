@@ -39,6 +39,7 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -100,6 +101,7 @@ public class NodeBrowseActivity extends DashboardActivity implements OnItemLongC
 	private String mFolderName, mFolderDescription;
 	private String mFolderId; 
 	private String mFavoriteTitle;
+	private Drawable mFavoriteImage;
 	private ArrayList<String> mArrayComment;
 	private int mPosition;
 
@@ -558,7 +560,7 @@ public class NodeBrowseActivity extends DashboardActivity implements OnItemLongC
 					.getInstance();
 			Set<NodeRef> favorites = prefsMgr.getFavorites(this);
 
-			mQuickAction.addItem(getResources().getDrawable(R.drawable.excel),
+			mQuickAction.addItem(getResources().getDrawable(R.drawable.context_share),
 					getString(R.string.send), new OnClickListener() {
 						public void onClick(View v) {
 							mQuickAction.dismiss();
@@ -566,11 +568,13 @@ public class NodeBrowseActivity extends DashboardActivity implements OnItemLongC
 						}
 					});
 			mFavoriteTitle = getString(R.string.add_favorite);
+			mFavoriteImage = getResources().getDrawable(R.drawable.context_favorite_add);
 			if (favorites.contains(ref)) {
 				mFavoriteTitle = getString(R.string.remove_favorite);
+				mFavoriteImage = getResources().getDrawable(R.drawable.context_favorite_remove);
 			}
 
-			mQuickAction.addItem(getResources().getDrawable(R.drawable.excel),
+			mQuickAction.addItem(mFavoriteImage,
 					mFavoriteTitle, new OnClickListener() {
 						public void onClick(View v) {
 							mQuickAction.dismiss();
@@ -648,7 +652,7 @@ public class NodeBrowseActivity extends DashboardActivity implements OnItemLongC
 						}
 					});
 			
-			mQuickAction.addItem(getResources().getDrawable(R.drawable.excel),
+			mQuickAction.addItem(getResources().getDrawable(R.drawable.context_delete),
 					getString(R.string.str_delete),
 					new OnClickListener() {
 						public void onClick(View v) {
@@ -677,7 +681,7 @@ public class NodeBrowseActivity extends DashboardActivity implements OnItemLongC
 
 			// Show file information
 
-			mQuickAction.addItem(getResources().getDrawable(R.drawable.excel),
+			mQuickAction.addItem(getResources().getDrawable(R.drawable.context_file_info),
 					getString(R.string.str_file_information),
 					new OnClickListener() {
 						public void onClick(View v) {
@@ -688,7 +692,7 @@ public class NodeBrowseActivity extends DashboardActivity implements OnItemLongC
 		} else { // If folder
 			isFile = false;
 			// Show folder information
-			mQuickAction.addItem(getResources().getDrawable(R.drawable.excel),
+			mQuickAction.addItem(getResources().getDrawable(R.drawable.context_folder_info),
 					getString(R.string.str_folder_information),
 					new OnClickListener() {
 						public void onClick(View v) {
@@ -697,7 +701,7 @@ public class NodeBrowseActivity extends DashboardActivity implements OnItemLongC
 						}
 					});
 
-			mQuickAction.addItem(getResources().getDrawable(R.drawable.excel), getString(R.string.str_delete),
+			mQuickAction.addItem(getResources().getDrawable(R.drawable.context_delete), getString(R.string.str_delete),
 					new OnClickListener() {
 						public void onClick(View v) {
 							mRequestThread = new Thread(new Runnable() {
@@ -723,7 +727,7 @@ public class NodeBrowseActivity extends DashboardActivity implements OnItemLongC
 						}
 					});
 			
-			mQuickAction.addItem(getResources().getDrawable(R.drawable.excel), getString(R.string.str_rating),
+			mQuickAction.addItem(getResources().getDrawable(R.drawable.context_rating), getString(R.string.str_rating),
 					new OnClickListener() {
 						public void onClick(View v) {
 							mRequestThread = new Thread(new Runnable() {
@@ -750,7 +754,7 @@ public class NodeBrowseActivity extends DashboardActivity implements OnItemLongC
 							mRequestThread.start();
 						}
 					});
-			mQuickAction.addItem(getResources().getDrawable(R.drawable.excel),
+			mQuickAction.addItem(getResources().getDrawable(R.drawable.context_upload),
 					getString(R.string.str_upload),
 					new OnClickListener() {
 						public void onClick(View v) {

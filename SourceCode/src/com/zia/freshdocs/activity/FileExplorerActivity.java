@@ -674,7 +674,8 @@ public final class FileExplorerActivity extends ListActivity implements OnMenuIt
 
 		} else if (keycode == KeyEvent.KEYCODE_BACK && mUseBackKey
 				&& current.equals("/")) {
-			Toast.makeText(FileExplorerActivity.this, "Press back again to quit.",Toast.LENGTH_SHORT).show();
+			// Toast.makeText(FileExplorerActivity.this, "Press back again to quit.",Toast.LENGTH_SHORT).show();
+			finish();
 			mUseBackKey = false;
 			mPathLabel.setText("Path: " + mFileManager.getCurrentDir());
 			return false;
@@ -714,7 +715,7 @@ public final class FileExplorerActivity extends ListActivity implements OnMenuIt
 		cmi.setCaption("Quit");
 		cmi.setImageResourceId(R.drawable.logout);
 		cmi.setId(MENU_QUIT);
-		menuItems.add(cmi);
+		// menuItems.add(cmi);
 		if (!mMenu.isShowing()) {
 			try {
 				mMenu.setMenuItems(menuItems);

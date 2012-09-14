@@ -17,6 +17,7 @@
           android:icon="@drawable/zialogo_sm"/>
 
     <item android:id="@+id/menu_item_quit"
-          android:title="@string/quit" 
+          android:title="@string/quit"
+          android:visible="false"
           android:icon="@android:drawable/ic_lock_power_off"/>
 </menu>
