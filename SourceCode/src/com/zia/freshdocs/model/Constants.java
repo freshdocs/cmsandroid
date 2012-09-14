@@ -62,5 +62,9 @@ public class Constants
 	public static final String QUIT = "quit";
 	
 	public static final String CMISHOST = "CMISHost";
+	
+	public static final String UPLOAD = "upload";
+	
+	public static final String DOCUMENT_LIBRARY= "documentLibrary";
 }
 

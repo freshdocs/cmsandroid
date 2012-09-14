@@ -257,7 +257,7 @@ public class HomeActivity extends DashboardActivity {
 			requestThread.start();
 			break;
 		case 2:
-			startActivity(new Intent(getApplicationContext(), FileExploreActivity.class));
+			startActivity(new Intent(getApplicationContext(), FileExplorerActivity.class));
 			break;
 		case 3:
 			startActivity(new Intent(getApplicationContext(), FavoritesActivity.class));

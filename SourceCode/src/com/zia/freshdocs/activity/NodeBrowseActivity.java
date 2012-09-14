@@ -39,6 +39,7 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
@@ -73,6 +74,7 @@ import com.zia.freshdocs.model.NodeRef;
 import com.zia.freshdocs.preference.CMISPreferencesManager;
 import com.zia.freshdocs.util.SharedPreferencesAccess;
 import com.zia.freshdocs.util.StringUtils;
+import com.zia.freshdocs.util.Utils;
 import com.zia.freshdocs.widget.ViVoteChart;
 import com.zia.freshdocs.widget.adapter.CMISAdapter;
 import com.zia.freshdocs.widget.adapter.CommentAdapter;
@@ -94,10 +96,12 @@ public class NodeBrowseActivity extends DashboardActivity implements OnItemLongC
 	private final int CREATE_NEW_FOLDER = 2;
 	private final int RATING = 3;
 	private final int RATE_COMMENT = 4;
+	public static final int REQUEST_UPLOAD_CODE = 5;
 	private String mFolderName, mFolderDescription;
 	private String mFolderId; 
 	private String mFavoriteTitle;
 	private ArrayList<String> mArrayComment;
+	private int mPosition;
 
 	/** Called when the activity is first created. */
 	@Override
@@ -238,6 +242,7 @@ public class NodeBrowseActivity extends DashboardActivity implements OnItemLongC
 
 	@Override
 	protected void onListItemClick(ListView l, View v, int position, long id) {
+		mPosition = position;
 		mAdapter.getChildren(position);
 		NodeRef ref = mAdapter.getItem(position);
 		// Get parent folder
@@ -252,8 +257,23 @@ public class NodeBrowseActivity extends DashboardActivity implements OnItemLongC
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
-
-		if (data != null && data.hasExtra(Constants.QUIT)) {
+		
+		if(requestCode == REQUEST_UPLOAD_CODE){
+			if(resultCode == RESULT_OK){
+				// If the file selection was successful
+				try {
+					// Get the URI of the selected file
+					final Uri uri = data.getData();
+					// Create a file instance from the URI
+					final File file = new File(Utils.getFilePath(this, uri));
+					
+					// Upload
+					mAdapter.getCmis().upload(file, mAdapter.getItem(mPosition).getName(), Constants.DOCUMENT_LIBRARY, "");
+				} catch (Exception e) {
+					e.printStackTrace();
+				}	
+			}
+		}else if (data != null && data.hasExtra(Constants.QUIT)) {
 			onQuit();
 		}
 	}
@@ -306,6 +326,7 @@ public class NodeBrowseActivity extends DashboardActivity implements OnItemLongC
 
 				@Override
 				public boolean onItemLongClick(AdapterView<?> adapterView, View view, final int position, long id) {
+					mPosition = position;
 					// Remove old view
 					mQuickAction.removeAll();
 					mQuickAction.addItem(getResources().getDrawable(R.drawable.excel),
@@ -518,6 +539,7 @@ public class NodeBrowseActivity extends DashboardActivity implements OnItemLongC
 			final int position, long value) {
 		final boolean isFile;
 		
+		mPosition = position;
 		// array to hold the coordinates of the clicked view
 		int[] xy = new int[2];
 		// fills the array with the computed coordinates
@@ -738,14 +760,11 @@ public class NodeBrowseActivity extends DashboardActivity implements OnItemLongC
 										mFolderId = mAdapter.getItem(position).getObjectId();
 										if (mFolderId != null) {
 											mFolderId = mFolderId.substring(mFolderId.lastIndexOf("/") + 1,mFolderId.length());
-											try {
-												File upload = new File(Environment.getExternalStorageDirectory().getPath() + "/a.pdf");
-												mAdapter.getCmis().upload(upload, "longnd", "documentLibrary", "");
-											} catch (IOException e) {
-												e.printStackTrace();
-											}
-											mQuickAction.dismiss();
-											mHandler.sendEmptyMessage(REFRESH);
+												Intent fileChooserIntent = new Intent(NodeBrowseActivity.this, FileExplorerActivity.class);
+												fileChooserIntent.putExtra(Constants.UPLOAD, true);
+												startActivityForResult(fileChooserIntent, REQUEST_UPLOAD_CODE);
+												mQuickAction.dismiss();
+//												mHandler.sendEmptyMessage(REFRESH);
 										}
 									}
 								}

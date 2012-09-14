@@ -32,6 +32,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.zia.freshdocs.R;
+import com.zia.freshdocs.model.Constants;
 import com.zia.freshdocs.widget.fileexplorer.CustomFastScrollView;
 import com.zia.freshdocs.widget.fileexplorer.EventHandler;
 import com.zia.freshdocs.widget.fileexplorer.FileManager;
@@ -41,7 +42,7 @@ import com.zia.freshdocs.widget.fileexplorer.custommenu.CustomMenu.OnMenuItemSel
 import com.zia.freshdocs.widget.fileexplorer.custommenu.CustomMenuItem;
 import com.zia.freshdocs.widget.quickaction.QuickActionWindow;
 
-public final class FileExploreActivity extends ListActivity implements OnMenuItemSelectedListener, OnItemLongClickListener {
+public final class FileExplorerActivity extends ListActivity implements OnMenuItemSelectedListener, OnItemLongClickListener {
 	private static final String PREFS_NAME = "ManagerPrefsFile"; // user
 																	// preference
 																	// file name
@@ -76,6 +77,7 @@ public final class FileExploreActivity extends ListActivity implements OnMenuIte
 	public static CustomMenu mMenu;
 	private boolean isFolderMove, isFileMove;
 	private CustomFastScrollView mFastScrollView;
+	private boolean isIntentGetContent;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -87,6 +89,9 @@ public final class FileExploreActivity extends ListActivity implements OnMenuIte
 			}
 
 			setContentView(R.layout.file_explore);
+			
+			Intent intent = getIntent();
+			isIntentGetContent = intent.getBooleanExtra(Constants.UPLOAD, false);
 			
 			// initialize the custom menu
 			mMenu = new CustomMenu(this, this, getLayoutInflater());
@@ -108,7 +113,7 @@ public final class FileExploreActivity extends ListActivity implements OnMenuIte
 			mFileManager.setShowHiddenFiles(hide);
 			mFileManager.setSortType(sort);
 
-			mHandler = new EventHandler(FileExploreActivity.this, mFileManager);
+			mHandler = new EventHandler(FileExplorerActivity.this, mFileManager);
 			mHandler.setTextColor(color);
 			mHandler.setShowThumbnails(thumb);
 			mTable = mHandler.new TableRow();
@@ -262,6 +267,12 @@ public final class FileExploreActivity extends ListActivity implements OnMenuIte
 				} else {
 					Toast.makeText(this, R.string.str_cant_read_folder,	Toast.LENGTH_SHORT).show();
 				}
+			}else if(isIntentGetContent){
+				// Otherwise, return the URI of the selected file
+				final Intent data = new Intent();
+				data.setData(Uri.fromFile(file));
+				setResult(RESULT_OK, data);
+				finish();
 			}
 
 			/* music file selected--add more audio formats */
@@ -509,7 +520,7 @@ public final class FileExploreActivity extends ListActivity implements OnMenuIte
 
 	@Override
 	protected Dialog onCreateDialog(int id) {
-		final Dialog dialog = new Dialog(FileExploreActivity.this);
+		final Dialog dialog = new Dialog(FileExplorerActivity.this);
 
 		switch (id) {
 		case MENU_MKDIR:
@@ -534,12 +545,12 @@ public final class FileExploreActivity extends ListActivity implements OnMenuIte
 						if (mFileManager.createDir(mFileManager.getCurrentDir()
 								+ "/", input.getText().toString()) == 0)
 							Toast.makeText(
-									FileExploreActivity.this,
+									FileExplorerActivity.this,
 									"Folder " + input.getText().toString()
 											+ " created", Toast.LENGTH_LONG)
 									.show();
 						else
-							Toast.makeText(FileExploreActivity.this,R.string.str_cant_create_folder,Toast.LENGTH_SHORT).show();
+							Toast.makeText(FileExplorerActivity.this,R.string.str_cant_create_folder,Toast.LENGTH_SHORT).show();
 					}
 
 					dialog.dismiss();
@@ -576,10 +587,10 @@ public final class FileExploreActivity extends ListActivity implements OnMenuIte
 						dialog.dismiss();
 
 					if (mFileManager.renameTarget(mFileManager.getCurrentDir()	+ "/" + mSelectedListItem, rename_input.getText().toString()) == 0) {
-						Toast.makeText(	FileExploreActivity.this,mSelectedListItem + " was renamed to "	+ rename_input.getText().toString(),
+						Toast.makeText(	FileExplorerActivity.this,mSelectedListItem + " was renamed to "	+ rename_input.getText().toString(),
 								Toast.LENGTH_LONG).show();
 					} else
-						Toast.makeText(FileExploreActivity.this,mSelectedListItem + " was not renamed",	Toast.LENGTH_LONG).show();
+						Toast.makeText(FileExplorerActivity.this,mSelectedListItem + " was not renamed",	Toast.LENGTH_LONG).show();
 
 					dialog.dismiss();
 					String temp = mFileManager.getCurrentDir();
@@ -654,7 +665,7 @@ public final class FileExploreActivity extends ListActivity implements OnMenuIte
 		} else if (keycode == KeyEvent.KEYCODE_BACK && mUseBackKey&& !current.equals("/")) {
 			if (mHandler.isMultiSelected()) {
 				mTable.killMultiSelect(true);
-				Toast.makeText(FileExploreActivity.this, "Multi-select is now off",Toast.LENGTH_SHORT).show();
+				Toast.makeText(FileExplorerActivity.this, "Multi-select is now off",Toast.LENGTH_SHORT).show();
 			}
 
 			mHandler.updateDirectory(mFileManager.getPreviousDir());
@@ -663,7 +674,7 @@ public final class FileExploreActivity extends ListActivity implements OnMenuIte
 
 		} else if (keycode == KeyEvent.KEYCODE_BACK && mUseBackKey
 				&& current.equals("/")) {
-			Toast.makeText(FileExploreActivity.this, "Press back again to quit.",Toast.LENGTH_SHORT).show();
+			Toast.makeText(FileExplorerActivity.this, "Press back again to quit.",Toast.LENGTH_SHORT).show();
 			mUseBackKey = false;
 			mPathLabel.setText("Path: " + mFileManager.getCurrentDir());
 			return false;
@@ -772,7 +783,7 @@ public final class FileExploreActivity extends ListActivity implements OnMenuIte
 		Rect rect = new Rect(xy[0], xy[1], xy[0] + view.getWidth(), xy[1]+ view.getHeight());
 
 		// a new QuickActionWindow object
-		final QuickActionWindow qa = new QuickActionWindow(FileExploreActivity.this, view,rect);
+		final QuickActionWindow qa = new QuickActionWindow(FileExplorerActivity.this, view,rect);
 
 		/* is it a directory and is multi-select turned off */
 		if (mFileManager.isDirectory(mSelectedListItem)
@@ -870,7 +881,7 @@ public final class FileExploreActivity extends ListActivity implements OnMenuIte
 												+ current_dir);
 									} else {
 										Toast.makeText(
-												FileExploreActivity.this,
+												FileExplorerActivity.this,
 												"You do not have permission to unzip "
 														+ name,
 												Toast.LENGTH_SHORT).show();
@@ -945,7 +956,7 @@ public final class FileExploreActivity extends ListActivity implements OnMenuIte
 	}
 
 	private void delete() {
-		AlertDialog.Builder builder = new AlertDialog.Builder(FileExploreActivity.this);
+		AlertDialog.Builder builder = new AlertDialog.Builder(FileExplorerActivity.this);
 		builder.setTitle("Warning ");
 		builder.setIcon(R.drawable.warning);
 		builder.setMessage("Deleting " + mSelectedListItem
