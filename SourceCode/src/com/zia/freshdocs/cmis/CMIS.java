@@ -74,6 +74,7 @@ import com.zia.freshdocs.model.NodeRef;
 import com.zia.freshdocs.net.EasySSLSocketFactory;
 import com.zia.freshdocs.preference.CMISHost;
 import com.zia.freshdocs.util.SharedPreferencesAccess;
+import com.zia.freshdocs.util.StringUtils;
 
 public class CMIS {
 	protected static final String CMIS_QUERY_TYPE = "application/cmisquery+xml";
@@ -626,8 +627,13 @@ public class CMIS {
 		return true;
 	}
 	
-	public void getComment(String fileId) throws ClientProtocolException, IOException{
+	public void getComment(Context context, String fileId) throws ClientProtocolException, IOException{
 		String json;
+		JSONObject  jsonObj;
+		String tempData;
+		JSONArray dataArr;
+		ArrayList<String> commentData = new ArrayList<String>();
+		
 		String path = String.format(ADD_COMMENT_URI, fileId);
 		 String url = new URL(mPrefs.isSSL() ? "https" : "http",
 					mPrefs.getHostname(), buildRelativeURI(path)).toString();
@@ -642,12 +648,33 @@ public class CMIS {
 		  System.out.println("----------------------------------------");
 		  System.out.println(response.getStatusLine());
 		  
+		  int responseCode = response.getStatusLine().getStatusCode();
+		  
 		  if (entity != null) {
 	        	 Log.i("response content length:", entity.getContentLength() + "");
 
 	            json = EntityUtils.toString(entity);
 	            
 	            Log.i("response content:" , json);
+	            
+	            if(responseCode == 200){
+	            	
+	            	try {
+						jsonObj = new JSONObject(json);
+						
+						tempData = jsonObj.isNull("items") ? "" : jsonObj.getString("items");
+						Log.d("tempData", tempData);
+						
+//						if(!StringUtils.isEmpty(tempData))
+//							SharedPreferencesAccess.saveValueToSharedPreferences(context, "comment", tempData);
+						
+						dataArr = new JSONArray(tempData);
+						if(dataArr != null)
+							SharedPreferencesAccess.saveJSONArrayToSharedPreferences(context, "comment", dataArr);
+					} catch (JSONException e) {
+						e.printStackTrace();
+					}
+	            }
 	            
 	            response.getEntity().consumeContent();
 	         }

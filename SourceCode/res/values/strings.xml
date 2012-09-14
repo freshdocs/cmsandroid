@@ -57,13 +57,6 @@
     <string name="title_feature2">File Explorer</string>
     <string name="title_feature3">Favorites</string>
     <string name="title_feature4">Add Server</string>
-    <string name="default_intro">This is the default content view for an activity. Be sure to change your activity\'s onCreate method. Use setContentView on a custom layout.</string>
-    <string name="feature1_intro">Feature 1 content goes here.</string>
-    <string name="feature2_intro">Feature 2 content goes here.</string>
-    <string name="feature3_intro">Feature 3 content goes here.</string>
-    <string name="feature4_intro">Feature 4 content goes here.</string>
-    <string name="about_intro">This app is a demo to show you how to do an Android app based on the Dashboard pattern that has been used in apps like Google+, Twitter, Google IO, and Evernote.</string>
-    <string name="search_intro">Content for the Search page goes here.</string>
     <string name="media_dialog">Media preview</string>
     <string name="dir_info">Folder Information</string>
     <string name="manager_act">Phone Management</string>
@@ -123,5 +116,6 @@
 	<string name="str_comment">Comment</string>
 	<string name="str_title">Title</string>
 	<string name="str_mandatory_info">You must enter a valid data</string>
+	<string name="str_no_comment">No Comment</string>
 	
 </resources>

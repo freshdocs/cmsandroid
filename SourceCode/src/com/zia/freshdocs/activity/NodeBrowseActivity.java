@@ -29,6 +29,8 @@ import java.util.ArrayList;
 import java.util.Set;
 
 import org.apache.http.client.ClientProtocolException;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -64,6 +66,7 @@ import android.widget.Toast;
 import com.zia.freshdocs.R;
 import com.zia.freshdocs.app.CMISApplication;
 import com.zia.freshdocs.cmis.CMIS;
+import com.zia.freshdocs.model.CommentAdapter;
 import com.zia.freshdocs.model.Constants;
 import com.zia.freshdocs.model.Constants.NetworkStatus;
 import com.zia.freshdocs.model.NodeRef;
@@ -276,6 +279,8 @@ public class NodeBrowseActivity extends DashboardActivity implements OnItemLongC
 	        ratingsCount = SharedPreferencesAccess.getValueFromSharedPreferences(NodeBrowseActivity.this, "ratingsCount");
 	        ratingsTotal = SharedPreferencesAccess.getValueFromSharedPreferences(NodeBrowseActivity.this, "ratingsTotal");
 	        averageRating = SharedPreferencesAccess.getValueFromSharedPreferences(NodeBrowseActivity.this, "averageRating");
+	        if(averageRating.equalsIgnoreCase("-1")) // No comment
+	        	averageRating = "0";
 	        
 	        TextView txtChartVoteRankPoint = (TextView) layout.findViewById(R.id.txtChartVoteRankPoint);
 	        txtChartVoteRankPoint.setText(averageRating);
@@ -287,10 +292,55 @@ public class NodeBrowseActivity extends DashboardActivity implements OnItemLongC
 	        txtChartVoteTotalComment.setText("(" + ratingsTotal + ")");
 	        
 	        ViVoteChart viVoteChart = (ViVoteChart) layout.findViewById(R.id.loChartView);
-	        int[] rateValue = {0,0,0,2,1};
+	        int[] rateValue = {0,0,0,0,0};
 	        viVoteChart.setAttribute(rateValue);
 	        viVoteChart.createChart();
 	        
+	        ListView lvCcomment = (ListView) layout.findViewById(R.id.lvComment);
+	        ArrayList<String> arrayComment = new ArrayList<String>();
+	        final CommentAdapter arrayAdapter = new CommentAdapter(this,R.layout.user_comment_item, arrayComment);
+	        lvCcomment.setAdapter(arrayAdapter);
+	        
+	        TextView txtNoComment = (TextView) layout.findViewById(R.id.txtNoComment);
+	        
+			if (mFolderId != null) {
+				try {
+					mAdapter.getCmis().getComment(NodeBrowseActivity.this, mFolderId);
+					
+					JSONArray dataArr = SharedPreferencesAccess.loadJSONArrayToSharedPreferences(NodeBrowseActivity.this, "comment");
+					
+					for(int i = 0 ; i < dataArr.length(); i++){
+					    JSONObject object = (JSONObject) dataArr.get(i); 
+					    String content = object.isNull("content") ? "" : object.getString("content");
+					    content = content.replace("<p>", ""); // Remove unused data
+					    content = content.replace("</p>", "");
+					    Log.d("content", content);
+					    
+					    String author = object.isNull("author") ? "" : object.getString("author");
+					    
+					    JSONObject authorObj = new JSONObject(author);
+					    String username = authorObj.isNull("username") ? "" : authorObj.getString("username");
+					    Log.d("username", username);
+					    
+					    String createdOn =  object.isNull("createdOn") ? "" : object.getString("createdOn");
+					    Log.d("createdOn", createdOn);
+					    
+					    arrayComment.add("{\"content\": \"" +content + "\",\"createdOn\": \"" +createdOn + "\",\"username\": \"" + username + "\"}");
+					    
+					}
+					if(arrayComment.size() == 0){ // No comment
+						lvCcomment.setVisibility(View.GONE);
+						txtNoComment.setVisibility(View.VISIBLE);
+					}
+					
+				} catch (ClientProtocolException e) {
+					e.printStackTrace();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+//				mHandler.sendEmptyMessage(REFRESH);
+			}
+	       
 	        Button btnComment = (Button) layout.findViewById(R.id.btn_comment_post);
 	        btnComment.setOnClickListener(new OnClickListener() {
 				@Override
@@ -675,59 +725,6 @@ public class NodeBrowseActivity extends DashboardActivity implements OnItemLongC
 											}
 										}
 										
-									}
-								}
-							});
-							mRequestThread.start();
-						}
-					});
-			
-//			mQuickAction.addItem(getResources().getDrawable(R.drawable.excel), "Add rating",
-//					new OnClickListener() {
-//						public void onClick(View v) {
-//							mRequestThread = new Thread(new Runnable() {
-//								public void run() {
-//									synchronized (this) {
-//										String folderId = mAdapter.getItem(
-//												position).getObjectId();
-//										if (folderId != null) {
-//											folderId = folderId.substring(folderId.lastIndexOf("/") + 1,folderId.length());
-//											try {
-//												mAdapter.getCmis().addRating(folderId, "1", "Rate via Android");
-//											} catch (ClientProtocolException e) {
-//												e.printStackTrace();
-//											} catch (IOException e) {
-//												e.printStackTrace();
-//											}
-//											mQuickAction.dismiss();
-//											mHandler.sendEmptyMessage(REFRESH);
-//										}
-//									}
-//								}
-//							});
-//							mRequestThread.start();
-//						}
-//					});
-			mQuickAction.addItem(getResources().getDrawable(R.drawable.excel), "Get comments",
-					new OnClickListener() {
-						public void onClick(View v) {
-							mRequestThread = new Thread(new Runnable() {
-								public void run() {
-									synchronized (this) {
-										String folderId = mAdapter.getItem(
-												position).getObjectId();
-										if (folderId != null) {
-											folderId = folderId.substring(folderId.lastIndexOf("/") + 1,folderId.length());
-											try {
-												mAdapter.getCmis().getComment(folderId);
-											} catch (ClientProtocolException e) {
-												e.printStackTrace();
-											} catch (IOException e) {
-												e.printStackTrace();
-											}
-											mQuickAction.dismiss();
-											mHandler.sendEmptyMessage(REFRESH);
-										}
 									}
 								}
 							});

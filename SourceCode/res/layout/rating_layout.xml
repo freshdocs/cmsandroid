@@ -81,20 +81,30 @@
                 android:layout_marginLeft="8.0dip" />
         </LinearLayout>
 
-        <View
+        <TextView
             android:layout_width="fill_parent"
-            android:layout_height="1dip"
-            android:layout_margin="5dip"
-            android:background="@color/light" />
+            android:layout_height="2.0dip"
+            android:layout_marginTop="2dp"
+            android:background="@color/colorstrip" />
 
         <ListView
-            android:id="@+id/lvcommnet"
+            android:id="@+id/lvComment"
             android:layout_width="fill_parent"
             android:layout_height="0.0dip"
             android:layout_weight="1.0"
             android:background="@color/body_background"
             android:cacheColorHint="@color/body_background"
             android:divider="@drawable/divider_horizontal" />
+
+        <TextView
+            android:id="@+id/txtNoComment"
+            android:layout_width="fill_parent"
+            android:layout_height="0.0dip"
+            android:layout_marginBottom="5dp"
+            android:layout_weight="1.0"
+            android:gravity="center"
+            android:text="@string/str_no_comment"
+            android:visibility="gone" />
 
         <TextView
             android:layout_width="fill_parent"
