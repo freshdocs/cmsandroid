@@ -59,6 +59,10 @@
             android:launchMode="standard"
             android:windowSoftInputMode="stateHidden" />
         <activity
+            android:name=".activity.HostAddingActivity"
+            android:launchMode="standard"
+            android:windowSoftInputMode="stateHidden" />
+        <activity
             android:name=".activity.AboutActivity"
             android:launchMode="standard" />
         <activity

@@ -49,6 +49,7 @@ public class HomeActivity extends DashboardActivity {
 	private static final int NODE_BROWSE_REQ = 1;
 	private CMISHost mHost;
 	private static final String OK_KEY = "ok";
+	private static final String REQUESTED_FROM_HOME = "requested_from_home";
 
 	// Image resources for the buttons
 	private Integer[] mImageIds = { R.drawable.home_button1,
@@ -211,7 +212,7 @@ public class HomeActivity extends DashboardActivity {
 	protected void onStop() {
 		super.onStop();
 	}
-
+	
 	/**
 	 * Handle the click of a Feature button by starting the activity for that
 	 * feature.
@@ -263,7 +264,9 @@ public class HomeActivity extends DashboardActivity {
 			startActivity(new Intent(getApplicationContext(), FavoritesActivity.class));
 			break;
 		case 4:
-			startActivity(new Intent(getApplicationContext(), HostPreferenceActivity.class));
+			Intent hostIntent = new Intent(getApplicationContext(), HostsActivity.class);
+			hostIntent.putExtra(HostsActivity.REQUESTED_FROM_HOME, REQUESTED_FROM_HOME);
+			startActivity(hostIntent);
 			break;
 		default:
 			break;

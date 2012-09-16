@@ -55,7 +55,7 @@ import com.zia.freshdocs.widget.quickaction.QuickActionWindow;
 public class HostsActivity extends ListActivity implements OnItemLongClickListener
 {
 	private static final String INITIALIZED_KEY = "initialized";
-	
+	public static final String REQUESTED_FROM_HOME = "requested_from_home";
 	private static final int NEW_HOST_REQ = 0;
 	private static final int EDIT_HOST_REQ = 1;
 	private static final int SPLASH_REQUEST_REQ = 2;
@@ -66,6 +66,8 @@ public class HostsActivity extends ListActivity implements OnItemLongClickListen
 //	private ChildDownloadThread _dlThread = null;
 	
 //	private UITableView tableView;
+	private boolean isCalledByHome = false;
+	public static boolean isExiting = false;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
@@ -77,10 +79,13 @@ public class HostsActivity extends ListActivity implements OnItemLongClickListen
 //		registerForContextMenu(getListView());
 		
 //		tableView = (UITableView) findViewById(R.id.tableView);
-		
+		Intent intent = getIntent();
+		if(intent.hasExtra(REQUESTED_FROM_HOME)) {
+			isCalledByHome = true;
+		}
 		getListView().setOnItemLongClickListener(this);
 		
-		if(savedInstanceState == null || !savedInstanceState.getBoolean(INITIALIZED_KEY))
+		if(!isCalledByHome && (savedInstanceState == null || !savedInstanceState.getBoolean(INITIALIZED_KEY)))
 		{
 			startActivityForResult(new Intent(this, SplashActivity.class), SPLASH_REQUEST_REQ);
 		}
@@ -173,7 +178,7 @@ public class HostsActivity extends ListActivity implements OnItemLongClickListen
 
 	protected void addServer()
 	{
-		Intent newHostIntent = new Intent(this, HostPreferenceActivity.class);
+		Intent newHostIntent = new Intent(this, HostAddingActivity.class);
 		startActivityForResult(newHostIntent, NEW_HOST_REQ);
 	}
 	
@@ -283,9 +288,9 @@ public class HostsActivity extends ListActivity implements OnItemLongClickListen
 		String json = gson.toJson(prefs);
 		prefsEditor.putString(Constants.CMISHOST, json);
 		prefsEditor.commit();
-		
-		Intent intent = new Intent(HostsActivity.this, HomeActivity.class);
-		startActivity(intent);
+
+		Intent homeIntent = new Intent(HostsActivity.this, HomeActivity.class);
+		startActivity(homeIntent);
 		
 //		final String hostId = prefs.getId();
 //
@@ -371,8 +376,8 @@ public class HostsActivity extends ListActivity implements OnItemLongClickListen
 					getString(R.string.edit_server), new OnClickListener() {
 						public void onClick(View v) {
 							quickAction.dismiss();
-							Intent newHostIntent = new Intent(HostsActivity.this,HostPreferenceActivity.class);
-							newHostIntent.putExtra(HostPreferenceActivity.EXTRA_EDIT_SERVER,id);
+							Intent newHostIntent = new Intent(HostsActivity.this,HostAddingActivity.class);
+							newHostIntent.putExtra(HostAddingActivity.EXTRA_EDIT_SERVER,id);
 							startActivityForResult(newHostIntent, EDIT_HOST_REQ);
 						}
 					});
