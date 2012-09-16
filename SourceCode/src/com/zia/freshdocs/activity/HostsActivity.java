@@ -26,6 +26,7 @@ package com.zia.freshdocs.activity;
 import java.util.Collection;
 
 import android.app.ListActivity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
@@ -33,15 +34,22 @@ import android.content.res.Configuration;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.view.Display;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemLongClickListener;
+import android.widget.Button;
 import android.widget.ListView;
+import android.widget.PopupWindow;
+import android.widget.TextView;
 
 import com.google.gson.Gson;
 import com.zia.freshdocs.R;
@@ -59,15 +67,12 @@ public class HostsActivity extends ListActivity implements OnItemLongClickListen
 	private static final int NEW_HOST_REQ = 0;
 	private static final int EDIT_HOST_REQ = 1;
 	private static final int SPLASH_REQUEST_REQ = 2;
-//	private static final int NODE_BROWSE_REQ = 3;
-	
-//	private static final String OK_KEY = "ok";
-	
-//	private ChildDownloadThread _dlThread = null;
-	
-//	private UITableView tableView;
+
 	private boolean isCalledByHome = false;
 	public static boolean isExiting = false;
+	private SharedPreferences mPrefs;
+	private boolean hostsScreenShown;
+	private final String hostsScreenShownPref = "hostsScreenShown";
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
@@ -76,21 +81,20 @@ public class HostsActivity extends ListActivity implements OnItemLongClickListen
 		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.hosts);
-//		registerForContextMenu(getListView());
 		
-//		tableView = (UITableView) findViewById(R.id.tableView);
 		Intent intent = getIntent();
 		if(intent.hasExtra(REQUESTED_FROM_HOME)) {
 			isCalledByHome = true;
 		}
+		
 		getListView().setOnItemLongClickListener(this);
 		
 		if(!isCalledByHome && (savedInstanceState == null || !savedInstanceState.getBoolean(INITIALIZED_KEY)))
 		{
 			startActivityForResult(new Intent(this, SplashActivity.class), SPLASH_REQUEST_REQ);
+		}else{
+			initializeHostList();
 		}
-		
-		initializeHostList();
 	}
 
 	@Override
@@ -118,67 +122,43 @@ public class HostsActivity extends ListActivity implements OnItemLongClickListen
 				prefs.toArray(new CMISHost[]{}));
 		setListAdapter(serverAdapter);
 		
-//		populateList(prefs)
 	}
 	
-//	private void populateList(Collection<CMISHost> prefs) {
-//		ViewItem viewItem;
-//		 CMISHost[] listHost = prefs.toArray(new CMISHost[]{});
-//		for(int i = 0; i < prefs.size(); i++){
-//			viewItem = createCustomUIView(this, listHost[i].getHostname());
-//			tableView.addViewItem(viewItem);
-//		}
-//		tableView.commit();
-//		
+//	@Override
+//	public boolean onCreateOptionsMenu(Menu menu)
+//	{
+//		MenuInflater inflater = getMenuInflater();
+//	    inflater.inflate(R.menu.hosts_menu, menu);    
+//		return true;
 //	}
-	
-//	public ViewItem createCustomUIView(Context context, String title) {
-//		LayoutInflater mInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-//		RelativeLayout view = (RelativeLayout) mInflater.inflate(
-//				R.layout.custom_view2, null);
-//		TextView tvTitle = (TextView) view.findViewById(R.id.title);
-//		tvTitle.setText(title);
-//
-//		ViewItem viewItem = new ViewItem(view);
-//
-//		return viewItem;
-//	}
-	
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu)
-	{
-		MenuInflater inflater = getMenuInflater();
-	    inflater.inflate(R.menu.hosts_menu, menu);    
-		return true;
-	}
 
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item)
-	{
-		switch (item.getItemId())
-		{
-		case R.id.menu_add_server:
-			addServer();
-			return true;
-		case R.id.menu_item_favorites:
-			Intent favoritesIntent = new Intent(this, FavoritesActivity.class);
-			startActivityForResult(favoritesIntent, 0);
-			return true;
-		case R.id.menu_item_about:
-			Intent aboutIntent = new Intent(this, AboutActivity.class);
-			startActivity(aboutIntent);
-			return true;
-		case R.id.menu_item_quit:
-			this.finish();
-			return true;
-		default:
-			return false;
-		}
-	}
+//	@Override
+//	public boolean onOptionsItemSelected(MenuItem item)
+//	{
+//		switch (item.getItemId())
+//		{
+//		case R.id.menu_add_server:
+//			addServer();
+//			return true;
+//		case R.id.menu_item_favorites:
+//			Intent favoritesIntent = new Intent(this, FavoritesActivity.class);
+//			startActivityForResult(favoritesIntent, 0);
+//			return true;
+//		case R.id.menu_item_about:
+//			Intent aboutIntent = new Intent(this, AboutActivity.class);
+//			startActivity(aboutIntent);
+//			return true;
+//		case R.id.menu_item_quit:
+//			this.finish();
+//			return true;
+//		default:
+//			return false;
+//		}
+//	}
 
 	protected void addServer()
 	{
-		Intent newHostIntent = new Intent(this, HostAddingActivity.class);
+		Intent newHostIntent = new Intent(HostsActivity.this, HostPreferenceActivity.class);
 		startActivityForResult(newHostIntent, NEW_HOST_REQ);
 	}
 	
@@ -190,44 +170,6 @@ public class HostsActivity extends ListActivity implements OnItemLongClickListen
 	{
 		super.onConfigurationChanged(newConfig);
 	}
-/*
-	@Override
-	public void onCreateContextMenu(ContextMenu menu, View v,
-			ContextMenuInfo menuInfo)
-	{
-		HostAdapter adapter = (HostAdapter) getListAdapter();
-		CMISHost host = adapter.getItem(((AdapterContextMenuInfo) menuInfo).position);
-		
-		if(!host.getId().equals(Constants.NEW_HOST_ID))
-		{
-			MenuInflater inflater = getMenuInflater();
-			inflater.inflate(R.menu.host_context_menu, menu);
-		}
-	}
-
-	@Override
-	public boolean onContextItemSelected(MenuItem item)
-	{
-		AdapterContextMenuInfo info = (AdapterContextMenuInfo) item.getMenuInfo();
-		CMISHost prefs = (CMISHost) getListAdapter().getItem(info.position);
-		String id = prefs.getId();
-
-		switch (item.getItemId())
-		{
-		case R.id.menu_edit_server:
-			Intent newHostIntent = new Intent(this, HostPreferenceActivity.class);
-			newHostIntent.putExtra(HostPreferenceActivity.EXTRA_EDIT_SERVER, id);
-			startActivityForResult(newHostIntent, EDIT_HOST_REQ);
-			
-			return true;
-		case R.id.menu_delete_server:
-			deleteServer(id);
-			break;
-		}
-		
-		return false;
-	}
-*/
 	protected void deleteServer(String id)
 	{
 		CMISPreferencesManager prefsMgr = CMISPreferencesManager.getInstance();
@@ -242,18 +184,31 @@ public class HostsActivity extends ListActivity implements OnItemLongClickListen
 		
 		switch(requestCode)
 		{
-		case NEW_HOST_REQ:			
-		case EDIT_HOST_REQ:			
-		case SPLASH_REQUEST_REQ:			
+		case NEW_HOST_REQ:		
+		case EDIT_HOST_REQ:
 			initializeHostList();
 			break;
-//		case NODE_BROWSE_REQ:
-//			if(resultCode == RESULT_OK && data != null && 
-//					data.getBooleanExtra(Constants.QUIT, false))
-//			{
-//				finish();
-//			}
-//			break;
+		case SPLASH_REQUEST_REQ:	
+			if(!isCalledByHome){
+				// Show hosts screen on first launch only
+				mPrefs = PreferenceManager.getDefaultSharedPreferences(this);
+				hostsScreenShown = mPrefs.getBoolean(hostsScreenShownPref, false);
+				
+				if (!hostsScreenShown) { // first launch
+					SharedPreferences.Editor editor = mPrefs.edit();
+					editor.putBoolean(hostsScreenShownPref, true);
+					hostsScreenShown = true;
+					editor.commit(); 
+					initializeHostList();   
+				}else{
+					// Go to HomeActivity
+					Intent homeIntent = new Intent(HostsActivity.this, HomeActivity.class);
+					homeIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+					startActivity(homeIntent);
+					finish();
+				}
+			}
+			break;
 		}
 	}
 	
@@ -290,64 +245,12 @@ public class HostsActivity extends ListActivity implements OnItemLongClickListen
 		prefsEditor.commit();
 
 		Intent homeIntent = new Intent(HostsActivity.this, HomeActivity.class);
+		homeIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 		startActivity(homeIntent);
+		finish();
 		
-//		final String hostId = prefs.getId();
-//
-//		adapter.toggleError(container, false);
-//		adapter.toggleProgress(container, true);
-//		
-//		_dlThread = new ChildDownloadThread(new Handler() 
-//		{
-//			public void handleMessage(Message msg) 
-//			{
-//				boolean ok = msg.getData().getBoolean(OK_KEY);
-//
-//				adapter.toggleProgress(container, false);					
-//
-//				if(!ok)
-//				{
-//					adapter.toggleError(container, true);
-//					app.handleNetworkStatus();
-//				} 
-//				else
-//				{
-//					Intent browseIntent = new Intent(ctx, NodeBrowseActivity.class);
-//					startActivityForResult(browseIntent, NODE_BROWSE_REQ);
-//				}
-//			}
-//		}, 
-//		new Downloadable()
-//		{
-//			public Object execute()
-//			{
-//				return app.initCMIS(hostId);
-//			}
-//		});
-//		
-//		_dlThread.start();
 	}
 	
-//	private class ChildDownloadThread extends Thread {
-//		Handler handler;
-//		Downloadable delegate;
-//
-//		ChildDownloadThread(Handler h, Downloadable delegate) 
-//		{
-//			handler = h;
-//			delegate = delegate;
-//		}
-//
-//		public void run() 
-//		{
-//			Boolean result = (Boolean) delegate.execute();
-//			Message msg = handler.obtainMessage();
-//			Bundle b = new Bundle();
-//			b.putBoolean(OK_KEY, result);
-//			msg.setData(b);
-//			handler.sendMessage(msg);
-//		}		
-//	}
 
 	@Override
 	public boolean onItemLongClick(AdapterView<?> arg0, View view,
@@ -376,8 +279,8 @@ public class HostsActivity extends ListActivity implements OnItemLongClickListen
 					getString(R.string.edit_server), new OnClickListener() {
 						public void onClick(View v) {
 							quickAction.dismiss();
-							Intent newHostIntent = new Intent(HostsActivity.this,HostAddingActivity.class);
-							newHostIntent.putExtra(HostAddingActivity.EXTRA_EDIT_SERVER,id);
+							Intent newHostIntent = new Intent(HostsActivity.this,HostPreferenceActivity.class);
+							newHostIntent.putExtra(HostPreferenceActivity.EXTRA_EDIT_SERVER,id);
 							startActivityForResult(newHostIntent, EDIT_HOST_REQ);
 						}
 					});

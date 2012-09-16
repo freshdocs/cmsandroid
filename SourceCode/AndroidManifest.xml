@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.zia.freshdocs"
-    android:versionCode="8"
-    android:versionName="1.2" >
+    android:installLocation="preferExternal"
+    android:versionCode="9"
+    android:versionName="2.0" >
 
     <uses-sdk android:minSdkVersion="8" />
 
@@ -56,10 +57,6 @@
         </activity>
         <activity
             android:name=".activity.HostPreferenceActivity"
-            android:launchMode="standard"
-            android:windowSoftInputMode="stateHidden" />
-        <activity
-            android:name=".activity.HostAddingActivity"
             android:launchMode="standard"
             android:windowSoftInputMode="stateHidden" />
         <activity

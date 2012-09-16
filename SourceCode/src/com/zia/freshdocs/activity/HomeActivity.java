@@ -80,11 +80,6 @@ public class HomeActivity extends DashboardActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_home);
 
-		/*
-		 * GridView gridview = (GridView) findViewById(R.id.buttons_grid);
-		 * gridview.setAdapter(new HomeButtonsAdapter(this));
-		 */
-
 		//
 		// Add the buttons that make up the Dashboard.
 		// We do this with a LayoutInflater. Doing it that way gives us more
@@ -112,7 +107,7 @@ public class HomeActivity extends DashboardActivity {
 				iv.setImageResource(imageId);
 				// Assign a value for the tag so the onClickFeature handler can
 				// determine which button was clicked.
-				iv.setTag(new Integer(j + 1));
+				iv.setTag(Integer.valueOf(j + 1));
 			}
 			TextView tv = (TextView) v.findViewById(R.id.home_btn_label);
 			if (tv != null)
@@ -137,6 +132,8 @@ public class HomeActivity extends DashboardActivity {
 		String json = appSharedPrefs.getString(Constants.CMISHOST, "");
 
 		mHost = gson.fromJson(json, CMISHost.class);
+		if(mHost != null)
+			((TextView) findViewById(R.id.txtLabel)).setText(mHost.getHostname());
 	}
 
 	/**
@@ -266,6 +263,7 @@ public class HomeActivity extends DashboardActivity {
 		case 4:
 			Intent hostIntent = new Intent(getApplicationContext(), HostsActivity.class);
 			hostIntent.putExtra(HostsActivity.REQUESTED_FROM_HOME, REQUESTED_FROM_HOME);
+			hostIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 			startActivity(hostIntent);
 			break;
 		default:

@@ -52,6 +52,7 @@
     <color name="darkBlue">#880000FF</color>
     <color name="blue">#627AAD</color>
     <color name="blue_2">#3B5998</color>
+    <color name="red">#FF0000</color>
 
     <!-- View -->
     <color name="light">#BBBBBB</color>

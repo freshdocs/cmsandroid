@@ -13,7 +13,7 @@
     distributed under the License is distributed on an "AS IS" BASIS,
     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
     See the License for the specific language governing permissions and
-    limitations under the License.
+    limitations under the License.
 -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/db1_root"
@@ -53,8 +53,19 @@
             style="@style/TitleBarAction"
             android:contentDescription="@string/description_search"
             android:onClick="onClickSearch"
-            android:src="@drawable/title_search" />
+            android:src="@drawable/title_search"
+            android:visibility="gone" />
     </LinearLayout>
+
+    <TextView
+        android:id="@+id/txtLabel"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/dialog_full_holo_light"
+        android:gravity="center"
+        android:padding="10dp"
+        android:textColor="@color/red"
+        android:textSize="20sp" />
 
     <LinearLayout
         android:layout_width="fill_parent"
@@ -90,8 +101,9 @@
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
             android:layout_weight="1"
+            android:baselineAligned="false"
             android:orientation="horizontal"
-            android:weightSum="2" android:baselineAligned="false">
+            android:weightSum="2" >
 
             <FrameLayout
                 android:id="@+id/frame3"
@@ -112,8 +124,9 @@
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
             android:layout_weight="1"
+            android:baselineAligned="false"
             android:orientation="horizontal"
-            android:weightSum="2" android:baselineAligned="false">
+            android:weightSum="2" >
 
             <FrameLayout
                 android:id="@+id/frame5"

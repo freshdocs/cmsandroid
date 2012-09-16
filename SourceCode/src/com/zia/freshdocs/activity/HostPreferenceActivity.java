@@ -27,6 +27,9 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.KeyEvent;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -53,6 +56,15 @@ public class HostPreferenceActivity extends Activity {
 		if (intent.hasExtra(EXTRA_EDIT_SERVER)) {
 			editServer(intent.getStringExtra(EXTRA_EDIT_SERVER));
 		}
+		Button btnSave = (Button) findViewById(R.id.btnSave); 
+		btnSave.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				updateHost();
+				setResult(RESULT_OK);
+				finish();
+			}
+		});
 	}
 
 	protected void editServer(String id) {
@@ -77,17 +89,17 @@ public class HostPreferenceActivity extends Activity {
 		}
 	}
 
-	@Override
-	public boolean onKeyDown(int keyCode, KeyEvent event) {
-		if (keyCode == KeyEvent.KEYCODE_BACK && !updateHost()) {
-			if (!_backPressed) {
-				_backPressed = true;
-				return false;
-			}
-		}
-
-		return super.onKeyDown(keyCode, event);
-	}
+//	@Override
+//	public boolean onKeyDown(int keyCode, KeyEvent event) {
+//		if (keyCode == KeyEvent.KEYCODE_BACK && !updateHost()) {
+//			if (!_backPressed) {
+//				_backPressed = true;
+//				return false;
+//			}
+//		}
+//
+//		return super.onKeyDown(keyCode, event);
+//	}
 
 	protected boolean updateHost() {
 		String hostname = ((EditText) findViewById(R.id.hostname_edittext))

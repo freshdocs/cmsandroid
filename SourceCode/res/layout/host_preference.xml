@@ -1,4 +1,5 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:background="@drawable/dialog_full_holo_light" >
@@ -9,7 +10,7 @@
 
         <TableLayout
             android:layout_width="fill_parent"
-            android:layout_height="410dp"
+            android:layout_height="wrap_content"
             android:orientation="vertical"
             android:padding="15dip"
             android:stretchColumns="1" >
@@ -114,6 +115,11 @@
                     android:text="/alfresco" />
             </TableRow>
         </TableLayout>
+        
     </ScrollView>
-
-</LinearLayout>
+	<Button
+	    android:layout_gravity="center"
+        android:id="@+id/btnSave"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/str_save" /></LinearLayout>
