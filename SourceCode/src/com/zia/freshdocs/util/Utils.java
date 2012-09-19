@@ -59,7 +59,13 @@ public class Utils {
 		}
 		return stringBuilder.toString();
 	}
-	
+	/**
+	 * Get real file path
+	 * @param context
+	 * @param uri
+	 * @return
+	 * @throws URISyntaxException
+	 */
 	public static String getFilePath(Context context, Uri uri) throws URISyntaxException {
 
 		if ("content".equalsIgnoreCase(uri.getScheme())) {

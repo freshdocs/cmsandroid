@@ -15,6 +15,10 @@ import android.widget.ImageButton;
 
 import com.zia.freshdocs.R;
 
+/**
+ * user-specific settings for FileExplorer
+ *
+ */
 public class FileExplorerSettingsActivity extends Activity {
 	private boolean mHiddenChanged = false;
 	private boolean mColorChanged = false;
@@ -27,6 +31,9 @@ public class FileExplorerSettingsActivity extends Activity {
 	private int color_state, sort_state, mSpaceState;
 	private Intent is = new Intent();
 	
+	/** 
+	 * Called when the activity is first created. 
+	 * */	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);

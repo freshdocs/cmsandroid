@@ -29,8 +29,6 @@ import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -68,13 +66,11 @@ import android.content.Context;
 import android.text.format.DateFormat;
 import android.util.Log;
 
-import com.google.gson.Gson;
 import com.zia.freshdocs.model.Constants.NetworkStatus;
 import com.zia.freshdocs.model.NodeRef;
 import com.zia.freshdocs.net.EasySSLSocketFactory;
 import com.zia.freshdocs.preference.CMISHost;
 import com.zia.freshdocs.util.SharedPreferencesAccess;
-import com.zia.freshdocs.util.StringUtils;
 
 public class CMIS {
 	protected static final String CMIS_QUERY_TYPE = "application/cmisquery+xml";

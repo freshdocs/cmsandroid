@@ -35,9 +35,15 @@ import android.widget.ListView;
 import com.zia.freshdocs.R;
 import com.zia.freshdocs.model.NodeRef;
 import com.zia.freshdocs.preference.CMISPreferencesManager;
+/**
+ * Activity Class for Displaying Favorites.
+ */
 
 public class FavoritesActivity extends NodeBrowseActivity
  {
+	/** 
+	 * Called when the activity is first created. 
+	 * */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		this.setTheme(R.style.Theme_HoloEverywhereLight);
@@ -61,7 +67,9 @@ public class FavoritesActivity extends NodeBrowseActivity
 		super.onResume();
 		initializeFavorites();
 	};
-
+	/** 
+	 * Initialize favorites.
+	 * */
 	protected void initializeFavorites() {
 		mAdapter.clear();
 

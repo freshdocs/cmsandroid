@@ -489,7 +489,7 @@ public class FileManager {
 		}
 	};
 	
-	/* (non-Javadoc)
+	/** (non-Javadoc)
 	 * this function will take the string from the top of the directory stack
 	 * and list all files/folders that are in it and return that list so 
 	 * it can be displayed. Since this function is called every time we need
@@ -562,7 +562,7 @@ public class FileManager {
 		return mDirContent;
 	}
 	
-	/*
+	/**
 	 * 
 	 * @param file
 	 * @param zout
@@ -593,7 +593,7 @@ public class FileManager {
 		}
 	}
 	
-	/*
+	/**
 	 * This function will be rewritten as there is a problem getting
 	 * the directory size in certain folders from root. ex /sys, /proc.
 	 * The app will continue until a stack overflow. get size is fine uder the 
@@ -619,7 +619,7 @@ public class FileManager {
 		}
 	}
 
-	/*
+	/**
 	 * (non-JavaDoc)
 	 * I dont like this method, it needs to be rewritten. Its hacky in that
 	 * if you are searching in the root dir (/) then it is not going to be treated

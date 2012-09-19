@@ -94,7 +94,9 @@ public class SearchActivity extends NodeBrowseActivity {
 			}
 		}
 	}
-
+	/**
+	 * Search information
+	 */
 	protected void search(String term) {
 		mAdapter.query(term);
 	}

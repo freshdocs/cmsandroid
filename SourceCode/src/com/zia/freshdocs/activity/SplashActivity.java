@@ -49,6 +49,9 @@ public class SplashActivity extends Activity {
 		};
 		handler.sendMessageDelayed(new Message(), DELAY);
 	}
+	/**
+	 *  Back to Home
+	 */
 
 	protected void launchMain() {
 		setResult(RESULT_OK);

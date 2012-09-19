@@ -28,6 +28,10 @@ import com.zia.freshdocs.R;
 import android.app.Activity;
 import android.os.Bundle;
 
+/**
+ * This class is used to display Zia Consulting's infomartion
+ */
+
 public class AboutActivity extends Activity
 {
 	@Override

@@ -173,7 +173,7 @@ public final class FileExplorerActivity extends ListActivity implements OnMenuIt
 
 	}
 
-	/*
+	/**
 	 * (non Java-Doc) Returns the file that was selected to the intent that
 	 * called this activity. usually from the caller is another application.
 	 */
@@ -643,7 +643,7 @@ public final class FileExplorerActivity extends ListActivity implements OnMenuIt
 		return dialog;
 	}
 
-	/*
+	/**
 	 * (non-Javadoc) This will check if the user is at root directory. If so, if
 	 * they press back again, it will close the application.
 	 * 
@@ -956,6 +956,9 @@ public final class FileExplorerActivity extends ListActivity implements OnMenuIt
 		return false;
 	}
 
+	/**
+	 * Delete file/folder
+	 * */
 	private void delete() {
 		AlertDialog.Builder builder = new AlertDialog.Builder(FileExplorerActivity.this);
 		builder.setTitle("Warning ");
@@ -982,7 +985,9 @@ public final class FileExplorerActivity extends ListActivity implements OnMenuIt
 		AlertDialog alert_d = builder.create();
 		alert_d.show();
 	}
-
+	/**
+	 * Move or Copy file/folder
+	 * */
 	private void moveOrCopy() {
 		if (isFileMove || isFolderMove) {
 			mHandler.setDeleteAfterCopy(true);

@@ -14,6 +14,14 @@ import android.widget.TextView;
 
 import com.zia.freshdocs.R;
 
+
+/**
+ * respond to hardware audio key presses, which request audio focus when playing
+ * audio, and which respond appropriately to changes in audio focus caused by
+ * the system or other applications
+ * 
+ */
+
 public class AudioPlayblackActivity extends Activity {
 	private String music_path;
 	private String music_name;
@@ -45,9 +53,18 @@ public class AudioPlayblackActivity extends Activity {
 		label.setText("Audio file: " + music_name);
 	}
 	
+	/**
+	 * Finish activity
+	 * 
+	 * */
 	private void close() {
 		finish();
 	}
+
+	/**
+	 * Accessing controller from button handler
+	 * 
+	 * */
 	
 	private class ButtonHandler implements OnClickListener {
 		private boolean init = false;

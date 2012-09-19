@@ -38,7 +38,10 @@ import com.zia.freshdocs.R;
 import com.zia.freshdocs.preference.CMISHost;
 import com.zia.freshdocs.preference.CMISPreferencesManager;
 import com.zia.freshdocs.util.StringUtils;
-
+/**
+ * user-specific settings for Hosts
+ *
+ */
 public class HostPreferenceActivity extends Activity {
 	public static final String EXTRA_EDIT_SERVER = "edit_server";
 
@@ -66,6 +69,11 @@ public class HostPreferenceActivity extends Activity {
 			}
 		});
 	}
+	/**
+	 * Edit server's information
+	 * @param id String
+	 * @return void
+	 */
 
 	protected void editServer(String id) {
 		CMISPreferencesManager prefsMgr = CMISPreferencesManager.getInstance();
@@ -100,6 +108,10 @@ public class HostPreferenceActivity extends Activity {
 //
 //		return super.onKeyDown(keyCode, event);
 //	}
+	/**
+	 * Update server's information
+	 * @return boolean
+	 */
 
 	protected boolean updateHost() {
 		String hostname = ((EditText) findViewById(R.id.hostname_edittext))
@@ -166,7 +178,9 @@ public class HostPreferenceActivity extends Activity {
 
 		return true;
 	}
-
+	/**
+	 * Display error using Toast.
+	 */
 	protected void toastError(String msg) {
 		int duration = Toast.LENGTH_SHORT;
 		Toast toast = Toast.makeText(this, msg

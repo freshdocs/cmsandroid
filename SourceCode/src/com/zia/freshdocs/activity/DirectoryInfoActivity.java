@@ -19,6 +19,9 @@ import android.widget.TextView;
 import com.zia.freshdocs.R;
 import com.zia.freshdocs.widget.fileexplorer.FileManager;
 
+/**
+ * Provides information about a specific directory.
+ * */
 public class DirectoryInfoActivity extends Activity {
 	private static final int KB = 1024;
 	private static final int MG = KB * KB;
@@ -63,7 +66,10 @@ public class DirectoryInfoActivity extends Activity {
 		
 	}
 	
-
+	/**
+	 * This class allows to perform background operations and publish results on
+	 * the UI thread without having to manipulate threads and/or handlers.
+	 */
 
 	private class BackgroundWork extends AsyncTask<String, Void, Long> {
 		private ProgressDialog dialog;
@@ -146,7 +152,9 @@ public class DirectoryInfoActivity extends Activity {
 			dialog.cancel();
 		}	
 	}
-	
+	/**
+	 * Convert number to right format
+	 * */
     private String Convert(int number){
         String temp;
         if(number >= 10){

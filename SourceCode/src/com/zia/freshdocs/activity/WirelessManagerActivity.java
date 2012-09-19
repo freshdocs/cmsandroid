@@ -74,7 +74,9 @@ public class WirelessManagerActivity extends Activity {
 				
 		get_wifi();
 	}
-	
+	/**
+	 * Get wifi's information
+	 */
 	private void get_wifi() {
 		WifiInfo info = wifi.getConnectionInfo();
 		int state = wifi.getWifiState();

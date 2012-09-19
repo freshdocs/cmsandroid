@@ -97,7 +97,7 @@ public class ProcessManagerActivity extends ListActivity {
 	}
 	
 	/**
-	 * 
+	 * update labels
 	 */
 	private void updateLabels() {
 		MemoryInfo memoryInfo;
@@ -127,7 +127,7 @@ public class ProcessManagerActivity extends ListActivity {
 		updateLabels();
 	}
 	
-	/* (non-JavaDoc)
+	/** (non-JavaDoc)
 	 * private inner class to bind the listview and its data source
 	 * @author Joe Berria
 	 */

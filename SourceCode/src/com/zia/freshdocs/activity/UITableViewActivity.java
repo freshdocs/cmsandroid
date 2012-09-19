@@ -6,6 +6,10 @@ import android.os.Bundle;
 import com.zia.freshdocs.R;
 import com.zia.freshdocs.widget.UITableView;
 
+/**
+ * Activity with UITable layout
+ *
+ */
 public abstract class UITableViewActivity extends Activity {
 
 	private UITableView mTableView;

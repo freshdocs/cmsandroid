@@ -36,7 +36,13 @@ public class SharedPreferencesAccess {
 		return settings.getString(key, "");
 	}
 	
-	
+	/**
+	 * Save JSONArray to SharedPreferences.
+	 * 
+	 * @param context
+	 * @param key
+	 * @param value
+	 */
 	public static void saveJSONArrayToSharedPreferences(Context c, String key, JSONArray array) {
         SharedPreferences settings = c.getSharedPreferences(key, 0);
         SharedPreferences.Editor editor = settings.edit();
@@ -44,7 +50,12 @@ public class SharedPreferencesAccess {
         editor.commit();
     }
 
-
+	/**
+	 * get JSONArray from SharedPreferences.
+	 * 
+	 * @param context
+	 * @return key
+	 */	
 	public static JSONArray loadJSONArrayToSharedPreferences(Context c, String key) throws JSONException {
         SharedPreferences settings = c.getSharedPreferences(key, 0);
         return new JSONArray(settings.getString(key, "[]"));

@@ -1,0 +1,238 @@
+\hypertarget{classcom_1_1zia_1_1freshdocs_1_1widget_1_1fileexplorer_1_1carousel_1_1_rotator}{\section{com.\-zia.\-freshdocs.\-widget.\-fileexplorer.\-carousel.\-Rotator Class Reference}
+\label{classcom_1_1zia_1_1freshdocs_1_1widget_1_1fileexplorer_1_1carousel_1_1_rotator}\index{com.\-zia.\-freshdocs.\-widget.\-fileexplorer.\-carousel.\-Rotator@{com.\-zia.\-freshdocs.\-widget.\-fileexplorer.\-carousel.\-Rotator}}
+}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{classcom_1_1zia_1_1freshdocs_1_1widget_1_1fileexplorer_1_1carousel_1_1_rotator_aa10d69d959b645a642bf69adc5a073d4}{Rotator} (Context context)
+\item 
+final boolean \hyperlink{classcom_1_1zia_1_1freshdocs_1_1widget_1_1fileexplorer_1_1carousel_1_1_rotator_a915636b61fc5f89010cfed82ba351324}{is\-Finished} ()
+\item 
+final void \hyperlink{classcom_1_1zia_1_1freshdocs_1_1widget_1_1fileexplorer_1_1carousel_1_1_rotator_a5690382de5045d670c59f40fd9213bd9}{force\-Finished} (boolean finished)
+\item 
+final long \hyperlink{classcom_1_1zia_1_1freshdocs_1_1widget_1_1fileexplorer_1_1carousel_1_1_rotator_a8207e93f51c5890e4e053aad9dcd8d1f}{get\-Duration} ()
+\item 
+final float \hyperlink{classcom_1_1zia_1_1freshdocs_1_1widget_1_1fileexplorer_1_1carousel_1_1_rotator_ae942ac64d4ad61bfe34d0169afda96cb}{get\-Curr\-Angle} ()
+\item 
+float \hyperlink{classcom_1_1zia_1_1freshdocs_1_1widget_1_1fileexplorer_1_1carousel_1_1_rotator_ab43104fdbe5dee316480b9e763d6d989}{get\-Curr\-Velocity} ()
+\item 
+final float \hyperlink{classcom_1_1zia_1_1freshdocs_1_1widget_1_1fileexplorer_1_1carousel_1_1_rotator_a2b0cca08445fb9ec231dd2c9e8d97e24}{get\-Start\-Angle} ()
+\item 
+int \hyperlink{classcom_1_1zia_1_1freshdocs_1_1widget_1_1fileexplorer_1_1carousel_1_1_rotator_ad09c4809f9d6bfc74f9d52ffbda74381}{time\-Passed} ()
+\item 
+void \hyperlink{classcom_1_1zia_1_1freshdocs_1_1widget_1_1fileexplorer_1_1carousel_1_1_rotator_a3b851c39f6020cdb9d306337aaa59561}{extend\-Duration} (int extend)
+\item 
+void \hyperlink{classcom_1_1zia_1_1freshdocs_1_1widget_1_1fileexplorer_1_1carousel_1_1_rotator_a2a9f781b6a19be4bdae048514eef2338}{abort\-Animation} ()
+\item 
+boolean \hyperlink{classcom_1_1zia_1_1freshdocs_1_1widget_1_1fileexplorer_1_1carousel_1_1_rotator_a94696e896aceab294961cb2f990b10ee}{compute\-Angle\-Offset} ()
+\item 
+void \hyperlink{classcom_1_1zia_1_1freshdocs_1_1widget_1_1fileexplorer_1_1carousel_1_1_rotator_a8f3a78bc801aadc6cee2471cdd19971d}{start\-Rotate} (float start\-Angle, float d\-Angle, int duration)
+\item 
+void \hyperlink{classcom_1_1zia_1_1freshdocs_1_1widget_1_1fileexplorer_1_1carousel_1_1_rotator_ae75e9fa8ce0cc45c8b1c4a23792e8358}{start\-Rotate} (float start\-Angle, float d\-Angle)
+\item 
+void \hyperlink{classcom_1_1zia_1_1freshdocs_1_1widget_1_1fileexplorer_1_1carousel_1_1_rotator_a0ebccf141084d76982a95eaaa696e4d9}{fling} (float velocity\-Angle)
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+This class encapsulates rotation. The duration of the rotation can be passed in the constructor and specifies the maximum time that the rotation animation should take. Past this time, the rotation is automatically moved to its final stage and compute\-Rotation\-Offset() will always return false to indicate that scrolling is over. 
+
+\subsection{Constructor \& Destructor Documentation}
+\hypertarget{classcom_1_1zia_1_1freshdocs_1_1widget_1_1fileexplorer_1_1carousel_1_1_rotator_aa10d69d959b645a642bf69adc5a073d4}{\index{com\-::zia\-::freshdocs\-::widget\-::fileexplorer\-::carousel\-::\-Rotator@{com\-::zia\-::freshdocs\-::widget\-::fileexplorer\-::carousel\-::\-Rotator}!Rotator@{Rotator}}
+\index{Rotator@{Rotator}!com::zia::freshdocs::widget::fileexplorer::carousel::Rotator@{com\-::zia\-::freshdocs\-::widget\-::fileexplorer\-::carousel\-::\-Rotator}}
+\subsubsection[{Rotator}]{\setlength{\rightskip}{0pt plus 5cm}com.\-zia.\-freshdocs.\-widget.\-fileexplorer.\-carousel.\-Rotator.\-Rotator (
+\begin{DoxyParamCaption}
+\item[{Context}]{context}
+\end{DoxyParamCaption}
+)}}\label{classcom_1_1zia_1_1freshdocs_1_1widget_1_1fileexplorer_1_1carousel_1_1_rotator_aa10d69d959b645a642bf69adc5a073d4}
+Create a Scroller with the specified interpolator. If the interpolator is null, the default (viscous) interpolator will be used. 
+
+\subsection{Member Function Documentation}
+\hypertarget{classcom_1_1zia_1_1freshdocs_1_1widget_1_1fileexplorer_1_1carousel_1_1_rotator_a2a9f781b6a19be4bdae048514eef2338}{\index{com\-::zia\-::freshdocs\-::widget\-::fileexplorer\-::carousel\-::\-Rotator@{com\-::zia\-::freshdocs\-::widget\-::fileexplorer\-::carousel\-::\-Rotator}!abort\-Animation@{abort\-Animation}}
+\index{abort\-Animation@{abort\-Animation}!com::zia::freshdocs::widget::fileexplorer::carousel::Rotator@{com\-::zia\-::freshdocs\-::widget\-::fileexplorer\-::carousel\-::\-Rotator}}
+\subsubsection[{abort\-Animation}]{\setlength{\rightskip}{0pt plus 5cm}void com.\-zia.\-freshdocs.\-widget.\-fileexplorer.\-carousel.\-Rotator.\-abort\-Animation (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}\label{classcom_1_1zia_1_1freshdocs_1_1widget_1_1fileexplorer_1_1carousel_1_1_rotator_a2a9f781b6a19be4bdae048514eef2338}
+Stops the animation. Contrary to \hyperlink{classcom_1_1zia_1_1freshdocs_1_1widget_1_1fileexplorer_1_1carousel_1_1_rotator_a5690382de5045d670c59f40fd9213bd9}{force\-Finished(boolean)}, aborting the animating cause the scroller to move to the final x and y position
+
+\begin{DoxySeeAlso}{See Also}
+\hyperlink{classcom_1_1zia_1_1freshdocs_1_1widget_1_1fileexplorer_1_1carousel_1_1_rotator_a5690382de5045d670c59f40fd9213bd9}{force\-Finished(boolean)} 
+\end{DoxySeeAlso}
+\hypertarget{classcom_1_1zia_1_1freshdocs_1_1widget_1_1fileexplorer_1_1carousel_1_1_rotator_a94696e896aceab294961cb2f990b10ee}{\index{com\-::zia\-::freshdocs\-::widget\-::fileexplorer\-::carousel\-::\-Rotator@{com\-::zia\-::freshdocs\-::widget\-::fileexplorer\-::carousel\-::\-Rotator}!compute\-Angle\-Offset@{compute\-Angle\-Offset}}
+\index{compute\-Angle\-Offset@{compute\-Angle\-Offset}!com::zia::freshdocs::widget::fileexplorer::carousel::Rotator@{com\-::zia\-::freshdocs\-::widget\-::fileexplorer\-::carousel\-::\-Rotator}}
+\subsubsection[{compute\-Angle\-Offset}]{\setlength{\rightskip}{0pt plus 5cm}boolean com.\-zia.\-freshdocs.\-widget.\-fileexplorer.\-carousel.\-Rotator.\-compute\-Angle\-Offset (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}\label{classcom_1_1zia_1_1freshdocs_1_1widget_1_1fileexplorer_1_1carousel_1_1_rotator_a94696e896aceab294961cb2f990b10ee}
+Call this when you want to know the new location. If it returns true, the animation is not yet finished. loc will be altered to provide the new location. \hypertarget{classcom_1_1zia_1_1freshdocs_1_1widget_1_1fileexplorer_1_1carousel_1_1_rotator_a3b851c39f6020cdb9d306337aaa59561}{\index{com\-::zia\-::freshdocs\-::widget\-::fileexplorer\-::carousel\-::\-Rotator@{com\-::zia\-::freshdocs\-::widget\-::fileexplorer\-::carousel\-::\-Rotator}!extend\-Duration@{extend\-Duration}}
+\index{extend\-Duration@{extend\-Duration}!com::zia::freshdocs::widget::fileexplorer::carousel::Rotator@{com\-::zia\-::freshdocs\-::widget\-::fileexplorer\-::carousel\-::\-Rotator}}
+\subsubsection[{extend\-Duration}]{\setlength{\rightskip}{0pt plus 5cm}void com.\-zia.\-freshdocs.\-widget.\-fileexplorer.\-carousel.\-Rotator.\-extend\-Duration (
+\begin{DoxyParamCaption}
+\item[{int}]{extend}
+\end{DoxyParamCaption}
+)}}\label{classcom_1_1zia_1_1freshdocs_1_1widget_1_1fileexplorer_1_1carousel_1_1_rotator_a3b851c39f6020cdb9d306337aaa59561}
+Extend the scroll animation. This allows a running animation to scroll further and longer, when used with \hyperlink{}{set\-Final\-X(int)} or \hyperlink{}{set\-Final\-Y(int)}.
+
+
+\begin{DoxyParams}{Parameters}
+{\em extend} & Additional time to scroll in milliseconds. \\
+\hline
+\end{DoxyParams}
+\begin{DoxySeeAlso}{See Also}
+\#set\-Final\-X(int) 
+
+\#set\-Final\-Y(int) 
+\end{DoxySeeAlso}
+\hypertarget{classcom_1_1zia_1_1freshdocs_1_1widget_1_1fileexplorer_1_1carousel_1_1_rotator_a0ebccf141084d76982a95eaaa696e4d9}{\index{com\-::zia\-::freshdocs\-::widget\-::fileexplorer\-::carousel\-::\-Rotator@{com\-::zia\-::freshdocs\-::widget\-::fileexplorer\-::carousel\-::\-Rotator}!fling@{fling}}
+\index{fling@{fling}!com::zia::freshdocs::widget::fileexplorer::carousel::Rotator@{com\-::zia\-::freshdocs\-::widget\-::fileexplorer\-::carousel\-::\-Rotator}}
+\subsubsection[{fling}]{\setlength{\rightskip}{0pt plus 5cm}void com.\-zia.\-freshdocs.\-widget.\-fileexplorer.\-carousel.\-Rotator.\-fling (
+\begin{DoxyParamCaption}
+\item[{float}]{velocity\-Angle}
+\end{DoxyParamCaption}
+)}}\label{classcom_1_1zia_1_1freshdocs_1_1widget_1_1fileexplorer_1_1carousel_1_1_rotator_a0ebccf141084d76982a95eaaa696e4d9}
+Start scrolling based on a fling gesture. The distance travelled will depend on the initial velocity of the fling.
+
+
+\begin{DoxyParams}{Parameters}
+{\em velocity\-Angle} & Initial velocity of the fling (X) measured in pixels per second. \\
+\hline
+\end{DoxyParams}
+\hypertarget{classcom_1_1zia_1_1freshdocs_1_1widget_1_1fileexplorer_1_1carousel_1_1_rotator_a5690382de5045d670c59f40fd9213bd9}{\index{com\-::zia\-::freshdocs\-::widget\-::fileexplorer\-::carousel\-::\-Rotator@{com\-::zia\-::freshdocs\-::widget\-::fileexplorer\-::carousel\-::\-Rotator}!force\-Finished@{force\-Finished}}
+\index{force\-Finished@{force\-Finished}!com::zia::freshdocs::widget::fileexplorer::carousel::Rotator@{com\-::zia\-::freshdocs\-::widget\-::fileexplorer\-::carousel\-::\-Rotator}}
+\subsubsection[{force\-Finished}]{\setlength{\rightskip}{0pt plus 5cm}final void com.\-zia.\-freshdocs.\-widget.\-fileexplorer.\-carousel.\-Rotator.\-force\-Finished (
+\begin{DoxyParamCaption}
+\item[{boolean}]{finished}
+\end{DoxyParamCaption}
+)}}\label{classcom_1_1zia_1_1freshdocs_1_1widget_1_1fileexplorer_1_1carousel_1_1_rotator_a5690382de5045d670c59f40fd9213bd9}
+Force the finished field to a particular value.
+
+
+\begin{DoxyParams}{Parameters}
+{\em finished} & The new finished value. \\
+\hline
+\end{DoxyParams}
+\hypertarget{classcom_1_1zia_1_1freshdocs_1_1widget_1_1fileexplorer_1_1carousel_1_1_rotator_ae942ac64d4ad61bfe34d0169afda96cb}{\index{com\-::zia\-::freshdocs\-::widget\-::fileexplorer\-::carousel\-::\-Rotator@{com\-::zia\-::freshdocs\-::widget\-::fileexplorer\-::carousel\-::\-Rotator}!get\-Curr\-Angle@{get\-Curr\-Angle}}
+\index{get\-Curr\-Angle@{get\-Curr\-Angle}!com::zia::freshdocs::widget::fileexplorer::carousel::Rotator@{com\-::zia\-::freshdocs\-::widget\-::fileexplorer\-::carousel\-::\-Rotator}}
+\subsubsection[{get\-Curr\-Angle}]{\setlength{\rightskip}{0pt plus 5cm}final float com.\-zia.\-freshdocs.\-widget.\-fileexplorer.\-carousel.\-Rotator.\-get\-Curr\-Angle (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}\label{classcom_1_1zia_1_1freshdocs_1_1widget_1_1fileexplorer_1_1carousel_1_1_rotator_ae942ac64d4ad61bfe34d0169afda96cb}
+Returns the current X offset in the scroll.
+
+\begin{DoxyReturn}{Returns}
+The new X offset as an absolute distance from the origin. 
+\end{DoxyReturn}
+\hypertarget{classcom_1_1zia_1_1freshdocs_1_1widget_1_1fileexplorer_1_1carousel_1_1_rotator_ab43104fdbe5dee316480b9e763d6d989}{\index{com\-::zia\-::freshdocs\-::widget\-::fileexplorer\-::carousel\-::\-Rotator@{com\-::zia\-::freshdocs\-::widget\-::fileexplorer\-::carousel\-::\-Rotator}!get\-Curr\-Velocity@{get\-Curr\-Velocity}}
+\index{get\-Curr\-Velocity@{get\-Curr\-Velocity}!com::zia::freshdocs::widget::fileexplorer::carousel::Rotator@{com\-::zia\-::freshdocs\-::widget\-::fileexplorer\-::carousel\-::\-Rotator}}
+\subsubsection[{get\-Curr\-Velocity}]{\setlength{\rightskip}{0pt plus 5cm}float com.\-zia.\-freshdocs.\-widget.\-fileexplorer.\-carousel.\-Rotator.\-get\-Curr\-Velocity (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}\label{classcom_1_1zia_1_1freshdocs_1_1widget_1_1fileexplorer_1_1carousel_1_1_rotator_ab43104fdbe5dee316480b9e763d6d989}
+Returns the current velocity.
+
+\begin{DoxyReturn}{Returns}
+The original velocity less the deceleration. Result may be negative. 
+\end{DoxyReturn}
+\hypertarget{classcom_1_1zia_1_1freshdocs_1_1widget_1_1fileexplorer_1_1carousel_1_1_rotator_a8207e93f51c5890e4e053aad9dcd8d1f}{\index{com\-::zia\-::freshdocs\-::widget\-::fileexplorer\-::carousel\-::\-Rotator@{com\-::zia\-::freshdocs\-::widget\-::fileexplorer\-::carousel\-::\-Rotator}!get\-Duration@{get\-Duration}}
+\index{get\-Duration@{get\-Duration}!com::zia::freshdocs::widget::fileexplorer::carousel::Rotator@{com\-::zia\-::freshdocs\-::widget\-::fileexplorer\-::carousel\-::\-Rotator}}
+\subsubsection[{get\-Duration}]{\setlength{\rightskip}{0pt plus 5cm}final long com.\-zia.\-freshdocs.\-widget.\-fileexplorer.\-carousel.\-Rotator.\-get\-Duration (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}\label{classcom_1_1zia_1_1freshdocs_1_1widget_1_1fileexplorer_1_1carousel_1_1_rotator_a8207e93f51c5890e4e053aad9dcd8d1f}
+Returns how long the scroll event will take, in milliseconds.
+
+\begin{DoxyReturn}{Returns}
+The duration of the scroll in milliseconds. 
+\end{DoxyReturn}
+\hypertarget{classcom_1_1zia_1_1freshdocs_1_1widget_1_1fileexplorer_1_1carousel_1_1_rotator_a2b0cca08445fb9ec231dd2c9e8d97e24}{\index{com\-::zia\-::freshdocs\-::widget\-::fileexplorer\-::carousel\-::\-Rotator@{com\-::zia\-::freshdocs\-::widget\-::fileexplorer\-::carousel\-::\-Rotator}!get\-Start\-Angle@{get\-Start\-Angle}}
+\index{get\-Start\-Angle@{get\-Start\-Angle}!com::zia::freshdocs::widget::fileexplorer::carousel::Rotator@{com\-::zia\-::freshdocs\-::widget\-::fileexplorer\-::carousel\-::\-Rotator}}
+\subsubsection[{get\-Start\-Angle}]{\setlength{\rightskip}{0pt plus 5cm}final float com.\-zia.\-freshdocs.\-widget.\-fileexplorer.\-carousel.\-Rotator.\-get\-Start\-Angle (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}\label{classcom_1_1zia_1_1freshdocs_1_1widget_1_1fileexplorer_1_1carousel_1_1_rotator_a2b0cca08445fb9ec231dd2c9e8d97e24}
+Returns the start X offset in the scroll.
+
+\begin{DoxyReturn}{Returns}
+The start X offset as an absolute distance from the origin. 
+\end{DoxyReturn}
+\hypertarget{classcom_1_1zia_1_1freshdocs_1_1widget_1_1fileexplorer_1_1carousel_1_1_rotator_a915636b61fc5f89010cfed82ba351324}{\index{com\-::zia\-::freshdocs\-::widget\-::fileexplorer\-::carousel\-::\-Rotator@{com\-::zia\-::freshdocs\-::widget\-::fileexplorer\-::carousel\-::\-Rotator}!is\-Finished@{is\-Finished}}
+\index{is\-Finished@{is\-Finished}!com::zia::freshdocs::widget::fileexplorer::carousel::Rotator@{com\-::zia\-::freshdocs\-::widget\-::fileexplorer\-::carousel\-::\-Rotator}}
+\subsubsection[{is\-Finished}]{\setlength{\rightskip}{0pt plus 5cm}final boolean com.\-zia.\-freshdocs.\-widget.\-fileexplorer.\-carousel.\-Rotator.\-is\-Finished (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}\label{classcom_1_1zia_1_1freshdocs_1_1widget_1_1fileexplorer_1_1carousel_1_1_rotator_a915636b61fc5f89010cfed82ba351324}
+Returns whether the scroller has finished scrolling.
+
+\begin{DoxyReturn}{Returns}
+True if the scroller has finished scrolling, false otherwise. 
+\end{DoxyReturn}
+\hypertarget{classcom_1_1zia_1_1freshdocs_1_1widget_1_1fileexplorer_1_1carousel_1_1_rotator_a8f3a78bc801aadc6cee2471cdd19971d}{\index{com\-::zia\-::freshdocs\-::widget\-::fileexplorer\-::carousel\-::\-Rotator@{com\-::zia\-::freshdocs\-::widget\-::fileexplorer\-::carousel\-::\-Rotator}!start\-Rotate@{start\-Rotate}}
+\index{start\-Rotate@{start\-Rotate}!com::zia::freshdocs::widget::fileexplorer::carousel::Rotator@{com\-::zia\-::freshdocs\-::widget\-::fileexplorer\-::carousel\-::\-Rotator}}
+\subsubsection[{start\-Rotate}]{\setlength{\rightskip}{0pt plus 5cm}void com.\-zia.\-freshdocs.\-widget.\-fileexplorer.\-carousel.\-Rotator.\-start\-Rotate (
+\begin{DoxyParamCaption}
+\item[{float}]{start\-Angle, }
+\item[{float}]{d\-Angle, }
+\item[{int}]{duration}
+\end{DoxyParamCaption}
+)}}\label{classcom_1_1zia_1_1freshdocs_1_1widget_1_1fileexplorer_1_1carousel_1_1_rotator_a8f3a78bc801aadc6cee2471cdd19971d}
+Start scrolling by providing a starting point and the distance to travel.
+
+
+\begin{DoxyParams}{Parameters}
+{\em start\-X} & Starting horizontal scroll offset in pixels. Positive numbers will scroll the content to the left. \\
+\hline
+{\em start\-Y} & Starting vertical scroll offset in pixels. Positive numbers will scroll the content up. \\
+\hline
+{\em dx} & Horizontal distance to travel. Positive numbers will scroll the content to the left. \\
+\hline
+{\em dy} & Vertical distance to travel. Positive numbers will scroll the content up. \\
+\hline
+{\em duration} & Duration of the scroll in milliseconds. \\
+\hline
+\end{DoxyParams}
+\hypertarget{classcom_1_1zia_1_1freshdocs_1_1widget_1_1fileexplorer_1_1carousel_1_1_rotator_ae75e9fa8ce0cc45c8b1c4a23792e8358}{\index{com\-::zia\-::freshdocs\-::widget\-::fileexplorer\-::carousel\-::\-Rotator@{com\-::zia\-::freshdocs\-::widget\-::fileexplorer\-::carousel\-::\-Rotator}!start\-Rotate@{start\-Rotate}}
+\index{start\-Rotate@{start\-Rotate}!com::zia::freshdocs::widget::fileexplorer::carousel::Rotator@{com\-::zia\-::freshdocs\-::widget\-::fileexplorer\-::carousel\-::\-Rotator}}
+\subsubsection[{start\-Rotate}]{\setlength{\rightskip}{0pt plus 5cm}void com.\-zia.\-freshdocs.\-widget.\-fileexplorer.\-carousel.\-Rotator.\-start\-Rotate (
+\begin{DoxyParamCaption}
+\item[{float}]{start\-Angle, }
+\item[{float}]{d\-Angle}
+\end{DoxyParamCaption}
+)}}\label{classcom_1_1zia_1_1freshdocs_1_1widget_1_1fileexplorer_1_1carousel_1_1_rotator_ae75e9fa8ce0cc45c8b1c4a23792e8358}
+Start scrolling by providing a starting point and the distance to travel. The scroll will use the default value of 250 milliseconds for the duration.
+
+
+\begin{DoxyParams}{Parameters}
+{\em start\-X} & Starting horizontal scroll offset in pixels. Positive numbers will scroll the content to the left. \\
+\hline
+{\em start\-Y} & Starting vertical scroll offset in pixels. Positive numbers will scroll the content up. \\
+\hline
+{\em dx} & Horizontal distance to travel. Positive numbers will scroll the content to the left. \\
+\hline
+{\em dy} & Vertical distance to travel. Positive numbers will scroll the content up. \\
+\hline
+\end{DoxyParams}
+\hypertarget{classcom_1_1zia_1_1freshdocs_1_1widget_1_1fileexplorer_1_1carousel_1_1_rotator_ad09c4809f9d6bfc74f9d52ffbda74381}{\index{com\-::zia\-::freshdocs\-::widget\-::fileexplorer\-::carousel\-::\-Rotator@{com\-::zia\-::freshdocs\-::widget\-::fileexplorer\-::carousel\-::\-Rotator}!time\-Passed@{time\-Passed}}
+\index{time\-Passed@{time\-Passed}!com::zia::freshdocs::widget::fileexplorer::carousel::Rotator@{com\-::zia\-::freshdocs\-::widget\-::fileexplorer\-::carousel\-::\-Rotator}}
+\subsubsection[{time\-Passed}]{\setlength{\rightskip}{0pt plus 5cm}int com.\-zia.\-freshdocs.\-widget.\-fileexplorer.\-carousel.\-Rotator.\-time\-Passed (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}\label{classcom_1_1zia_1_1freshdocs_1_1widget_1_1fileexplorer_1_1carousel_1_1_rotator_ad09c4809f9d6bfc74f9d52ffbda74381}
+Returns the time elapsed since the beginning of the scrolling.
+
+\begin{DoxyReturn}{Returns}
+The elapsed time in milliseconds. 
+\end{DoxyReturn}
+
+
+The documentation for this class was generated from the following file\-:\begin{DoxyCompactItemize}
+\item 
+/\-Users/mac/\-Desktop/\-Source\-Code/src/com/zia/freshdocs/widget/fileexplorer/carousel/\hyperlink{_rotator_8java}{Rotator.\-java}\end{DoxyCompactItemize}
