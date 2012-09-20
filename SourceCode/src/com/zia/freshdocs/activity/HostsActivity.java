@@ -275,7 +275,7 @@ public class HostsActivity extends ListActivity implements OnItemLongClickListen
 			final QuickActionWindow quickAction = new QuickActionWindow(
 					HostsActivity.this, view, rect);
 
-			quickAction.addItem(getResources().getDrawable(R.drawable.excel),
+			quickAction.addItem(getResources().getDrawable(R.drawable.context_edit),
 					getString(R.string.edit_server), new OnClickListener() {
 						public void onClick(View v) {
 							quickAction.dismiss();
@@ -285,7 +285,7 @@ public class HostsActivity extends ListActivity implements OnItemLongClickListen
 						}
 					});
 
-			quickAction.addItem(getResources().getDrawable(R.drawable.excel),
+			quickAction.addItem(getResources().getDrawable(R.drawable.context_delete),
 					getString(R.string.delete_server), new OnClickListener() {
 						public void onClick(View v) {
 							deleteServer(id);
