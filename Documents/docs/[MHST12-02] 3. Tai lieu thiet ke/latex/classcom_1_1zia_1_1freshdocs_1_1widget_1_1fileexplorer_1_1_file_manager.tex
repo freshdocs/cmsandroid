@@ -1,0 +1,322 @@
+\hypertarget{classcom_1_1zia_1_1freshdocs_1_1widget_1_1fileexplorer_1_1_file_manager}{\section{com.\-zia.\-freshdocs.\-widget.\-fileexplorer.\-File\-Manager Class Reference}
+\label{classcom_1_1zia_1_1freshdocs_1_1widget_1_1fileexplorer_1_1_file_manager}\index{com.\-zia.\-freshdocs.\-widget.\-fileexplorer.\-File\-Manager@{com.\-zia.\-freshdocs.\-widget.\-fileexplorer.\-File\-Manager}}
+}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{classcom_1_1zia_1_1freshdocs_1_1widget_1_1fileexplorer_1_1_file_manager_a851c9b7d58ef83cd4bae907f0aac91eb}{File\-Manager} ()
+\item 
+String \hyperlink{classcom_1_1zia_1_1freshdocs_1_1widget_1_1fileexplorer_1_1_file_manager_ae1e732b9736be60e16c21f3a802e44d8}{get\-Current\-Dir} ()
+\item 
+Array\-List$<$ String $>$ \hyperlink{classcom_1_1zia_1_1freshdocs_1_1widget_1_1fileexplorer_1_1_file_manager_ac278b53c29aa81d216c6d8d791016106}{get\-Home\-Dir} ()
+\item 
+void \hyperlink{classcom_1_1zia_1_1freshdocs_1_1widget_1_1fileexplorer_1_1_file_manager_ace41ce68b6b7ad5ff469e76f46ccdcd0}{set\-Show\-Hidden\-Files} (boolean choice)
+\item 
+void \hyperlink{classcom_1_1zia_1_1freshdocs_1_1widget_1_1fileexplorer_1_1_file_manager_a14f9e7e1b359468c82c4fd64500e13d8}{set\-Sort\-Type} (int type)
+\item 
+Array\-List$<$ String $>$ \hyperlink{classcom_1_1zia_1_1freshdocs_1_1widget_1_1fileexplorer_1_1_file_manager_ae1a8d103fa5dbfade39ca0e071da3eed}{get\-Previous\-Dir} ()
+\item 
+Array\-List$<$ String $>$ \hyperlink{classcom_1_1zia_1_1freshdocs_1_1widget_1_1fileexplorer_1_1_file_manager_a68b8361912dc1a3de41ce7b2a8975a7c}{get\-Next\-Dir} (String path, boolean is\-Full\-Path)
+\item 
+int \hyperlink{classcom_1_1zia_1_1freshdocs_1_1widget_1_1fileexplorer_1_1_file_manager_a1e688cf72bb5e16c2e8da77e0028776e}{copy\-To\-Directory} (String old, String new\-Dir)
+\item 
+void \hyperlink{classcom_1_1zia_1_1freshdocs_1_1widget_1_1fileexplorer_1_1_file_manager_a1504afeed0e897aa0ce249e62ef44592}{extract\-Zip\-Files\-From\-Dir} (String zip\-Name, String to\-Dir, String from\-Dir)
+\item 
+void \hyperlink{classcom_1_1zia_1_1freshdocs_1_1widget_1_1fileexplorer_1_1_file_manager_a8aeb681e45fcce92cc4060ca7139d07d}{extract\-Zip\-Files} (String zip\-\_\-file, String directory)
+\item 
+void \hyperlink{classcom_1_1zia_1_1freshdocs_1_1widget_1_1fileexplorer_1_1_file_manager_a34589f8be3c60e24457dfa4f4278ef9a}{create\-Zip\-File} (String path)
+\item 
+int \hyperlink{classcom_1_1zia_1_1freshdocs_1_1widget_1_1fileexplorer_1_1_file_manager_a3f30e730f97184e178ece5f1f472b2d4}{rename\-Target} (String file\-Path, String new\-Name)
+\item 
+int \hyperlink{classcom_1_1zia_1_1freshdocs_1_1widget_1_1fileexplorer_1_1_file_manager_a6bc5e607bdd04f826f9f1a4a26490373}{create\-Dir} (String path, String name)
+\item 
+int \hyperlink{classcom_1_1zia_1_1freshdocs_1_1widget_1_1fileexplorer_1_1_file_manager_a820b0bdac17374cb719e83f24fcecfb9}{delete\-Target} (String path)
+\item 
+boolean \hyperlink{classcom_1_1zia_1_1freshdocs_1_1widget_1_1fileexplorer_1_1_file_manager_aa51edb6094808b3350dd9e91bd2a45c5}{is\-Directory} (String name)
+\item 
+Array\-List$<$ String $>$ \hyperlink{classcom_1_1zia_1_1freshdocs_1_1widget_1_1fileexplorer_1_1_file_manager_ad5d5eefe857f98bc934fe4d99c54a26f}{search\-In\-Directory} (String dir, String path\-Name)
+\item 
+long \hyperlink{classcom_1_1zia_1_1freshdocs_1_1widget_1_1fileexplorer_1_1_file_manager_a4bb3ac0f6b08ad04e3c6d78076ab10f5}{get\-Dir\-Size} (String path)
+\end{DoxyCompactItemize}
+\subsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+static String \hyperlink{classcom_1_1zia_1_1freshdocs_1_1widget_1_1fileexplorer_1_1_file_manager_aecf1482512be0ca7749b868780d9493f}{integer\-To\-I\-P\-Address} (int ip)
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+This class is completely modular, which is to say that it has no reference to the any G\-U\-I activity. This class could be taken and placed into in other java (not just Android) project and work. \par
+ \par
+ This class handles all file and folder operations on the system. This class dictates how files and folders are copied/pasted, (un)zipped renamed and searched. The \hyperlink{classcom_1_1zia_1_1freshdocs_1_1widget_1_1fileexplorer_1_1_event_handler}{Event\-Handler} class will generally call these methods and have them performed in a background thread. Threading is not done in this class. 
+
+\subsection{Constructor \& Destructor Documentation}
+\hypertarget{classcom_1_1zia_1_1freshdocs_1_1widget_1_1fileexplorer_1_1_file_manager_a851c9b7d58ef83cd4bae907f0aac91eb}{\index{com\-::zia\-::freshdocs\-::widget\-::fileexplorer\-::\-File\-Manager@{com\-::zia\-::freshdocs\-::widget\-::fileexplorer\-::\-File\-Manager}!File\-Manager@{File\-Manager}}
+\index{File\-Manager@{File\-Manager}!com::zia::freshdocs::widget::fileexplorer::FileManager@{com\-::zia\-::freshdocs\-::widget\-::fileexplorer\-::\-File\-Manager}}
+\subsubsection[{File\-Manager}]{\setlength{\rightskip}{0pt plus 5cm}com.\-zia.\-freshdocs.\-widget.\-fileexplorer.\-File\-Manager.\-File\-Manager (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}\label{classcom_1_1zia_1_1freshdocs_1_1widget_1_1fileexplorer_1_1_file_manager_a851c9b7d58ef83cd4bae907f0aac91eb}
+Constructs an object of the class \par
+ this class uses a stack to handle the navigation of directories. 
+
+\subsection{Member Function Documentation}
+\hypertarget{classcom_1_1zia_1_1freshdocs_1_1widget_1_1fileexplorer_1_1_file_manager_a1e688cf72bb5e16c2e8da77e0028776e}{\index{com\-::zia\-::freshdocs\-::widget\-::fileexplorer\-::\-File\-Manager@{com\-::zia\-::freshdocs\-::widget\-::fileexplorer\-::\-File\-Manager}!copy\-To\-Directory@{copy\-To\-Directory}}
+\index{copy\-To\-Directory@{copy\-To\-Directory}!com::zia::freshdocs::widget::fileexplorer::FileManager@{com\-::zia\-::freshdocs\-::widget\-::fileexplorer\-::\-File\-Manager}}
+\subsubsection[{copy\-To\-Directory}]{\setlength{\rightskip}{0pt plus 5cm}int com.\-zia.\-freshdocs.\-widget.\-fileexplorer.\-File\-Manager.\-copy\-To\-Directory (
+\begin{DoxyParamCaption}
+\item[{String}]{old, }
+\item[{String}]{new\-Dir}
+\end{DoxyParamCaption}
+)}}\label{classcom_1_1zia_1_1freshdocs_1_1widget_1_1fileexplorer_1_1_file_manager_a1e688cf72bb5e16c2e8da77e0028776e}
+
+\begin{DoxyParams}{Parameters}
+{\em old} & the file to be copied \\
+\hline
+{\em new\-Dir} & the directory to move the file to \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+
+\end{DoxyReturn}
+\hypertarget{classcom_1_1zia_1_1freshdocs_1_1widget_1_1fileexplorer_1_1_file_manager_a6bc5e607bdd04f826f9f1a4a26490373}{\index{com\-::zia\-::freshdocs\-::widget\-::fileexplorer\-::\-File\-Manager@{com\-::zia\-::freshdocs\-::widget\-::fileexplorer\-::\-File\-Manager}!create\-Dir@{create\-Dir}}
+\index{create\-Dir@{create\-Dir}!com::zia::freshdocs::widget::fileexplorer::FileManager@{com\-::zia\-::freshdocs\-::widget\-::fileexplorer\-::\-File\-Manager}}
+\subsubsection[{create\-Dir}]{\setlength{\rightskip}{0pt plus 5cm}int com.\-zia.\-freshdocs.\-widget.\-fileexplorer.\-File\-Manager.\-create\-Dir (
+\begin{DoxyParamCaption}
+\item[{String}]{path, }
+\item[{String}]{name}
+\end{DoxyParamCaption}
+)}}\label{classcom_1_1zia_1_1freshdocs_1_1widget_1_1fileexplorer_1_1_file_manager_a6bc5e607bdd04f826f9f1a4a26490373}
+
+\begin{DoxyParams}{Parameters}
+{\em path} & \\
+\hline
+{\em name} & \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+
+\end{DoxyReturn}
+\hypertarget{classcom_1_1zia_1_1freshdocs_1_1widget_1_1fileexplorer_1_1_file_manager_a34589f8be3c60e24457dfa4f4278ef9a}{\index{com\-::zia\-::freshdocs\-::widget\-::fileexplorer\-::\-File\-Manager@{com\-::zia\-::freshdocs\-::widget\-::fileexplorer\-::\-File\-Manager}!create\-Zip\-File@{create\-Zip\-File}}
+\index{create\-Zip\-File@{create\-Zip\-File}!com::zia::freshdocs::widget::fileexplorer::FileManager@{com\-::zia\-::freshdocs\-::widget\-::fileexplorer\-::\-File\-Manager}}
+\subsubsection[{create\-Zip\-File}]{\setlength{\rightskip}{0pt plus 5cm}void com.\-zia.\-freshdocs.\-widget.\-fileexplorer.\-File\-Manager.\-create\-Zip\-File (
+\begin{DoxyParamCaption}
+\item[{String}]{path}
+\end{DoxyParamCaption}
+)}}\label{classcom_1_1zia_1_1freshdocs_1_1widget_1_1fileexplorer_1_1_file_manager_a34589f8be3c60e24457dfa4f4278ef9a}
+Create Zip file
+
+
+\begin{DoxyParams}{Parameters}
+{\em path} & \\
+\hline
+\end{DoxyParams}
+\hypertarget{classcom_1_1zia_1_1freshdocs_1_1widget_1_1fileexplorer_1_1_file_manager_a820b0bdac17374cb719e83f24fcecfb9}{\index{com\-::zia\-::freshdocs\-::widget\-::fileexplorer\-::\-File\-Manager@{com\-::zia\-::freshdocs\-::widget\-::fileexplorer\-::\-File\-Manager}!delete\-Target@{delete\-Target}}
+\index{delete\-Target@{delete\-Target}!com::zia::freshdocs::widget::fileexplorer::FileManager@{com\-::zia\-::freshdocs\-::widget\-::fileexplorer\-::\-File\-Manager}}
+\subsubsection[{delete\-Target}]{\setlength{\rightskip}{0pt plus 5cm}int com.\-zia.\-freshdocs.\-widget.\-fileexplorer.\-File\-Manager.\-delete\-Target (
+\begin{DoxyParamCaption}
+\item[{String}]{path}
+\end{DoxyParamCaption}
+)}}\label{classcom_1_1zia_1_1freshdocs_1_1widget_1_1fileexplorer_1_1_file_manager_a820b0bdac17374cb719e83f24fcecfb9}
+The full path name of the file to delete.
+
+
+\begin{DoxyParams}{Parameters}
+{\em path} & name \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+
+\end{DoxyReturn}
+\hypertarget{classcom_1_1zia_1_1freshdocs_1_1widget_1_1fileexplorer_1_1_file_manager_a8aeb681e45fcce92cc4060ca7139d07d}{\index{com\-::zia\-::freshdocs\-::widget\-::fileexplorer\-::\-File\-Manager@{com\-::zia\-::freshdocs\-::widget\-::fileexplorer\-::\-File\-Manager}!extract\-Zip\-Files@{extract\-Zip\-Files}}
+\index{extract\-Zip\-Files@{extract\-Zip\-Files}!com::zia::freshdocs::widget::fileexplorer::FileManager@{com\-::zia\-::freshdocs\-::widget\-::fileexplorer\-::\-File\-Manager}}
+\subsubsection[{extract\-Zip\-Files}]{\setlength{\rightskip}{0pt plus 5cm}void com.\-zia.\-freshdocs.\-widget.\-fileexplorer.\-File\-Manager.\-extract\-Zip\-Files (
+\begin{DoxyParamCaption}
+\item[{String}]{zip\-\_\-file, }
+\item[{String}]{directory}
+\end{DoxyParamCaption}
+)}}\label{classcom_1_1zia_1_1freshdocs_1_1widget_1_1fileexplorer_1_1_file_manager_a8aeb681e45fcce92cc4060ca7139d07d}
+
+\begin{DoxyParams}{Parameters}
+{\em zip\-\_\-file} & \\
+\hline
+{\em directory} & \\
+\hline
+\end{DoxyParams}
+\hypertarget{classcom_1_1zia_1_1freshdocs_1_1widget_1_1fileexplorer_1_1_file_manager_a1504afeed0e897aa0ce249e62ef44592}{\index{com\-::zia\-::freshdocs\-::widget\-::fileexplorer\-::\-File\-Manager@{com\-::zia\-::freshdocs\-::widget\-::fileexplorer\-::\-File\-Manager}!extract\-Zip\-Files\-From\-Dir@{extract\-Zip\-Files\-From\-Dir}}
+\index{extract\-Zip\-Files\-From\-Dir@{extract\-Zip\-Files\-From\-Dir}!com::zia::freshdocs::widget::fileexplorer::FileManager@{com\-::zia\-::freshdocs\-::widget\-::fileexplorer\-::\-File\-Manager}}
+\subsubsection[{extract\-Zip\-Files\-From\-Dir}]{\setlength{\rightskip}{0pt plus 5cm}void com.\-zia.\-freshdocs.\-widget.\-fileexplorer.\-File\-Manager.\-extract\-Zip\-Files\-From\-Dir (
+\begin{DoxyParamCaption}
+\item[{String}]{zip\-Name, }
+\item[{String}]{to\-Dir, }
+\item[{String}]{from\-Dir}
+\end{DoxyParamCaption}
+)}}\label{classcom_1_1zia_1_1freshdocs_1_1widget_1_1fileexplorer_1_1_file_manager_a1504afeed0e897aa0ce249e62ef44592}
+
+\begin{DoxyParams}{Parameters}
+{\em to\-Dir} & \\
+\hline
+{\em from\-Dir} & \\
+\hline
+\end{DoxyParams}
+\hypertarget{classcom_1_1zia_1_1freshdocs_1_1widget_1_1fileexplorer_1_1_file_manager_ae1e732b9736be60e16c21f3a802e44d8}{\index{com\-::zia\-::freshdocs\-::widget\-::fileexplorer\-::\-File\-Manager@{com\-::zia\-::freshdocs\-::widget\-::fileexplorer\-::\-File\-Manager}!get\-Current\-Dir@{get\-Current\-Dir}}
+\index{get\-Current\-Dir@{get\-Current\-Dir}!com::zia::freshdocs::widget::fileexplorer::FileManager@{com\-::zia\-::freshdocs\-::widget\-::fileexplorer\-::\-File\-Manager}}
+\subsubsection[{get\-Current\-Dir}]{\setlength{\rightskip}{0pt plus 5cm}String com.\-zia.\-freshdocs.\-widget.\-fileexplorer.\-File\-Manager.\-get\-Current\-Dir (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}\label{classcom_1_1zia_1_1freshdocs_1_1widget_1_1fileexplorer_1_1_file_manager_ae1e732b9736be60e16c21f3a802e44d8}
+This will return a string of the current directory path \begin{DoxyReturn}{Returns}
+the current directory 
+\end{DoxyReturn}
+\hypertarget{classcom_1_1zia_1_1freshdocs_1_1widget_1_1fileexplorer_1_1_file_manager_a4bb3ac0f6b08ad04e3c6d78076ab10f5}{\index{com\-::zia\-::freshdocs\-::widget\-::fileexplorer\-::\-File\-Manager@{com\-::zia\-::freshdocs\-::widget\-::fileexplorer\-::\-File\-Manager}!get\-Dir\-Size@{get\-Dir\-Size}}
+\index{get\-Dir\-Size@{get\-Dir\-Size}!com::zia::freshdocs::widget::fileexplorer::FileManager@{com\-::zia\-::freshdocs\-::widget\-::fileexplorer\-::\-File\-Manager}}
+\subsubsection[{get\-Dir\-Size}]{\setlength{\rightskip}{0pt plus 5cm}long com.\-zia.\-freshdocs.\-widget.\-fileexplorer.\-File\-Manager.\-get\-Dir\-Size (
+\begin{DoxyParamCaption}
+\item[{String}]{path}
+\end{DoxyParamCaption}
+)}}\label{classcom_1_1zia_1_1freshdocs_1_1widget_1_1fileexplorer_1_1_file_manager_a4bb3ac0f6b08ad04e3c6d78076ab10f5}
+
+\begin{DoxyParams}{Parameters}
+{\em path} & \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+
+\end{DoxyReturn}
+\hypertarget{classcom_1_1zia_1_1freshdocs_1_1widget_1_1fileexplorer_1_1_file_manager_ac278b53c29aa81d216c6d8d791016106}{\index{com\-::zia\-::freshdocs\-::widget\-::fileexplorer\-::\-File\-Manager@{com\-::zia\-::freshdocs\-::widget\-::fileexplorer\-::\-File\-Manager}!get\-Home\-Dir@{get\-Home\-Dir}}
+\index{get\-Home\-Dir@{get\-Home\-Dir}!com::zia::freshdocs::widget::fileexplorer::FileManager@{com\-::zia\-::freshdocs\-::widget\-::fileexplorer\-::\-File\-Manager}}
+\subsubsection[{get\-Home\-Dir}]{\setlength{\rightskip}{0pt plus 5cm}Array\-List$<$String$>$ com.\-zia.\-freshdocs.\-widget.\-fileexplorer.\-File\-Manager.\-get\-Home\-Dir (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}\label{classcom_1_1zia_1_1freshdocs_1_1widget_1_1fileexplorer_1_1_file_manager_ac278b53c29aa81d216c6d8d791016106}
+This will return a string of the current home path. \begin{DoxyReturn}{Returns}
+the home directory 
+\end{DoxyReturn}
+\hypertarget{classcom_1_1zia_1_1freshdocs_1_1widget_1_1fileexplorer_1_1_file_manager_a68b8361912dc1a3de41ce7b2a8975a7c}{\index{com\-::zia\-::freshdocs\-::widget\-::fileexplorer\-::\-File\-Manager@{com\-::zia\-::freshdocs\-::widget\-::fileexplorer\-::\-File\-Manager}!get\-Next\-Dir@{get\-Next\-Dir}}
+\index{get\-Next\-Dir@{get\-Next\-Dir}!com::zia::freshdocs::widget::fileexplorer::FileManager@{com\-::zia\-::freshdocs\-::widget\-::fileexplorer\-::\-File\-Manager}}
+\subsubsection[{get\-Next\-Dir}]{\setlength{\rightskip}{0pt plus 5cm}Array\-List$<$String$>$ com.\-zia.\-freshdocs.\-widget.\-fileexplorer.\-File\-Manager.\-get\-Next\-Dir (
+\begin{DoxyParamCaption}
+\item[{String}]{path, }
+\item[{boolean}]{is\-Full\-Path}
+\end{DoxyParamCaption}
+)}}\label{classcom_1_1zia_1_1freshdocs_1_1widget_1_1fileexplorer_1_1_file_manager_a68b8361912dc1a3de41ce7b2a8975a7c}
+
+\begin{DoxyParams}{Parameters}
+{\em path} & \\
+\hline
+{\em is\-Full\-Path} & \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+
+\end{DoxyReturn}
+\hypertarget{classcom_1_1zia_1_1freshdocs_1_1widget_1_1fileexplorer_1_1_file_manager_ae1a8d103fa5dbfade39ca0e071da3eed}{\index{com\-::zia\-::freshdocs\-::widget\-::fileexplorer\-::\-File\-Manager@{com\-::zia\-::freshdocs\-::widget\-::fileexplorer\-::\-File\-Manager}!get\-Previous\-Dir@{get\-Previous\-Dir}}
+\index{get\-Previous\-Dir@{get\-Previous\-Dir}!com::zia::freshdocs::widget::fileexplorer::FileManager@{com\-::zia\-::freshdocs\-::widget\-::fileexplorer\-::\-File\-Manager}}
+\subsubsection[{get\-Previous\-Dir}]{\setlength{\rightskip}{0pt plus 5cm}Array\-List$<$String$>$ com.\-zia.\-freshdocs.\-widget.\-fileexplorer.\-File\-Manager.\-get\-Previous\-Dir (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}\label{classcom_1_1zia_1_1freshdocs_1_1widget_1_1fileexplorer_1_1_file_manager_ae1a8d103fa5dbfade39ca0e071da3eed}
+This will return a string that represents the path of the previous path \begin{DoxyReturn}{Returns}
+returns the previous path 
+\end{DoxyReturn}
+\hypertarget{classcom_1_1zia_1_1freshdocs_1_1widget_1_1fileexplorer_1_1_file_manager_aecf1482512be0ca7749b868780d9493f}{\index{com\-::zia\-::freshdocs\-::widget\-::fileexplorer\-::\-File\-Manager@{com\-::zia\-::freshdocs\-::widget\-::fileexplorer\-::\-File\-Manager}!integer\-To\-I\-P\-Address@{integer\-To\-I\-P\-Address}}
+\index{integer\-To\-I\-P\-Address@{integer\-To\-I\-P\-Address}!com::zia::freshdocs::widget::fileexplorer::FileManager@{com\-::zia\-::freshdocs\-::widget\-::fileexplorer\-::\-File\-Manager}}
+\subsubsection[{integer\-To\-I\-P\-Address}]{\setlength{\rightskip}{0pt plus 5cm}static String com.\-zia.\-freshdocs.\-widget.\-fileexplorer.\-File\-Manager.\-integer\-To\-I\-P\-Address (
+\begin{DoxyParamCaption}
+\item[{int}]{ip}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [static]}}}\label{classcom_1_1zia_1_1freshdocs_1_1widget_1_1fileexplorer_1_1_file_manager_aecf1482512be0ca7749b868780d9493f}
+converts integer from wifi manager to an I\-P address.
+
+
+\begin{DoxyParams}{Parameters}
+{\em des} & \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+
+\end{DoxyReturn}
+\hypertarget{classcom_1_1zia_1_1freshdocs_1_1widget_1_1fileexplorer_1_1_file_manager_aa51edb6094808b3350dd9e91bd2a45c5}{\index{com\-::zia\-::freshdocs\-::widget\-::fileexplorer\-::\-File\-Manager@{com\-::zia\-::freshdocs\-::widget\-::fileexplorer\-::\-File\-Manager}!is\-Directory@{is\-Directory}}
+\index{is\-Directory@{is\-Directory}!com::zia::freshdocs::widget::fileexplorer::FileManager@{com\-::zia\-::freshdocs\-::widget\-::fileexplorer\-::\-File\-Manager}}
+\subsubsection[{is\-Directory}]{\setlength{\rightskip}{0pt plus 5cm}boolean com.\-zia.\-freshdocs.\-widget.\-fileexplorer.\-File\-Manager.\-is\-Directory (
+\begin{DoxyParamCaption}
+\item[{String}]{name}
+\end{DoxyParamCaption}
+)}}\label{classcom_1_1zia_1_1freshdocs_1_1widget_1_1fileexplorer_1_1_file_manager_aa51edb6094808b3350dd9e91bd2a45c5}
+
+\begin{DoxyParams}{Parameters}
+{\em name} & \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+
+\end{DoxyReturn}
+\hypertarget{classcom_1_1zia_1_1freshdocs_1_1widget_1_1fileexplorer_1_1_file_manager_a3f30e730f97184e178ece5f1f472b2d4}{\index{com\-::zia\-::freshdocs\-::widget\-::fileexplorer\-::\-File\-Manager@{com\-::zia\-::freshdocs\-::widget\-::fileexplorer\-::\-File\-Manager}!rename\-Target@{rename\-Target}}
+\index{rename\-Target@{rename\-Target}!com::zia::freshdocs::widget::fileexplorer::FileManager@{com\-::zia\-::freshdocs\-::widget\-::fileexplorer\-::\-File\-Manager}}
+\subsubsection[{rename\-Target}]{\setlength{\rightskip}{0pt plus 5cm}int com.\-zia.\-freshdocs.\-widget.\-fileexplorer.\-File\-Manager.\-rename\-Target (
+\begin{DoxyParamCaption}
+\item[{String}]{file\-Path, }
+\item[{String}]{new\-Name}
+\end{DoxyParamCaption}
+)}}\label{classcom_1_1zia_1_1freshdocs_1_1widget_1_1fileexplorer_1_1_file_manager_a3f30e730f97184e178ece5f1f472b2d4}
+
+\begin{DoxyParams}{Parameters}
+{\em file\-Path} & \\
+\hline
+{\em new\-Name} & \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+
+\end{DoxyReturn}
+\hypertarget{classcom_1_1zia_1_1freshdocs_1_1widget_1_1fileexplorer_1_1_file_manager_ad5d5eefe857f98bc934fe4d99c54a26f}{\index{com\-::zia\-::freshdocs\-::widget\-::fileexplorer\-::\-File\-Manager@{com\-::zia\-::freshdocs\-::widget\-::fileexplorer\-::\-File\-Manager}!search\-In\-Directory@{search\-In\-Directory}}
+\index{search\-In\-Directory@{search\-In\-Directory}!com::zia::freshdocs::widget::fileexplorer::FileManager@{com\-::zia\-::freshdocs\-::widget\-::fileexplorer\-::\-File\-Manager}}
+\subsubsection[{search\-In\-Directory}]{\setlength{\rightskip}{0pt plus 5cm}Array\-List$<$String$>$ com.\-zia.\-freshdocs.\-widget.\-fileexplorer.\-File\-Manager.\-search\-In\-Directory (
+\begin{DoxyParamCaption}
+\item[{String}]{dir, }
+\item[{String}]{path\-Name}
+\end{DoxyParamCaption}
+)}}\label{classcom_1_1zia_1_1freshdocs_1_1widget_1_1fileexplorer_1_1_file_manager_ad5d5eefe857f98bc934fe4d99c54a26f}
+
+\begin{DoxyParams}{Parameters}
+{\em dir} & \\
+\hline
+{\em path\-Name} & \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+
+\end{DoxyReturn}
+\hypertarget{classcom_1_1zia_1_1freshdocs_1_1widget_1_1fileexplorer_1_1_file_manager_ace41ce68b6b7ad5ff469e76f46ccdcd0}{\index{com\-::zia\-::freshdocs\-::widget\-::fileexplorer\-::\-File\-Manager@{com\-::zia\-::freshdocs\-::widget\-::fileexplorer\-::\-File\-Manager}!set\-Show\-Hidden\-Files@{set\-Show\-Hidden\-Files}}
+\index{set\-Show\-Hidden\-Files@{set\-Show\-Hidden\-Files}!com::zia::freshdocs::widget::fileexplorer::FileManager@{com\-::zia\-::freshdocs\-::widget\-::fileexplorer\-::\-File\-Manager}}
+\subsubsection[{set\-Show\-Hidden\-Files}]{\setlength{\rightskip}{0pt plus 5cm}void com.\-zia.\-freshdocs.\-widget.\-fileexplorer.\-File\-Manager.\-set\-Show\-Hidden\-Files (
+\begin{DoxyParamCaption}
+\item[{boolean}]{choice}
+\end{DoxyParamCaption}
+)}}\label{classcom_1_1zia_1_1freshdocs_1_1widget_1_1fileexplorer_1_1_file_manager_ace41ce68b6b7ad5ff469e76f46ccdcd0}
+This will determine if hidden files and folders will be visible to the user. 
+\begin{DoxyParams}{Parameters}
+{\em choice} & true if user is veiwing hidden files, false otherwise \\
+\hline
+\end{DoxyParams}
+\hypertarget{classcom_1_1zia_1_1freshdocs_1_1widget_1_1fileexplorer_1_1_file_manager_a14f9e7e1b359468c82c4fd64500e13d8}{\index{com\-::zia\-::freshdocs\-::widget\-::fileexplorer\-::\-File\-Manager@{com\-::zia\-::freshdocs\-::widget\-::fileexplorer\-::\-File\-Manager}!set\-Sort\-Type@{set\-Sort\-Type}}
+\index{set\-Sort\-Type@{set\-Sort\-Type}!com::zia::freshdocs::widget::fileexplorer::FileManager@{com\-::zia\-::freshdocs\-::widget\-::fileexplorer\-::\-File\-Manager}}
+\subsubsection[{set\-Sort\-Type}]{\setlength{\rightskip}{0pt plus 5cm}void com.\-zia.\-freshdocs.\-widget.\-fileexplorer.\-File\-Manager.\-set\-Sort\-Type (
+\begin{DoxyParamCaption}
+\item[{int}]{type}
+\end{DoxyParamCaption}
+)}}\label{classcom_1_1zia_1_1freshdocs_1_1widget_1_1fileexplorer_1_1_file_manager_a14f9e7e1b359468c82c4fd64500e13d8}
+
+\begin{DoxyParams}{Parameters}
+{\em type} & \\
+\hline
+\end{DoxyParams}
+
+
+The documentation for this class was generated from the following file\-:\begin{DoxyCompactItemize}
+\item 
+/\-Users/mac/\-Desktop/\-Source\-Code/src/com/zia/freshdocs/widget/fileexplorer/\hyperlink{_file_manager_8java}{File\-Manager.\-java}\end{DoxyCompactItemize}

@@ -1,6 +1,0 @@
-var searchData=
-[
-  ['makehttprequest',['makeHttpRequest',['../classcom_1_1zia_1_1freshdocs_1_1cmis_1_1_c_m_i_s.html#ae8543267fca86eee486d017ad1041b3b',1,'com.zia.freshdocs.cmis.CMIS.makeHttpRequest(String path)'],['../classcom_1_1zia_1_1freshdocs_1_1cmis_1_1_c_m_i_s.html#a34772aab9d5714aad689d675168368d8',1,'com.zia.freshdocs.cmis.CMIS.makeHttpRequest(boolean isPost, String path, String payLoad, String contentType)']]],
-  ['maketext',['makeText',['../classcom_1_1zia_1_1freshdocs_1_1widget_1_1_holo_toast.html#ab147e5c19c02797c892ad8b1f30d7ddc',1,'com.zia.freshdocs.widget.HoloToast.makeText(Context context, CharSequence s, int duration)'],['../classcom_1_1zia_1_1freshdocs_1_1widget_1_1_holo_toast.html#a1cd284e060ad50f0248ee3fa17581f76',1,'com.zia.freshdocs.widget.HoloToast.makeText(Context context, int resId, int duration)']]],
-  ['menuitemselectedevent',['MenuItemSelectedEvent',['../classcom_1_1zia_1_1freshdocs_1_1activity_1_1_file_explorer_activity.html#a02e0c8ea573e62cf3e6a675b6705186c',1,'com.zia.freshdocs.activity.FileExplorerActivity.MenuItemSelectedEvent()'],['../interfacecom_1_1zia_1_1freshdocs_1_1widget_1_1fileexplorer_1_1custommenu_1_1_custom_menu_1_1_on_menu_item_selected_listener.html#a41e3410c814fafa6ecdba9a22c94b9de',1,'com.zia.freshdocs.widget.fileexplorer.custommenu.CustomMenu.OnMenuItemSelectedListener.MenuItemSelectedEvent()']]]
-];
